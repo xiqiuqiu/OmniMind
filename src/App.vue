@@ -340,7 +340,7 @@ const expandIdea = async (param?: any, customInput?: string) => {
             const node = flowNodes.value.find(n => n.id === parentNode.id)
             if (node) {
                 node.data.isExpanding = false
-                node.data.followUp = ''
+                // 不再自动清空 followUp，以便用户查看追问的问题
             }
         } else {
             isLoading.value = false
@@ -456,7 +456,7 @@ const startNewSession = () => {
                     <div
                         class="window-node group transition-all duration-500"
                         :class="{
-                            'opacity-10 grayscale-[0.8] blur-[1px] scale-[0.95] pointer-events-none': activeNodeId && !activePath.nodeIds.has(id),
+                            'opacity-40 grayscale-[0.4] blur-[0.5px] scale-[0.98] pointer-events-none': activeNodeId && !activePath.nodeIds.has(id),
                             'opacity-100 grayscale-0 blur-0 scale-105 z-50 ring-2 ring-offset-4': activePath.nodeIds.has(id)
                         }"
                         :style="{
@@ -609,18 +609,8 @@ const startNewSession = () => {
         </div>
 
         <!-- 底部全局操作栏 -->
-        <div class="fixed bottom-12 left-1/2 -translate-x-1/2 z-50 flex flex-col items-center gap-4">
-            <!-- 路径提示 (参考图片风格) -->
-            <div
-                class="flex items-center gap-2 px-4 py-1.5 bg-white/90 backdrop-blur-md border border-slate-200 rounded-lg shadow-sm self-start ml-2 mb-[-8px] z-10 scale-90 origin-bottom-left"
-            >
-                <Sparkles class="w-3 h-3 text-emerald-500" />
-                <span class="text-slate-400 text-xs font-bold">pwd:</span>
-                <span class="text-slate-300 text-xs">~ /</span>
-                <span class="text-slate-600 text-xs font-bold">think-flow</span>
-            </div>
-
-            <div class="flex items-center gap-3">
+        <div class="fixed bottom-12 left-1/2 -translate-x-1/2 z-50 flex flex-col items-center gap-4 w-full max-w-2xl px-6">
+            <div class="flex items-center gap-3 w-full">
                 <!-- 核心输入框容器 -->
                 <div
                     class="flex-grow flex items-center gap-4 bg-slate-50 border border-slate-200 rounded-2xl px-5 py-3 focus-within:bg-white focus-within:shadow-xl focus-within:shadow-slate-100 transition-all"
