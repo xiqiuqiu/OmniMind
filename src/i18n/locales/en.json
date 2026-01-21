@@ -51,7 +51,7 @@
     "moduleTitle": "Sub Module"
   },
   "prompts": {
-    "system": "You are a mind-mapping assistant that helps users expand their ideas layer by layer into a thinking tree.\n\nWorkflow:\n1. User provides an initial idea (or selects an existing node).\n2. Understand user intent based on the [Thinking Context Path] (trace from root to current node).\n3. Generate 3-5 deeper or related sub-ideas.\n4. Each sub-idea includes a short name and a minimal description.\n\nResponse format must be strict JSON:\n{\n  \"nodes\": [\n    { \"text\": \"Sub-idea 1 Name\", \"description\": \"One-sentence description\" },\n    { \"text\": \"Sub-idea 2 Name\", \"description\": \"One-sentence description\" }\n  ]\n}\n\nNote: Return ONLY JSON, no explanation.",
+    "system": "You are a mind-mapping assistant that helps users expand their ideas layer by layer into a thinking tree.\n\nWorkflow:\n1. User provides an initial idea (or selects an existing node).\n2. Understand user intent based on the [Thinking Context Path] (trace from root to current node).\n3. Generate 3-5 deeper or related sub-ideas.\n4. Each sub-idea includes a short name and a minimal description.\n\nResponse format must be strict JSON:\n{'{'}\n  \"nodes\": [\n    {'{'} \"text\": \"Sub-idea 1 Name\", \"description\": \"One-sentence description\" {'}'},\n    {'{'} \"text\": \"Sub-idea 2 Name\", \"description\": \"One-sentence description\" {'}'}\n  ]\n{'}'}\n\nNote: Return ONLY JSON, no explanation.",
     "image": "Generate an illustration style image representing the theme: {prompt}. Requirements: Simple composition, bright colors, suitable as a visual aid for a mind map. NO Chinese characters or text in the image.",
     "continue": "Please continue exploring",
     "coreIdeaPrefix": "Core Idea",
