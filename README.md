@@ -2,164 +2,115 @@
 
 English | [中文](./README.zh-CN.md)
 
-ThinkFlow AI is a lightweight, local-first idea-to-structure workspace. You type a core idea, and the app expands it into a navigable knowledge graph (modules/submodules). Each node supports follow-up expansion, deep-dive details, and optional image generation.
+ThinkFlow AI is a lightweight, local-first, AI-driven mind mapping workspace. It automatically transforms a simple idea into a structured and highly visual mind map using the divergent thinking power of AI.
 
-This repository currently uses the package name `thinkflow` (historical) while the product name is **ThinkFlow AI**.
+This project aims to provide a smooth, zero-backend-config thinking assistant that offers deep analytical capabilities, supporting users during brainstorming, knowledge organization, and creative expansion.
 
-## Highlights
+---
 
-- **Idea expansion to graph**: generate a root node and expand into structured child nodes.
-- **Context-aware follow-up**: expand a selected node with an additional requirement (follow-up input).
-- **Deep dive**: generate detailed explanations for a node and show them inline.
-- **Image generation (per node)**: generate/regenerate a visual for a node and preview it fullscreen.
-- **Export to Markdown**: export the current graph as a Markdown outline (including deep-dive content).
-- **Local-first settings**: API mode and endpoints are stored in `localStorage` (no backend needed).
-- **Bilingual UI**: built-in English/Chinese UI with a one-click toggle.
+## 🌟 Key Highlights
 
-## Tech Stack
+- **🚀 Idea to Graph**: Just enter a core concept, and the AI will automatically generate a root node and expand into multiple insightful child nodes.
+- **🧠 Context-Aware Follow-up**: Support for follow-up questions on any node. The AI considers the "thinking path" from root to the current node to ensure logical consistency.
+- **📖 Deep Answer (Deep Dive)**: More than just keywords—click "Answer" to have the AI generate detailed analysis, background, and applications for a node, rendered in Markdown.
+- **🎨 Intelligent Visual Aid**: Integrated AI image generation creates realistic visuals based on node content, enhancing the visual impact and memory retention of your mind map.
+- **📊 Session Summary**: One-click summary of the entire canvas, extracting core logic, main dimensions, and final insights.
+- **📂 Structured Export**: Export the entire mind map as a standard Markdown outline, including node descriptions, answers, and hierarchical structure.
+- **🔐 Local-First Configuration**: All API configurations (Key, Base URL, etc.) and language preferences are stored in the browser's `localStorage`, ensuring privacy and security.
 
-- **Vue 3** (Composition API)
-- **Vite 5**
-- **TypeScript**
-- **Tailwind CSS**
-- **VueFlow** (`@vue-flow/core`, `background`, `controls`, `minimap`)
-- **vue-i18n**
-- **lucide-vue-next** (icons)
+---
 
-## Project Structure
+## 🛠️ Tech Stack
 
-Key files you will touch most often:
+- **Framework**: [Vue 3](https://vuejs.org/) (Composition API)
+- **Build Tool**: [Vite 5](https://vitejs.dev/)
+- **Language**: [TypeScript](https://www.typescriptlang.org/)
+- **Styling**: [Tailwind CSS](https://tailwindcss.com/)
+- **Graph Engine**: [@vue-flow/core](https://vueflow.dev/)
+- **I18n**: [vue-i18n](https://vue-i18n.intlify.dev/)
+- **Icon Library**: [lucide-vue-next](https://lucide.dev/)
+- **Markdown Rendering**: [markdown-it](https://github.com/markdown-it/markdown-it)
 
-- `src/App.vue`: app shell, composes the layout and wires UI to business actions.
-- `src/composables/useThinkFlow.ts`: core business logic (graph operations, API calls, persistence).
-- `src/components/TopNav.vue`: top toolbar (layout, export, summary, settings, language toggle).
-- `src/components/BottomBar.vue`: bottom input bar (core idea input + execute).
-- `src/components/WindowNode.vue`: custom VueFlow node UI (expand/deep-dive/image/follow-up).
-- `src/components/SettingsModal.vue`: API mode and custom endpoints configuration UI.
-- `src/i18n/index.ts`: i18n bootstrap (default English; persists language in `localStorage`).
+---
 
-## How It Works (High-Level)
+## 📂 Code Structure Guide
 
-ThinkFlow AI is built around a single composable:
+```text
+src/
+├── components/             # UI Components
+│   ├── TopNav.vue          # Top toolbar: Handles fit, layout, export, summary, and language toggle.
+│   ├── SideNav.vue         # Left side nav: Controls MiniMap, edge styles, background, and settings entry.
+│   ├── BottomBar.vue       # Bottom input bar: Initial entry for core ideas.
+│   ├── WindowNode.vue      # Custom Node: Core UI for expanding, answers, image generation, and follow-ups.
+│   ├── SettingsModal.vue   # API Settings: Configuration for Text and Image generation endpoints.
+│   ├── SummaryModal.vue    # Modal for displaying the session summary.
+│   ├── ImagePreviewModal.vue # Modal for fullscreen node image preview.
+│   └── ResetConfirmModal.vue # Confirmation modal for canvas reset.
+├── composables/            # Core Logic Layer
+│   └── useThinkFlow.ts     # Core Business Hook: Manages node state, API calls, layout algorithms, and persistence.
+├── i18n/                   # Internationalization
+│   ├── locales/            # Language packs (zh.json, en.json)
+│   └── index.ts            # I18n initialization
+├── App.vue                 # App Entry: Composes components and configures the VueFlow environment.
+└── main.ts                 # Program Entry Point
+```
 
-- `useThinkFlow` owns all reactive state for nodes/edges and UI flags.
-- UI components are “thin”: they render and forward events (expand, deep-dive, image, export).
-- The graph is rendered with VueFlow using a custom node type (`window`).
-- Settings are stored in `localStorage`:
-    - language (`language`)
-    - API mode + chat/image endpoints/models/keys
+### Core Design Principles
 
-## Getting Started
+- **State Management**: Uses `useThinkFlow` composable to centralize management of nodes, edges, and UI states, distributed to child components via `App.vue`.
+- **Layout Algorithm**: Implements a horizontal tree layout algorithm based on dynamic subtree height calculations, automatically adapting to node size changes.
+- **API Communication**: Compatible with OpenAI-style endpoints, supporting custom model names and Base URLs.
 
-### Prerequisites
+---
 
-- Node.js **18+** (required by Vite 5)
-- npm (or pnpm/yarn; examples use npm)
+## 🚀 Quick Start
 
-### Install
+### 1. Prerequisites
+
+- Node.js 18+
+- npm or pnpm
+
+### 2. Install Dependencies
 
 ```bash
 npm install
 ```
 
-### Run Dev Server
+### 3. Run Development Server
 
 ```bash
 npm run dev
 ```
 
-Then open the URL printed by Vite (usually `http://localhost:5173`).
+Access `http://localhost:5173` to start.
 
-### Build
+---
 
-```bash
-npm run build
-```
+## ⚙️ Configuration
 
-### Preview Production Build
+This project does not provide a backend; users must configure their own API endpoints:
 
-```bash
-npm run preview
-```
+1. Click the **Settings** icon at the bottom of the left sidebar.
+2. **Default Mode**: Uses pre-configured trial endpoints (subject to rate limits).
+3. **Custom Mode**:
+    - **Text Gen**: Enter OpenAI-compatible `Base URL`, `Model Name`, and `API Key`.
+    - **Image Gen**: Enter configuration for `dall-e` or other image generation APIs.
 
-## Configuration
+---
 
-### Custom Mode (Bring Your Own Endpoint)
+## 📖 Usage Manual
 
-Open **Settings** in the UI:
+1. **Start a Session**: Enter your idea in the bottom input (e.g., "Future of Urban Transportation") and press Enter.
+2. **Node Actions**:
+    - **Expand**: Click the `+` on a node or enter a follow-up requirement to generate child nodes.
+    - **Answer**: Click the book icon for a deep analysis of that node.
+    - **Image**: Click the image icon to generate a visual reference for the idea.
+3. **Organize Canvas**:
+    - **Layout**: Click the "Layout" button at the top to automatically organize all nodes.
+    - **Export**: Click the "Export" button at the top to get a Markdown copy of your work.
 
-- Switch to **Custom**
-- Configure **Text Generation** (chat completion)
-    - `baseUrl` (POST endpoint)
-    - `model`
-    - `apiKey`
-- Configure **Image Generation**
-    - `baseUrl` (POST endpoint)
-    - `model`
-    - `apiKey`
+---
 
-These fields are saved into `localStorage` automatically.
+## 📄 License
 
-## Features Guide
-
-### 1) Expand From a Core Idea
-
-1. Type a core idea in the bottom input.
-2. Press Enter or click **Execute**.
-3. A root node appears and the app generates child nodes.
-
-### 2) Expand a Specific Node (Follow-Up)
-
-1. Click into a node’s follow-up input.
-2. Type an additional requirement.
-3. Press Enter to expand using the context path (root → current node).
-
-### 3) Deep Dive a Node
-
-Click **Deep Dive** on a node to generate a detailed explanation. The content will be stored on the node and can be reopened without re-requesting (unless you expand further).
-
-### 4) Generate/Preview Node Image
-
-- Click **IMG** to generate an image for a node.
-- Click the image to open fullscreen preview.
-- Use the regenerate action to request a new image.
-
-### 5) Export Markdown
-
-Use **Export** in the top toolbar:
-
-- Root becomes the Markdown title
-- Child nodes become an indented list
-- Deep-dive text is exported as blockquote content under the node
-
-## Third-Party Integrations
-
-- **Microsoft Clarity**: included in `index.html` for analytics.
-- **VueFlow plugins**:
-    - Background (Dots/Lines)
-    - Controls (zoom/fit)
-    - MiniMap (overview)
-
-## Internationalization (i18n)
-
-- Default locale: **English**
-- Supported: `en`, `zh`
-- Language choice is stored in `localStorage` key `language`
-
-To add a new language:
-
-1. Add a JSON file in `src/i18n/locales/`
-2. Register it in `src/i18n/index.ts`
-3. Add a toggle option in the UI (currently a simple EN/ZH switch)
-
-## Common Troubleshooting
-
-- **CORS / Failed to fetch**: if you use a custom endpoint, ensure it allows browser requests and supports proper CORS headers.
-- **401/403**: verify the API key and `Authorization: Bearer ...` format.
-- **429**: rate limited by the provider; retry later.
-
-## Scripts
-
-- `npm run dev`: start Vite dev server
-- `npm run build`: production build
-- `npm run preview`: preview the build output locally
+MIT License

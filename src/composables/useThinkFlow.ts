@@ -510,35 +510,112 @@ export function useThinkFlow({ t, locale }: { t: Translate; locale: Ref<string> 
 
     /**
      * 布局：从根节点开始按“横向树形”重新排布节点位置
-     * - 主要用于整理节点过多导致的视觉拥挤
+     * - 动态计算节点宽高与子树高度，确保在节点展开（回答/生图）后仍能整齐排布
      */
     const resetLayout = () => {
         const rootNode = flowNodes.value.find(n => n.data.type === 'root')
         if (!rootNode) return
 
+        const nodeGapX = 150 // 节点层级间的横向间距
+        const nodeGapY = 40 // 同级节点间的纵向间距
+
+        /**
+         * 获取节点的实际尺寸，优先使用已测量尺寸，否则使用默认值
+         */
+        const getNodeSize = (node: any) => ({
+            width: node.dimensions?.width ?? node.measured?.width ?? 280,
+            height: node.dimensions?.height ?? node.measured?.height ?? 180
+        })
+
+        // 存储每个节点及其子树所需的总高度
+        const subtreeHeights = new Map<string, number>()
+
+        /**
+         * 第一遍遍历：递归计算每个节点及其子树占用的总高度
+         */
+        const calculateSubtreeHeight = (nodeId: string): number => {
+            const node = flowNodes.value.find(n => n.id === nodeId)
+            if (!node || node.hidden) return 0
+
+            const size = getNodeSize(node)
+            const children = flowEdges.value
+                .filter(e => e.source === nodeId)
+                .map(e => e.target)
+                .filter(id => {
+                    const childNode = flowNodes.value.find(n => n.id === id)
+                    return childNode && !childNode.hidden
+                })
+
+            if (children.length === 0) {
+                subtreeHeights.set(nodeId, size.height)
+                return size.height
+            }
+
+            let childrenTotalHeight = 0
+            children.forEach((childId, index) => {
+                childrenTotalHeight += calculateSubtreeHeight(childId)
+                if (index < children.length - 1) {
+                    childrenTotalHeight += nodeGapY
+                }
+            })
+
+            // 节点自身高度与子树高度取较大值
+            const totalHeight = Math.max(size.height, childrenTotalHeight)
+            subtreeHeights.set(nodeId, totalHeight)
+            return totalHeight
+        }
+
+        // 开始计算
+        calculateSubtreeHeight(rootNode.id)
+
         const visited = new Set<string>()
-        const layoutNode = (nodeId: string, x: number, y: number) => {
+
+        /**
+         * 第二遍遍历：根据计算出的子树高度，递归设置节点位置
+         * @param nodeId 当前节点 ID
+         * @param x 当前起始 X 坐标
+         * @param ySubtreeTop 当前子树顶部的 Y 坐标
+         */
+        const layoutNode = (nodeId: string, x: number, ySubtreeTop: number) => {
             if (visited.has(nodeId)) return
             visited.add(nodeId)
 
             const node = flowNodes.value.find(n => n.id === nodeId)
-            if (node) {
-                node.position = { x, y }
+            if (!node || node.hidden) return
 
-                const childEdges = flowEdges.value.filter(e => e.source === nodeId)
-                childEdges.forEach((edge, index) => {
-                    const offsetX = 450
-                    const totalHeight = (childEdges.length - 1) * 280
-                    const startY = y - totalHeight / 2
-                    const offsetY = index * 280
+            const size = getNodeSize(node)
+            const subtreeHeight = subtreeHeights.get(nodeId) || size.height
 
-                    layoutNode(edge.target, x + offsetX, startY + offsetY)
+            // 将节点放置在子树区域的垂直中心
+            node.position = {
+                x,
+                y: ySubtreeTop + (subtreeHeight - size.height) / 2
+            }
+
+            const children = flowEdges.value
+                .filter(e => e.source === nodeId)
+                .map(e => e.target)
+                .filter(id => {
+                    const childNode = flowNodes.value.find(n => n.id === id)
+                    return childNode && !childNode.hidden
+                })
+
+            if (children.length > 0) {
+                const nextX = x + size.width + nodeGapX
+                let currentY = ySubtreeTop
+
+                children.forEach(childId => {
+                    const childSubtreeHeight = subtreeHeights.get(childId) || 0
+                    layoutNode(childId, nextX, currentY)
+                    currentY += childSubtreeHeight + nodeGapY
                 })
             }
         }
 
-        layoutNode(rootNode.id, 50, 300)
+        // 从根节点开始排版
+        layoutNode(rootNode.id, 50, 100)
 
+        // 延迟执行 fitView 确保位置更新已应用
         setTimeout(() => {
             fitView({ padding: 0.2, duration: 800 })
         }, 100)
@@ -990,4 +1067,3 @@ export function useThinkFlow({ t, locale }: { t: Translate; locale: Ref<string> 
         expandIdea
     }
 }
-

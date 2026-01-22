@@ -2,165 +2,115 @@
 
 [English](./README.md) | 中文
 
-ThinkFlow AI 是一个轻量、偏本地化（Local-first）的“从想法到结构化图谱”的工作台：输入一个核心想法，应用会把它扩展为可浏览的知识图谱（模块/子模块）。每个节点支持继续追问扩展、深挖详情，以及可选的配图生成。
+ThinkFlow AI 是一个轻量级、Local-first（本地优先）的 AI 驱动思维导图工作台。它能够将你的一个简单想法，通过 AI 的发散性思维，自动化地扩展为结构清晰、可视化程度高的思维图谱。
 
-## 亮点功能
+本项目旨在提供一个极致流畅、无需复杂后端配置、且具备深度解析能力的思维助手，帮助用户在头脑风暴、知识梳理和创意发散时获得持续的灵感支持。
 
-- **想法扩展为图谱**：生成根节点并扩展出结构化子节点。
-- **上下文追问扩展**：对选中节点追加需求（follow-up 输入）并基于路径上下文扩展。
-- **深挖详情**：为节点生成更详细的解释/补充内容并在节点内展开展示。
-- **节点配图（可重试）**：为单个节点生成/重新生成图片，并支持全屏预览。
-- **导出 Markdown**：将当前图谱导出为 Markdown 大纲（包含深挖内容）。
-- **本地配置**：API 模式与配置保存到 `localStorage`，无需额外后端。
-- **中英双语**：内置英文/中文 UI，一键切换。
+---
 
-## 技术栈
+## 🌟 核心亮点
 
-- **Vue 3**（Composition API）
-- **Vite 5**
-- **TypeScript**
-- **Tailwind CSS**
-- **VueFlow**（`@vue-flow/core` + background/controls/minimap）
-- **vue-i18n**
-- **lucide-vue-next**（图标）
+- **🚀 从想法到图谱**：只需输入一个核心概念，AI 会自动生成根节点并向外发散多个具有深度的子节点。
+- **🧠 上下文关联追问**：支持针对任意节点进行追问，AI 在生成时会参考“从根到当前节点”的思考路径，确保生成的逻辑一致性。
+- **📖 深度回答（Deep Dive）**：不再仅仅是关键词，点击“回答”即可让 AI 针对该节点生成详尽的解析、背景及应用场景，支持 Markdown 渲染。
+- **🎨 智能视觉辅助**：集成 AI 生图能力，可根据节点内容生成写实风格的配图，提升思维导图的视觉冲击力与记忆点。
+- **📊 全篇智能总结**：一键梳理整张画布的所有想法，提取核心逻辑、主要维度和最终洞察，生成精炼的全局总结。
+- **📂 结构化导出**：支持将整个思维图谱导出为标准的 Markdown 大纲，包含节点描述、回答内容及层级结构。
+- **🔐 本地化配置**：所有的 API 配置（Key、Base URL 等）和语言偏好均保存在浏览器 `localStorage` 中，隐私且安全。
 
-## 项目结构
+---
 
-你最常关注的文件：
+## 🛠️ 技术栈
 
-- `src/App.vue`：应用壳层，组合布局与事件转发。
-- `src/composables/useThinkFlow.ts`：核心业务逻辑（节点/边操作、API 调用、持久化）。
-- `src/components/TopNav.vue`：顶部工具栏（布局、导出、总结、设置、语言切换）。
-- `src/components/BottomBar.vue`：底部输入条（核心想法输入 + 执行）。
-- `src/components/WindowNode.vue`：自定义节点 UI（扩展/深挖/配图/follow-up）。
-- `src/components/SettingsModal.vue`：API 模式与自定义端点配置 UI。
-- `src/i18n/index.ts`：i18n 初始化（默认英文；语言写入 `localStorage`）。
+- **框架**: [Vue 3](https://vuejs.org/) (Composition API)
+- **构建工具**: [Vite 5](https://vitejs.dev/)
+- **语言**: [TypeScript](https://www.typescriptlang.org/)
+- **样式**: [Tailwind CSS](https://tailwindcss.com/)
+- **画布引擎**: [@vue-flow/core](https://vueflow.dev/)
+- **国际化**: [vue-i18n](https://vue-i18n.intlify.dev/)
+- **图标库**: [lucide-vue-next](https://lucide.dev/)
+- **Markdown 渲染**: [markdown-it](https://github.com/markdown-it/markdown-it)
 
-## 核心原理（高层）
+---
 
-应用围绕一个 composable 构建：
+## 📂 代码结构指南
 
-- `useThinkFlow` 统一持有：节点/边数据、UI 状态、网络请求、错误处理、导出能力。
-- 组件尽量“轻”：负责渲染与事件转发（expand、deep-dive、image、export 等）。
-- 画布由 VueFlow 渲染，节点使用自定义类型 `window`。
-- 配置持久化到 `localStorage`：
-    - 语言：`language`
-    - API 模式与 chat/image 的 baseUrl/model/apiKey
+```text
+src/
+├── components/             # UI 组件库
+│   ├── TopNav.vue          # 顶部工具栏：处理适配、布局、导出、总结、语言切换等全局动作
+│   ├── SideNav.vue         # 左侧配置栏：控制小地图、连线样式、背景网格及 API 设置入口
+│   ├── BottomBar.vue       # 底部输入框：核心想法的初始入口
+│   ├── WindowNode.vue      # 自定义节点：核心 UI，包含扩展、回答、生图及追问逻辑
+│   ├── SettingsModal.vue   # API 配置弹窗：支持文本/图片生成的 Base URL 和 Key 设置
+│   ├── SummaryModal.vue    # 全篇总结展示弹窗
+│   ├── ImagePreviewModal.vue # 节点配图全屏预览弹窗
+│   └── ResetConfirmModal.vue # 画布重置确认弹窗
+├── composables/            # 核心逻辑层
+│   └── useThinkFlow.ts     # 核心业务 Hook：管理节点状态、API 调用、布局算法、持久化逻辑等
+├── i18n/                   # 国际化
+│   ├── locales/            # 语言包 (zh.json, en.json)
+│   └── index.ts            # i18n 初始化
+├── App.vue                 # 应用入口：组合各组件并配置 VueFlow 画布环境
+└── main.ts                 # 程序起点
+```
 
-## 快速开始
+### 核心逻辑设计
 
-### 环境要求
+- **状态管理**: 采用 `useThinkFlow` 组合式函数统一管理画布节点、连线及 UI 状态。通过解构方式在 `App.vue` 中分发给各子组件。
+- **布局算法**: 实现了基于子树高度动态计算的“横向树形”排版算法，能够自动适配节点展开后的尺寸变化，确保图谱整齐。
+- **API 通信**: 适配 OpenAI 格式接口，支持自定义模型名称及 Base URL。
 
-- Node.js **18+**（Vite 5 要求）
-- npm（也可以用 pnpm/yarn；示例使用 npm）
+---
 
-### 安装依赖
+## 🚀 快速开始
+
+### 1. 环境准备
+
+- Node.js 18+
+- npm 或 pnpm
+
+### 2. 安装依赖
 
 ```bash
 npm install
 ```
 
-### 启动开发环境
+### 3. 启动开发服务器
 
 ```bash
 npm run dev
 ```
 
-打开 Vite 输出的地址（通常是 `http://localhost:5173`）。
+访问 `http://localhost:5173` 即可开始使用。
 
-### 构建
+---
 
-```bash
-npm run build
-```
+## ⚙️ 配置说明
 
-### 预览构建产物
+本项目不提供后端服务，需用户自行配置 API 接口：
 
-```bash
-npm run preview
-```
+1. 点击左侧工具栏底部的 **设置** 图标。
+2. **默认模式**: 预设了部分体验接口（可能有请求限制）。
+3. **自定义模式**:
+    - **文本生成**: 填入 OpenAI 兼容格式的 `Base URL`、`Model Name` 和 `API Key`。
+    - **图片生成**: 填入支持 `dall-e` 格式或其他生图 API 的配置。
 
-## 配置说明
+---
 
-### 自定义模式：自带端点（BYO Endpoint）
+## 📖 功能使用手册
 
-在界面里打开 **Settings**：
+1. **开启新会话**: 在底部输入框输入您的想法（如“未来城市的交通方式”），按回车。
+2. **节点操作**:
+    - **扩展**: 点击节点右侧的 `+` 或输入后续要求，AI 会继续在该分支下生成子节点。
+    - **回答**: 点击书本图标，获取该节点的深度解析。
+    - **生图**: 点击图片图标，为该想法生成视觉参考。
+3. **整理画布**:
+    - **布局**: 点击顶部“布局”按钮，自动按层级整理所有节点。
+    - **导出**: 点击顶部“导出”按钮，获取 Markdown 格式的内容副本。
 
-- 切换到 **Custom**
-- 配置 **文本生成（chat completion）**
-    - `baseUrl`（POST 接口地址）
-    - `model`
-    - `apiKey`
-- 配置 **图片生成**
-    - `baseUrl`（POST 接口地址）
-    - `model`
-    - `apiKey`
+---
 
-这些字段会自动保存到 `localStorage`。
+## 📄 开源协议
 
-## 功能使用说明
-
-### 1）从核心想法生成图谱
-
-1. 在底部输入框输入核心想法
-2. 回车或点击 **Execute**
-3. 生成根节点并自动扩展出子节点
-
-### 2）对某个节点继续扩展（Follow-Up）
-
-1. 在节点的 follow-up 输入框填写“追加需求”
-2. 回车触发扩展
-3. 扩展时会携带“从根到当前节点”的上下文路径，保证更贴合当前分支
-
-### 3）深挖节点详情
-
-点击节点上的 **Deep Dive**：
-
-- 生成更长的解释/拓展内容
-- 内容会写回节点并可重复打开（不必每次都重新请求）
-
-### 4）节点配图与预览
-
-- 点击节点上的 **IMG** 生成配图
-- 点击图片打开全屏预览
-- 支持在预览层或节点上进行重新生成
-
-### 5）导出 Markdown
-
-顶部工具栏点击 **Export**：
-
-- 根节点作为一级标题
-- 子节点按缩进列表输出
-- 深挖内容作为引用块输出到对应节点下方
-
-## 第三方集成与插件
-
-- **Microsoft Clarity**：在 `index.html` 中引入，用于分析与统计。
-- **VueFlow 插件**：
-    - Background（Dots/Lines）
-    - Controls（缩放/适配）
-    - MiniMap（总览）
-
-## 国际化（i18n）
-
-- 默认语言：**英文**
-- 已支持：`en`、`zh`
-- 语言选择写入 `localStorage` 的 `language`
-
-新增语言建议步骤：
-
-1. 在 `src/i18n/locales/` 添加对应 JSON
-2. 在 `src/i18n/index.ts` 注册 messages
-3. 在 UI 中扩展语言切换逻辑（目前为 EN/ZH 双向切换）
-
-## 常见问题排查
-
-- **CORS / Failed to fetch**：使用自定义端点时，确保支持浏览器跨域请求并正确返回 CORS 响应头。
-- **401/403**：检查 API Key 是否正确，以及是否使用 `Authorization: Bearer ...`。
-- **429**：触发限流，稍后重试。
-
-## Scripts
-
-- `npm run dev`：启动开发服务器
-- `npm run build`：构建生产包
-- `npm run preview`：本地预览构建产物
+MIT License
