@@ -988,7 +988,7 @@ export function useThinkFlow({ t, locale }: { t: Translate; locale: Ref<string> 
                     data: {
                         ...node.data,
                         isExpanding: true,
-                        isDetailExpanded: false,
+                        // 保持当前的 isDetailExpanded 状态，不强制关闭详情
                         error: null
                     }
                 })
