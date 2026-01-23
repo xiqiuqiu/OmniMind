@@ -10,14 +10,14 @@ export const API_KEY = ''
  */
 export const DEFAULT_CONFIG = {
     chat: {
-        baseUrl: 'https://thinkflow.lz-t.top/chat/completions',
-        model: 'glm-4-flash',
-        apiKey: ''
+        baseUrl: 'https://openrouter.ai/api/v1/chat/completions',
+        model: 'xiaomi/mimo-v2-flash:free',
+        apiKey: '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'
     },
     image: {
-        baseUrl: 'https://thinkflow.lz-t.top/images/generations',
-        model: 'cogview-3-flash',
-        apiKey: ''
+        baseUrl: 'https://openrouter.ai/api/v1/chat/completions',
+        model: 'google/gemini-3-pro-image-preview',
+        apiKey: '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'
     }
 }
 
