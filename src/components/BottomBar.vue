@@ -6,18 +6,22 @@
  */
 
 // 图标：输入提示与执行态
-import { Github, RefreshCw, Terminal, Zap } from 'lucide-vue-next'
+import { Github, RefreshCw, Terminal, Zap, Sparkles, Brain } from 'lucide-vue-next'
 
 /**
  * props：
  * - t：i18n 翻译函数
  * - modelValue：输入框内容（由 v-model 驱动）
  * - isLoading：是否正在生成（用于禁用按钮并显示 loading 图标）
+ * - aiStyle: AI 思考风格
+ * - onToggleAiStyle: 切换 AI 思考风格的回调
  */
 const props = defineProps<{
     t: any
     modelValue: string
     isLoading: boolean
+    aiStyle: string
+    onToggleAiStyle: () => void
 }>()
 
 /**
@@ -32,7 +36,21 @@ const emit = defineEmits<{
 </script>
 
 <template>
-    <div class="fixed bottom-4 md:bottom-6 left-1/2 -translate-x-1/2 z-50 flex flex-col items-center gap-4 w-full max-w-2xl px-4 md:px-6">
+    <div class="fixed bottom-4 md:bottom-4 left-1/2 -translate-x-1/2 z-50 flex flex-col items-center gap-3 w-full max-w-2xl px-4 md:px-6">
+        <!-- 思考风格切换 -->
+        <div class="flex items-center gap-1.5 self-start ml-2 md:ml-4 mb-1">
+            <button
+                @click="props.onToggleAiStyle"
+                class="flex items-center gap-1.5 px-3 py-1.5 rounded-full border text-[10px] font-bold tracking-widest uppercase transition-all shadow-sm"
+                :class="
+                    props.aiStyle === 'creative' ? 'bg-amber-50 border-amber-200 text-amber-600 shadow-amber-100/50' : 'bg-cyan-50 border-cyan-200 text-cyan-700 shadow-cyan-100/50'
+                "
+            >
+                <component :is="props.aiStyle === 'creative' ? Sparkles : Brain" class="w-3 h-3" />
+                <span>{{ props.aiStyle === 'creative' ? props.t('nav.styleCreative') : props.t('nav.stylePrecise') }}</span>
+            </button>
+        </div>
+
         <div class="flex items-center gap-2 md:gap-3 w-full">
             <div
                 class="flex-grow flex items-center gap-2 md:gap-4 bg-slate-50 border border-slate-200 rounded-xl md:rounded-2xl px-3 md:px-5 py-2 md:py-3 focus-within:bg-white focus-within:shadow-xl focus-within:shadow-slate-100 transition-all"

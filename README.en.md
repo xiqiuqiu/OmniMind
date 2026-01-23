@@ -1,161 +1,160 @@
-# ThinkFlow AI
+# 🧠 ThinkFlow AI
 
-[中文](./README.md) | English
+<p align="center">
+  <img src="./public/logo.png" alt="ThinkFlow AI Logo" width="120" />
+</p>
 
-**ThinkFlow AI** is a next-generation, local-first, AI-driven mind mapping tool built with Vue 3 and VueFlow. More than just a drawing app, it serves as a "brain augmentor" that thinks with you. By combining the divergent capabilities of LLMs (Large Language Models) with structured visualization, ThinkFlow AI rapidly transforms fuzzy ideas into clear, deep knowledge systems.
+<p align="center">
+  <strong>Give Flow to Thought, Shape to Inspiration: An AI-Driven, Local-First Thinking Space</strong>
+</p>
 
-This project was built through Vibe Coding (requirement-driven, AI-assisted iteration).
+<p align="center">
+  <a href="https://github.com/vuejs/core"><img src="https://img.shields.io/badge/vue-3.x-brightgreen.svg" alt="vue"></a>
+  <a href="https://github.com/vitejs/vite"><img src="https://img.shields.io/badge/vite-5.x-646cff.svg" alt="vite"></a>
+  <a href="https://github.com/microsoft/TypeScript"><img src="https://img.shields.io/badge/typescript-5.x-blue.svg" alt="typescript"></a>
+  <a href="https://github.com/tailwindlabs/tailwindcss"><img src="https://img.shields.io/badge/tailwind-3.x-38bdf8.svg" alt="tailwind"></a>
+  <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/license-MIT-orange.svg" alt="license"></a>
+</p>
+
+<p align="center">
+  English | <a href="./README.md">中文</a>
+</p>
+
+---
+
+## 💡 Vision & Philosophy
+
+**ThinkFlow AI** is dedicated to creating a high-efficiency workbench that transforms "ideas" into "structured graphs."
+
+In traditional creation, inspiration is often fragmented and fuzzy. ThinkFlow AI redefines this process: simply input a core idea, and the application leverages the divergent power of AI to expand it into a hierarchical, interactive **Knowledge Graph**.
+
+- **Modular Expansion**: Starting from core concepts, it automatically deduces and generates sub-modules, building a logically rigorous thinking network.
+- **Infinite Depth Exploration**: Every node is just a beginning. You can continue to **follow-up and expand** any branch or dive deep into professional details through the "**Deep Answer**" feature.
+- **Multidimensional Sensory Fusion**: Supports one-click **image generation** for nodes, weaving abstract logic with concrete visual imagery to achieve full-sensory knowledge internalization.
+
+This is more than just a tool; it is a local-first thinking space that grows with you.
+
+---
+
+## ✨ Key Features
+
+### 🚀 Intelligent Divergence System (AI-Driven Divergence)
+
+- **Zero-Pressure Cold Start**: Enter a core concept, and the AI automatically builds the initial logical skeleton, ending "blank page anxiety."
+- **Full-Chain Context Awareness**: The AI understands the complete logical path from the root node to the current node. This means every "follow-up" is based on deep context rather than isolated keywords.
+- **Multi-style AI Generation**: Switch between "Creative" and "Precise" modes to control the breadth and depth of AI expansions.
+- **Dynamic Tree Layout**: Built-in adaptive layout algorithm automatically handles collisions and overlaps when nodes expand, ensuring the graph remains clear and organized.
+
+### 🔍 Deep Content Exploration (Deep Dive & Insights)
+
+- **Professional-Grade Deep Analysis**: Generate 300-500 words of deep answers with one click, supporting Markdown rendering, covering concept explanations, case studies, and logical deductions.
+- **Visual Imagery Generation**: Integrated CogView/DALL-E interfaces generate concrete images for abstract concepts, reinforcing sensory memory and multi-dimensional cognition.
+- **Global Macro Insights**: Automatically scans the entire graph topology to extract key points and generate a global summary.
+
+### 🛠️ Premium Interaction Experience
+
+- **Immersive Presentation Mode**: One-click full-screen presentation with keyboard navigation (Arrow keys) to guide your audience through the map.
+- **Global Search & Focus**: Real-time search for nodes by label or description with automatic viewport focusing.
+- **Linked Dragging System**: Parent and child nodes move together, maintaining the relative stability of logical clusters.
+- **Subtree State Management**: Supports subtree collapsing for large-scale graphs, allowing you to switch freely between macro vision and micro details.
+- **Local-First Architecture**: All configurations and data are stored in the browser's IndexedDB/LocalStorage. Supports any OpenAI-compatible interface with no platform lock-in.
 
 ---
 
 ## 🔗 Live Demo
 
-Experience it now: [https://thinkflow-ai.lz-t.top/](https://thinkflow-ai.lz-t.top/)
+Start your thinking journey now: [https://thinkflow-ai.lz-t.top/](https://thinkflow-ai.lz-t.top/)
 
 ---
 
-## 🌟 Why ThinkFlow AI?
+## 🛠️ Tech Stack Revealed
 
-Traditional mind mapping tools often require manual entry of every branch, which can become a bottleneck during a burst of inspiration. ThinkFlow AI redefines this process:
-
-1.  **AI-Driven Automated Divergence**: Enter a core keyword, and the AI automatically expands outward based on logical chains, helping you break through "blank page anxiety."
-2.  **Context-Aware Deep Dialogue**: Every node carries its full path context within the thinking tree. This means the AI understands _why_ you moved from A to B, generating more precise follow-up suggestions.
-3.  **Multi-Dimensional Sensory Presentation**: Gain textual knowledge through deep "Answers," visual imagery through AI Image Generation, and macro insights through "Session Summaries."
-4.  **Ultimate Privacy & Freedom**: Adopts a local-first architecture. Configurations are stored locally in your browser. Supports any OpenAI-compatible interface with no platform lock-in.
-
----
-
-## 🚀 Core Functional Architecture
-
-### 1. Intelligent Expansion System
-
-- **Core Idea Activation**: Generate the foundation of your thinking tree with one click.
-- **Path Contextual Follow-up**: Perform follow-ups on nodes; the AI reasons using the full logical path from the root to the current node.
-- **Node Management**: Supports subtree collapsing for large-scale graphs to keep the workspace clean.
-
-### 2. Deep Dive & Summarization
-
-- **Deep Answer (Deep Dive)**: Generates 300-500 words of professional analysis for specific concepts, supporting rich Markdown formatting.
-- **Visual Generation (Image Gen)**: Utilizes CogView or DALL-E to generate photorealistic visuals for nodes, reinforcing visual memory.
-- **Global Summary**: Automatically analyzes the entire graph's logic to extract core insights and conclusions.
-
-### 3. Canvas Interaction & Layout
-
-- **Smart Tree Layout**: Built-in algorithm based on dynamic subtree height calculations to solve overlap issues after node expansion.
-- **Linked Dragging**: When a parent node moves, child nodes move synchronously to maintain relative positions.
-- **Versatile Export**: Perfectly supports exporting to structured Markdown, preserving all deep answer content.
+| Domain             | Tech Choice                 | Core Advantages                                                             |
+| :----------------- | :-------------------------- | :-------------------------------------------------------------------------- |
+| **Core Framework** | **Vue 3 (Composition API)** | Ultimate reactive experience and component-based development efficiency.    |
+| **Build Tool**     | **Vite 5 + TypeScript**     | Second-level startup speed and rigorous type safety.                        |
+| **Canvas Engine**  | **@vue-flow/core**          | High-performance node rendering and extremely high customization potential. |
+| **Visual Styling** | **Tailwind CSS**            | Atomic style management, ensuring a refined and unified UI.                 |
+| **i18n**           | **Vue-I18n**                | Comprehensive localized support for English and Chinese.                    |
+| **Parsing Engine** | **Markdown-it**             | High-quality rendering of node content with code highlighting.              |
 
 ---
 
-## 🛠️ Tech Stack
-
-| Dimension                | Technology Choice                                      |
-| :----------------------- | :----------------------------------------------------- |
-| **Frontend Framework**   | Vue 3 (Composition API)                                |
-| **Build Tool**           | Vite 5 + TypeScript                                    |
-| **Graph Engine**         | @vue-flow/core (High performance, highly customizable) |
-| **UI/Styling**           | Tailwind CSS + Lucide Icons                            |
-| **Internationalization** | Vue-I18n (Seamless English/Chinese switching)          |
-| **Markdown**             | Markdown-it (Node content rendering)                   |
-
----
-
-## 📂 Source Structure
+## 📂 Architecture Overview
 
 ```text
 src/
-├── components/             # UI Component Layer
-│   ├── WindowNode.vue      # Logic Carrier: Custom node with Image/Answer/Follow-up capabilities
+├── components/          # Refined UI Component Library
+│   ├── WindowNode.vue   # Core Hub: Custom node integrating AI scheduling and interaction logic
+│   ├── TopNav.vue       # Global Control Center
 │   └── ...
-├── services/               # Base Service Layer
-│   └── config.ts           # Core Config: API endpoints, model names, and global API Key
-├── composables/            # Domain Logic Layer
-│   └── useThinkFlow.ts     # Business Heart: State management, API scheduling, layout algorithm
-├── i18n/                   # Language Assets
-│   └── locales/            # zh.json / en.json translation files
-├── App.vue                 # App Skeleton: VueFlow container config and assembly
-└── main.ts                 # Entry Point
+├── services/            # Data & Configuration Layer
+│   └── config.ts        # Strategy Config: API gateways, model parameters, and default settings
+├── composables/         # Business Logic Brain
+│   └── useThinkFlow.ts  # Core Logic: Graph state management, AI request stream processing, auto-layout algorithm
+├── i18n/                # Internationalization Assets (Locales)
+├── App.vue              # Container Skeleton
+└── main.ts              # Application Entry Point
 ```
 
 ---
 
 ## 🚀 Quick Start
 
+### 1. Prerequisites
+
+Ensure your development environment has [Node.js](https://nodejs.org/) installed (v18+ recommended).
+
+### 2. Clone and Install
+
 ```bash
-# 1. Clone the repo
 git clone https://github.com/your-repo/ThinkFlowAI.git
-
-# 2. Install dependencies
+cd ThinkFlowAI
 npm install
+```
 
-# 3. Start development
+### 3. Start Development Server
+
+```bash
 npm run dev
 ```
 
 ---
 
-## ⚙️ API Service Description (Public Demo)
+## ⚙️ Deployment & Private Configuration
 
-To provide an out-of-the-box experience, this project includes a default set of demo endpoints.
+### 1. Default Demo Endpoint Description
 
-- **Service Proxying**: Default requests are proxied and controlled via **Cloudflare Workers**.
-- **Model Support**: Connected to Zhipu Bigmodel (glm-4-flash / cogview-3-flash) using free tiers.
-- **Limitations**: As these are public demo endpoints, you may encounter rate limits or exhausted quotas.
+The project defaults to proxying requests via **Cloudflare Workers** to Zhipu Bigmodel (glm-4-flash/cogview-3-flash). Public interfaces have rate limits; developers are encouraged to configure private endpoints.
 
----
+### 2. Custom API Configuration
 
-## ⚙️ Deployment & Configuration (Self-Hosting Guide)
-
-If you wish to self-host this project (e.g., for internal use or sharing with friends), we **recommend** following these steps to modify the backend service configuration to avoid rate limits on public demo endpoints.
-
-### 1. Modify Default API Config
-
-Open `src/services/config.ts` and modify the `DEFAULT_CONFIG` constant:
+Modify `DEFAULT_CONFIG` in [src/services/config.ts](file:///d:/lztcode/ThinkFlowAI/src/services/config.ts):
 
 ```typescript
-// src/services/config.ts
 export const DEFAULT_CONFIG = {
     chat: {
-        // Your Chat API endpoint (OpenAI compatible)
-        // If you encounter CORS issues, use it with vite.config.ts proxy (e.g., '/api/chat')
-        baseUrl: 'https://your-private-api.com/v1/chat/completions',
+        baseUrl: 'https://api.your-provider.com/v1/chat/completions',
         model: 'gpt-4o',
-        apiKey: '' // (Optional) Recommend filling in the default Key for private deployment
+        apiKey: 'sk-...' // Recommended to configure via environment variables or UI settings to avoid hardcoding
     },
     image: {
-        baseUrl: 'https://your-private-api.com/v1/images/generations',
+        baseUrl: 'https://api.your-provider.com/v1/images/generations',
         model: 'dall-e-3',
-        apiKey: ''
+        apiKey: 'sk-...'
     }
 }
 ```
 
-### 2. Handling CORS Issues
-
-If your API does not support CORS, you can configure a proxy in `vite.config.ts`:
-
-```typescript
-// vite.config.ts
-export default defineConfig({
-    server: {
-        proxy: {
-            '/api': {
-                target: 'https://your-private-api.com/v1',
-                changeOrigin: true,
-                rewrite: path => path.replace(/^\/api/, '')
-            }
-        }
-    }
-})
-```
-
-After configuring the proxy, update `baseUrl` in `config.ts` to a relative path (e.g., `/api/chat/completions`).
-
 ### 3. Build for Production
 
 ```bash
-# Execute build
 npm run build
 ```
 
 ---
+
+<p align="center">
+  If you find this project helpful, please give it a ⭐️ to show your support!
+</p>
+

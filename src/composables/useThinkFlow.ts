@@ -87,7 +87,8 @@ export function useThinkFlow({ t, locale }: { t: Translate; locale: Ref<string> 
         viewport,
         onNodeDragStart,
         onNodeDrag,
-        onNodeDragStop
+        onNodeDragStop,
+        project
     } = useVueFlow()
 
     /**
@@ -100,6 +101,65 @@ export function useThinkFlow({ t, locale }: { t: Translate; locale: Ref<string> 
     const showSummaryModal = ref(false)
     const isSummarizing = ref(false)
     const summaryContent = ref('')
+
+    /**
+     * AI 思考风格
+     * - creative: 发散模式 (默认)
+     * - precise: 严谨模式
+     */
+    const aiStyle = ref(localStorage.getItem('ai_style') || 'creative')
+
+    watch(aiStyle, val => {
+        localStorage.setItem('ai_style', val)
+    })
+
+    /**
+     * 演示模式状态
+     */
+    const isPresenting = ref(false)
+    const presentationIndex = ref(-1)
+
+    /**
+     * 搜索状态
+     */
+    const searchQuery = ref('')
+    const searchResults = computed(() => {
+        if (!searchQuery.value.trim()) return []
+        const q = searchQuery.value.toLowerCase()
+        return flowNodes.value.filter(n => n.data.label?.toLowerCase().includes(q) || n.data.description?.toLowerCase().includes(q))
+    })
+
+    const focusNode = (nodeId: string) => {
+        const node = flowNodes.value.find(n => n.id === nodeId)
+        if (node) {
+            setNodes(flowNodes.value.map(n => ({ ...n, selected: n.id === nodeId })))
+            fitView({ nodes: [nodeId], padding: 2, duration: 800 })
+        }
+    }
+
+    const nextPresentationNode = () => {
+        if (flowNodes.value.length === 0) return
+        presentationIndex.value = (presentationIndex.value + 1) % flowNodes.value.length
+        focusNode(flowNodes.value[presentationIndex.value].id)
+    }
+
+    const prevPresentationNode = () => {
+        if (flowNodes.value.length === 0) return
+        presentationIndex.value = (presentationIndex.value - 1 + flowNodes.value.length) % flowNodes.value.length
+        focusNode(flowNodes.value[presentationIndex.value].id)
+    }
+
+    const togglePresentation = () => {
+        isPresenting.value = !isPresenting.value
+        if (isPresenting.value) {
+            presentationIndex.value = 0
+            if (flowNodes.value.length > 0) {
+                focusNode(flowNodes.value[0].id)
+            }
+        } else {
+            presentationIndex.value = -1
+        }
+    }
 
     const draggingNodeId = ref<string | null>(null)
     const dragLastPositionByNodeId = new Map<string, { x: number; y: number }>()
@@ -680,7 +740,8 @@ export function useThinkFlow({ t, locale }: { t: Translate; locale: Ref<string> 
      * 导出：将当前树形结构导出为 Markdown
      * - 以 root 为标题
      * - 子节点按缩进列表输出
-     * - deepDive 生成的详细内容以引用块输出
+     * - 回答内容（deepDive）以引用块输出
+     * - 节点描述（description）紧随标题输出
      */
     const exportMarkdown = () => {
         if (flowNodes.value.length === 0) return
@@ -690,6 +751,14 @@ export function useThinkFlow({ t, locale }: { t: Translate; locale: Ref<string> 
 
         let markdown = `# ${rootNode.data.label}\n\n`
 
+        if (rootNode.data.description) {
+            markdown += `> ${rootNode.data.description}\n\n`
+        }
+
+        if (rootNode.data.detailedContent) {
+            markdown += `## ${t('node.deepDive')}\n\n${rootNode.data.detailedContent}\n\n---\n\n`
+        }
+
         const buildMarkdown = (parentId: string, level: number) => {
             const children = flowEdges.value
                 .filter(e => e.source === parentId)
@@ -698,11 +767,21 @@ export function useThinkFlow({ t, locale }: { t: Translate; locale: Ref<string> 
 
             children.forEach(child => {
                 const indent = '  '.repeat(level - 1)
-                markdown += `${indent}- ${child!.data.label}\n`
+                const detailIndent = '  '.repeat(level)
+
+                // 写入节点标题与描述
+                markdown += `${indent}- **${child!.data.label}**`
+                if (child!.data.description) {
+                    markdown += `: ${child!.data.description}`
+                }
+                markdown += '\n'
+
+                // 如果有深挖回答，以引用块形式展示
                 if (child!.data.detailedContent) {
-                    const detailIndent = '  '.repeat(level)
+                    markdown += `${detailIndent}> **[${t('node.deepDive')}]**\n`
                     markdown += `${detailIndent}> ${child!.data.detailedContent.replace(/\n/g, `\n${detailIndent}> `)}\n`
                 }
+
                 buildMarkdown(child!.id, level + 1)
             })
         }
@@ -855,7 +934,10 @@ export function useThinkFlow({ t, locale }: { t: Translate; locale: Ref<string> 
                 },
                 body: JSON.stringify({
                     model: useConfig.model,
-                    messages: [{ role: 'user', content: t('prompts.deepDivePrompt', { rootTopic, context, topic, detail }) }]
+                    messages: [
+                        { role: 'system', content: aiStyle.value === 'creative' ? t('prompts.styleCreative') : t('prompts.stylePrecise') },
+                        { role: 'user', content: t('prompts.deepDivePrompt', { rootTopic, context, topic, detail }) }
+                    ]
                 })
             })
 
@@ -961,7 +1043,10 @@ export function useThinkFlow({ t, locale }: { t: Translate; locale: Ref<string> 
             addNodes({
                 id: rootId,
                 type: 'window',
-                position: { x: 50, y: 300 },
+                position: project({
+                    x: window.innerWidth / 2 - 140,
+                    y: window.innerHeight / 2 - 90
+                }),
                 data: {
                     label: text,
                     description: t('node.coreIdea'),
@@ -995,7 +1080,7 @@ export function useThinkFlow({ t, locale }: { t: Translate; locale: Ref<string> 
             }
         }
 
-        const systemPrompt = t('prompts.system')
+        const systemPrompt = t('prompts.system') + '\n' + (aiStyle.value === 'creative' ? t('prompts.styleCreative') : t('prompts.stylePrecise'))
 
         let userMessage = ''
         if (parentNode) {
@@ -1138,6 +1223,14 @@ export function useThinkFlow({ t, locale }: { t: Translate; locale: Ref<string> 
         exportMarkdown,
         generateNodeImage,
         deepDive,
-        expandIdea
+        expandIdea,
+        aiStyle,
+        isPresenting,
+        togglePresentation,
+        nextPresentationNode,
+        prevPresentationNode,
+        searchQuery,
+        searchResults,
+        focusNode
     }
 }

@@ -13,18 +13,7 @@ import { ref } from 'vue'
 import { Handle, Position } from '@vue-flow/core'
 
 // 图标：节点 UI
-import {
-    ArrowRight,
-    BookOpen,
-    ChevronDown,
-    ChevronRight,
-    Image as ImageIcon,
-    Maximize2,
-    RefreshCw,
-    Shield,
-    Terminal,
-    X
-} from 'lucide-vue-next'
+import { ArrowRight, BookOpen, ChevronDown, ChevronRight, Image as ImageIcon, Maximize2, RefreshCw, Shield, Sparkles, Terminal, X } from 'lucide-vue-next'
 
 // Markdown 渲染
 import MarkdownIt from 'markdown-it'
@@ -105,7 +94,7 @@ const handleBlur = () => {
         }"
         :style="{
             borderColor: isFocused || props.activePath.nodeIds.has(props.id) ? props.config.edgeColor : props.config.edgeColor + '40',
-            boxShadow: isFocused ? `0 25px 50px -12px ${props.config.edgeColor}60` : (props.activeNodeId === props.id ? `0 20px 50px -12px ${props.config.edgeColor}40` : ''),
+            boxShadow: isFocused ? `0 25px 50px -12px ${props.config.edgeColor}60` : props.activeNodeId === props.id ? `0 20px 50px -12px ${props.config.edgeColor}40` : '',
             '--tw-ring-color': isFocused || props.selected ? props.config.edgeColor + '40' : 'transparent'
         }"
     >
@@ -114,7 +103,10 @@ const handleBlur = () => {
 
         <div class="window-header" :style="{ backgroundColor: props.activePath.nodeIds.has(props.id) ? props.config.edgeColor + '15' : props.config.edgeColor + '05' }">
             <div class="flex gap-1.5">
-                <div class="w-2 h-2 rounded-full" :style="{ backgroundColor: props.activePath.nodeIds.has(props.id) ? props.config.edgeColor : props.config.edgeColor + '40' }"></div>
+                <div
+                    class="w-2 h-2 rounded-full"
+                    :style="{ backgroundColor: props.activePath.nodeIds.has(props.id) ? props.config.edgeColor : props.config.edgeColor + '40' }"
+                ></div>
                 <div class="w-2 h-2 rounded-full bg-slate-200"></div>
                 <div class="w-2 h-2 rounded-full bg-slate-200"></div>
             </div>
@@ -128,17 +120,20 @@ const handleBlur = () => {
                 :class="props.isSubtreeCollapsed(props.id) ? 'text-orange-600 bg-orange-50' : 'text-slate-400 hover:bg-slate-100 hover:text-slate-600'"
                 @click.stop="props.toggleSubtreeCollapse(props.id)"
             >
-                <component :is="props.isSubtreeCollapsed(props.id) ? ChevronRight : ChevronDown" class="w-3 h-3" />
+                <component :is="props.isSubtreeCollapsed(props.id) ? ChevronRight : ChevronDown" class="w-3 h-3" :stroke-width="1.5" />
                 <span v-if="props.isSubtreeCollapsed(props.id) && props.data.hiddenDescendantCount" class="text-[9px] font-black">{{ props.data.hiddenDescendantCount }}</span>
             </button>
         </div>
 
-        <div v-if="props.data.isExpanding" class="absolute inset-0 z-20 flex flex-col items-center justify-center bg-white/60 backdrop-blur-[2px] rounded-2xl transition-all duration-300">
+        <div
+            v-if="props.data.isExpanding"
+            class="absolute inset-0 z-20 flex flex-col items-center justify-center bg-white/60 backdrop-blur-[4px] rounded-2xl transition-all duration-300"
+        >
             <div class="relative">
-                <RefreshCw class="w-8 h-8 text-slate-900 animate-spin mb-3" :style="{ color: props.config.edgeColor }" />
-                <div class="absolute inset-0 blur-xl opacity-20 animate-pulse" :style="{ backgroundColor: props.config.edgeColor }"></div>
+                <div class="absolute inset-0 blur-2xl opacity-30 animate-pulse scale-150" :style="{ backgroundColor: props.config.edgeColor }"></div>
+                <Sparkles class="w-10 h-10 text-slate-900 animate-ai-glow mb-3 relative z-10" :style="{ color: props.config.edgeColor }" :stroke-width="1.5" />
             </div>
-            <span class="text-[10px] font-black tracking-widest uppercase text-slate-500">{{ props.t('common.expanding') }}</span>
+            <span class="text-[10px] font-black tracking-widest uppercase text-slate-600 animate-pulse">{{ props.t('common.expanding') }}</span>
         </div>
 
         <div class="window-content">
@@ -148,20 +143,23 @@ const handleBlur = () => {
                 @click.stop="props.data.imageUrl ? emit('preview', props.data.imageUrl) : null"
             >
                 <img v-if="props.data.imageUrl" :src="props.data.imageUrl" class="w-full h-full object-cover" />
-                <div v-if="props.data.isImageLoading" class="absolute inset-0 flex flex-col items-center justify-center bg-white/80 backdrop-blur-sm cursor-default">
-                    <RefreshCw class="w-6 h-6 text-orange-500 animate-spin mb-2" />
-                    <span class="text-[8px] font-bold text-slate-400 uppercase">{{ props.t('common.generating') }}</span>
+                <div v-if="props.data.isImageLoading" class="absolute inset-0 flex flex-col items-center justify-center bg-white/80 backdrop-blur-md cursor-default">
+                    <Sparkles class="w-6 h-6 text-orange-500 animate-ai-glow mb-2" :stroke-width="1.5" />
+                    <span class="text-[8px] font-bold text-slate-400 uppercase tracking-widest animate-pulse">{{ props.t('common.generating') }}</span>
                 </div>
-                <div v-if="props.data.imageUrl" class="absolute inset-0 bg-black/40 opacity-0 group-hover/img:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                <div
+                    v-if="props.data.imageUrl"
+                    class="absolute inset-0 bg-black/40 opacity-0 group-hover/img:opacity-100 transition-opacity flex items-center justify-center gap-2"
+                >
                     <button class="p-2 bg-white/20 hover:bg-white/40 rounded-full backdrop-blur-md transition-all" :title="props.t('node.view')">
-                        <Maximize2 class="w-4 h-4 text-white" />
+                        <Maximize2 class="w-4 h-4 text-white" :stroke-width="1.5" />
                     </button>
                     <button
                         @click.stop="props.generateNodeImage(props.id, props.data.label)"
                         class="p-2 bg-white/20 hover:bg-white/40 rounded-full backdrop-blur-md transition-all"
                         :title="props.t('node.regenerate')"
                     >
-                        <RefreshCw class="w-4 h-4 text-white" />
+                        <RefreshCw class="w-4 h-4 text-white" :stroke-width="1.5" />
                     </button>
                 </div>
             </div>
@@ -183,17 +181,21 @@ const handleBlur = () => {
 
             <div v-if="props.data.error" class="mt-3 p-2.5 bg-red-50 border border-red-100 rounded-lg animate-in fade-in slide-in-from-top-1 duration-300">
                 <div class="flex items-start gap-2">
-                    <Shield class="w-3.5 h-3.5 text-red-500 shrink-0 mt-0.5" />
+                    <Shield class="w-3.5 h-3.5 text-red-500 shrink-0 mt-0.5" :stroke-width="1.5" />
                     <div class="flex-grow space-y-1">
                         <p class="text-[10px] font-black text-red-600 leading-tight">{{ props.t('common.error.title') }}</p>
                         <p class="text-[9px] text-red-500 leading-relaxed">{{ props.data.error }}</p>
                     </div>
                     <button
-                        @click.stop="props.data.imageUrl === null && props.data.isImageLoading === false ? props.generateNodeImage(props.id, props.data.label) : props.expandIdea({ id: props.id, data: props.data, position: getNodePosition(props.id) })"
+                        @click.stop="
+                            props.data.imageUrl === null && props.data.isImageLoading === false
+                                ? props.generateNodeImage(props.id, props.data.label)
+                                : props.expandIdea({ id: props.id, data: props.data, position: getNodePosition(props.id) })
+                        "
                         class="p-1 hover:bg-red-100 rounded transition-colors"
                         :title="props.t('common.error.retry')"
                     >
-                        <RefreshCw class="w-3 h-3 text-red-600" />
+                        <RefreshCw class="w-3 h-3 text-red-600" :stroke-width="1.5" />
                     </button>
                 </div>
             </div>
@@ -208,12 +210,8 @@ const handleBlur = () => {
                     </div>
 
                     <div class="flex items-center gap-2">
-                        <button
-                            @click.stop="props.deepDive(props.id, props.data.label)"
-                            class="action-btn text-orange-500 hover:bg-orange-50"
-                            :title="props.t('node.deepDive')"
-                        >
-                            <BookOpen class="w-2.5 h-2.5" />
+                        <button @click.stop="props.deepDive(props.id, props.data.label)" class="action-btn text-orange-500 hover:bg-orange-50" :title="props.t('node.deepDive')">
+                            <BookOpen class="w-2.5 h-2.5" :stroke-width="1.5" />
                             <span>{{ props.t('node.deepDive') }}</span>
                         </button>
                         <button
@@ -221,7 +219,7 @@ const handleBlur = () => {
                             @click.stop="props.generateNodeImage(props.id, props.data.label)"
                             class="action-btn text-blue-500 hover:bg-blue-50"
                         >
-                            <ImageIcon class="w-2.5 h-2.5" />
+                            <ImageIcon class="w-2.5 h-2.5" :stroke-width="1.5" />
                             <span>{{ props.t('node.imgAction') }}</span>
                         </button>
                     </div>
@@ -231,15 +229,15 @@ const handleBlur = () => {
                     <div class="flex items-center justify-between mb-2">
                         <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest">{{ props.t('node.deepDive') }}</span>
                         <button @click.stop="props.updateNode(props.id, { data: { ...props.data, isDetailExpanded: false } })" class="text-slate-300 hover:text-slate-500">
-                            <X class="w-3 h-3" />
+                            <X class="w-3 h-3" :stroke-width="1.5" />
                         </button>
                     </div>
                     <div v-if="props.data.isDeepDiving" class="flex flex-col items-center py-6">
                         <div class="relative mb-3">
-                            <RefreshCw class="w-6 h-6 text-orange-400 animate-spin" />
+                            <Sparkles class="w-6 h-6 text-orange-400 animate-ai-glow" :stroke-width="1.5" />
                             <div class="absolute inset-0 blur-lg bg-orange-200 opacity-50 animate-pulse"></div>
                         </div>
-                        <span class="text-[9px] font-black text-slate-300 uppercase tracking-widest animate-pulse">{{ props.t('common.loading') }}</span>
+                        <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest animate-pulse">{{ props.t('common.loading') }}</span>
                     </div>
                     <div
                         v-else
@@ -253,8 +251,8 @@ const handleBlur = () => {
                         class="flex items-center gap-2 bg-slate-50 rounded-lg px-2.5 py-2 border border-slate-100 focus-within:bg-white transition-all"
                         :style="{ borderColor: props.data.followUp || isFocused ? props.config.edgeColor : '' }"
                     >
-                        <ChevronRight v-if="!props.data.followUp" class="w-3 h-3 text-slate-400" />
-                        <Terminal v-else class="w-3 h-3" :style="{ color: props.config.edgeColor }" />
+                        <ChevronRight v-if="!props.data.followUp" class="w-3 h-3 text-slate-400" :stroke-width="1.5" />
+                        <Terminal v-else class="w-3 h-3" :style="{ color: props.config.edgeColor }" :stroke-width="1.5" />
                         <input
                             v-model="props.data.followUp"
                             @focus="handleFocus"
@@ -270,8 +268,8 @@ const handleBlur = () => {
                             class="transition-all transform active:scale-90"
                             :style="{ color: props.data.followUp?.trim() ? props.config.edgeColor : '#94a3b8' }"
                         >
-                            <RefreshCw v-if="props.data.isExpanding" class="w-3.5 h-3.5 animate-spin" />
-                            <ArrowRight v-else class="w-3.5 h-3.5" />
+                            <Sparkles v-if="props.data.isExpanding" class="w-3.5 h-3.5 animate-ai-glow" :stroke-width="1.5" />
+                            <ArrowRight v-else class="w-3.5 h-3.5" :stroke-width="1.5" />
                         </button>
                     </div>
                 </div>
@@ -279,3 +277,60 @@ const handleBlur = () => {
         </div>
     </div>
 </template>
+
+<style scoped>
+@keyframes ai-glow {
+    0%,
+    100% {
+        transform: scale(1) rotate(0deg);
+        filter: drop-shadow(0 0 5px currentColor);
+        opacity: 0.8;
+    }
+    50% {
+        transform: scale(1.1) rotate(10deg);
+        filter: drop-shadow(0 0 15px currentColor);
+        opacity: 1;
+    }
+}
+
+.animate-ai-glow {
+    animation: ai-glow 2.5s ease-in-out infinite;
+}
+
+.window-node {
+    @apply relative w-[280px] bg-white border-2 rounded-2xl overflow-hidden shadow-xl;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.window-header {
+    @apply flex items-center justify-between px-3 py-2 border-b border-slate-50;
+}
+
+.window-title {
+    @apply text-[9px] font-black tracking-widest uppercase text-slate-400 select-none;
+}
+
+.window-content {
+    @apply p-4;
+}
+
+.action-btn {
+    @apply flex items-center gap-1 px-1.5 py-1 rounded-md text-[9px] font-black tracking-widest uppercase transition-all duration-300;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+    width: 3px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    @apply bg-slate-200 rounded-full;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    @apply bg-slate-300;
+}
+</style>

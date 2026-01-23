@@ -33,7 +33,6 @@ body {
 /* Markdown 渲染基础样式 */
 .markdown-body {
   @apply text-slate-700;
-  padding: 0 1rem;
 }
 
 .markdown-body h1 {
@@ -52,7 +51,8 @@ body {
   @apply mb-2 last:mb-0;
 }
 
-.markdown-body ul, .markdown-body ol {
+.markdown-body ul,
+.markdown-body ol {
   @apply pl-4 mb-2 list-outside;
 }
 
@@ -88,7 +88,8 @@ body {
   @apply w-full border-collapse mb-3;
 }
 
-.markdown-body th, .markdown-body td {
+.markdown-body th,
+.markdown-body td {
   @apply border border-slate-200 p-2 text-left;
 }
 

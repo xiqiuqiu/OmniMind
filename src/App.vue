@@ -13,7 +13,7 @@ import { VueFlow } from '@vue-flow/core'
 import { Background, BackgroundVariant } from '@vue-flow/background'
 import { Controls, ControlButton } from '@vue-flow/controls'
 import { MiniMap } from '@vue-flow/minimap'
-import { Maximize, Minimize } from 'lucide-vue-next'
+import { Maximize, Minimize, X } from 'lucide-vue-next'
 
 // VueFlow 内置样式（必须引入，否则组件样式缺失）
 import '@vue-flow/core/dist/style.css'
@@ -58,14 +58,6 @@ const handleFullscreenChange = () => {
     isFullscreen.value = !!document.fullscreenElement
 }
 
-onMounted(() => {
-    document.addEventListener('fullscreenchange', handleFullscreenChange)
-})
-
-onUnmounted(() => {
-    document.removeEventListener('fullscreenchange', handleFullscreenChange)
-})
-
 /**
  * 从业务层拿到全局状态与动作。
  * 说明：
@@ -103,8 +95,40 @@ const {
     exportMarkdown,
     generateNodeImage,
     deepDive,
-    expandIdea
+    expandIdea,
+    aiStyle,
+    isPresenting,
+    togglePresentation,
+    nextPresentationNode,
+    prevPresentationNode,
+    searchQuery,
+    searchResults,
+    focusNode
 } = useThinkFlow({ t, locale })
+
+/**
+ * 演示模式键盘监听
+ */
+const handlePresentationKeydown = (e: KeyboardEvent) => {
+    if (!isPresenting.value) return
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+        nextPresentationNode()
+    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+        prevPresentationNode()
+    } else if (e.key === 'Escape') {
+        togglePresentation()
+    }
+}
+
+onMounted(() => {
+    document.addEventListener('fullscreenchange', handleFullscreenChange)
+    window.addEventListener('keydown', handlePresentationKeydown)
+})
+
+onUnmounted(() => {
+    document.removeEventListener('fullscreenchange', handleFullscreenChange)
+    window.removeEventListener('keydown', handlePresentationKeydown)
+})
 
 const verticalGuideStyle = computed(() => {
     const x = alignmentGuides.value.x
@@ -138,6 +162,7 @@ const fitToView = () => {
 <template>
     <div class="h-screen w-screen bg-white font-mono text-slate-800 relative overflow-hidden flex flex-col selection:bg-orange-100">
         <TopNav
+            v-if="!isPresenting"
             :t="t"
             :locale="locale"
             :config="config"
@@ -148,17 +173,41 @@ const fitToView = () => {
             :onGenerateSummary="generateSummary"
             :onExportMarkdown="exportMarkdown"
             :onOpenSettings="() => (showSettings = true)"
+            :aiStyle="aiStyle"
+            :onToggleAiStyle="() => (aiStyle = aiStyle === 'creative' ? 'precise' : 'creative')"
+            :isPresenting="isPresenting"
+            :onTogglePresentation="togglePresentation"
+            :searchQuery="searchQuery"
+            :onUpdateSearchQuery="val => (searchQuery = val)"
+            :searchResults="searchResults"
+            :onFocusNode="focusNode"
             @toggle-locale="toggleLocale"
         />
 
-        <SideNav :t="t" :locale="locale" :config="config" />
+        <SideNav v-if="!isPresenting" :t="t" :locale="locale" :config="config" />
 
         <div class="flex-grow relative">
+            <!-- 演示模式退出提示 -->
+            <div
+                v-if="isPresenting"
+                class="absolute top-6 left-1/2 -translate-x-1/2 z-[100] bg-black/80 backdrop-blur-md text-white px-6 py-3 rounded-full flex items-center gap-4 shadow-2xl animate-bounce-in"
+            >
+                <span class="text-xs font-bold tracking-widest uppercase">{{ t('nav.presentationMode') }}</span>
+                <div class="h-4 w-px bg-white/20"></div>
+                <div class="flex items-center gap-2">
+                    <kbd class="px-2 py-1 bg-white/10 rounded text-[10px]">←/→</kbd>
+                    <span class="text-[10px] opacity-60">{{ t('nav.presentationNav') }}</span>
+                </div>
+                <button @click="togglePresentation" class="ml-2 p-1 hover:bg-white/20 rounded-full transition-colors">
+                    <X class="w-4 h-4" />
+                </button>
+            </div>
+
             <VueFlow
                 :default-edge-options="{ type: config.edgeType }"
                 :fit-view-on-init="false"
                 class="bg-white"
-                :class="{ 'space-pressed': isSpacePressed }"
+                :class="{ 'space-pressed': isSpacePressed, 'presentation-mode': isPresenting }"
                 :pan-on-drag="panOnDrag"
                 :selection-key-code="'Shift'"
                 :snap-to-grid="config.snapToGrid"
@@ -167,9 +216,9 @@ const fitToView = () => {
             >
                 <Background
                     :variant="config.backgroundVariant"
-                    :pattern-color="config.backgroundVariant === BackgroundVariant.Dots ? '#cbd5e1' : '#f1f5f9'"
-                    :gap="24"
-                    :size="config.backgroundVariant === BackgroundVariant.Dots ? 1 : 0.5"
+                    :pattern-color="config.backgroundVariant === BackgroundVariant.Dots ? '#94a3b8' : '#f1f5f9'"
+                    :gap="config.backgroundVariant === BackgroundVariant.Dots ? 16 : 24"
+                    :size="config.backgroundVariant === BackgroundVariant.Dots ? 1.2 : 0.5"
                 />
                 <Controls v-if="false" :show-fullscreen="false" :show-fit-view="false">
                     <ControlButton @click="toggleFullscreen" :title="isFullscreen ? t('nav.exitFullscreen') : t('nav.fullscreen')">
@@ -211,7 +260,15 @@ const fitToView = () => {
             <SummaryModal :show="showSummaryModal" :t="t" :isSummarizing="isSummarizing" :summaryContent="summaryContent" @close="showSummaryModal = false" />
         </div>
 
-        <BottomBar :t="t" :isLoading="isLoading" v-model="ideaInput" @expand="expandIdea" />
+        <BottomBar
+            v-if="!isPresenting"
+            :t="t"
+            :isLoading="isLoading"
+            v-model="ideaInput"
+            :aiStyle="aiStyle"
+            :onToggleAiStyle="() => (aiStyle = aiStyle === 'creative' ? 'precise' : 'creative')"
+            @expand="expandIdea"
+        />
     </div>
 </template>
 

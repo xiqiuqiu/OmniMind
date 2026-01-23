@@ -1,162 +1,156 @@
-# ThinkFlow AI
+# 🧠 ThinkFlow AI
 
-中文 | [English](./README.en.md)
+<p align="center">
+  <strong>ThinkFlow AI 是一个轻量级“从想法到结构化图谱”的工作台</strong>
+</p>
 
-**ThinkFlow AI** 是一款基于 Vue 3 和 VueFlow 构建的次世代、本地优先（Local-first）AI 驱动思维导图工具。它不仅仅是一个绘图软件，更是一个能够与你共同思考的“脑力增幅器”。通过将 LLM（大语言模型）的发散性能力与结构化可视化相结合，ThinkFlow AI 能将模糊的想法迅速转化为清晰、深度的知识体系。
+<p align="center">
+  <a href="https://github.com/vuejs/core"><img src="https://img.shields.io/badge/vue-3.x-brightgreen.svg" alt="vue"></a>
+  <a href="https://github.com/vitejs/vite"><img src="https://img.shields.io/badge/vite-5.x-646cff.svg" alt="vite"></a>
+  <a href="https://github.com/microsoft/TypeScript"><img src="https://img.shields.io/badge/typescript-5.x-blue.svg" alt="typescript"></a>
+  <a href="https://github.com/tailwindlabs/tailwindcss"><img src="https://img.shields.io/badge/tailwind-3.x-38bdf8.svg" alt="tailwind"></a>
+  <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/license-MIT-orange.svg" alt="license"></a>
+</p>
 
-本项目通过 Vibe Coding 完成（需求驱动 + AI 协作迭代）。
-
----
-
-## 🔗 在线预览
-
-立即体验：[https://thinkflow-ai.lz-t.top/](https://thinkflow-ai.lz-t.top/)
-
----
-
-## 🌟 为什么选择 ThinkFlow AI？
-
-传统的思维导图工具往往需要手动录入每一个分支，这在灵感爆发时往往会成为阻碍。ThinkFlow AI 重新定义了这一过程：
-
-1.  **AI 驱动的自动化发散**：输入一个核心词，AI 会基于逻辑链路自动向外扩展，帮助你打破“白纸焦虑”。
-2.  **上下文感知的深度对话**：每一个节点都带有其在思维树中的完整路径上下文，这意味着 AI 能够理解你为什么从 A 想到 B，从而生成更精准的后续建议。
-3.  **多维度的感官呈现**：通过深度“回答（Answer）”获取文本知识，通过 AI 生图获取视觉意象，通过“全篇总结”获取宏观洞察。
-4.  **极致的隐私与自由**：采用本地优先架构，配置存储在浏览器本地，支持任何 OpenAI 兼容接口，不锁定任何平台。
+<p align="center">
+  <a href="./README.en.md">English</a> | 中文
+</p>
 
 ---
 
-## 🚀 核心功能架构
+## 💡 愿景与理念
 
-### 1. 智能扩展系统
+**ThinkFlow AI** 致力于打造一个从“想法”到“结构化图谱”的高效工作台。
 
-- **核心想法激活**：一键生成思维树根基。
-- **路径上下文追问**：对节点进行 Follow-up，AI 将结合从根节点到当前节点的完整逻辑路径进行推理。
-- **节点折叠与管理**：支持大规模图谱的子树折叠，保持视野清爽。
+在传统创作中，灵感往往是碎片化且模糊的。ThinkFlow AI 重新定义了这一过程：你只需输入一个核心想法，应用便会利用 AI 的发散性能力将其扩展为一套层次分明、可交互浏览的**知识图谱**。
 
-### 2. 内容深挖与总结
+- **模块化扩展**：从核心概念出发，自动推演并生成子模块，构建逻辑严密的思维网络。
+- **无限深度探索**：每一个节点都不是终点。你可以针对任何分支继续**追问扩展**，或者通过“**深度回答**”功能深挖背后的专业详情。
+- **多维感知融合**：支持为节点一键生成**视觉配图**，让抽象的逻辑与具象的视觉意象交织，实现全感官的知识内化。
 
-- **深度回答 (Deep Dive)**：针对特定概念生成 300-500 字的专业解析，支持 Markdown 丰富格式。
-- **视觉生成 (Image Gen)**：利用 CogView 或 DALL-E 为节点生成写实风格配图，强化视觉记忆。
-- **全局摘要 (Summary)**：自动分析全图逻辑，提取核心洞察与结论。
-
-### 3. 画布交互与排版
-
-- **智能树形布局**：内置基于子树高度动态计算的算法，解决节点展开后的重叠问题。
-- **联动拖拽**：父节点移动时，子节点保持相对位置同步移动。
-- **多样化导出**：完美支持导出为结构化 Markdown，保留所有深度回答内容。
+这不仅是一个工具，更是一个能与你共同成长的本地优先思考空间。
 
 ---
 
-## 🛠️ 技术栈
+## ✨ 核心特性
 
-| 维度         | 技术选型                            |
-| :----------- | :---------------------------------- |
-| **前端框架** | Vue 3 (Composition API)             |
-| **构建工具** | Vite 5 + TypeScript                 |
-| **画布引擎** | @vue-flow/core (高性能、高度定制化) |
-| **UI/样式**  | Tailwind CSS + Lucide Icons         |
-| **国际化**   | Vue-I18n (中英双语无缝切换)         |
-| **Markdown** | Markdown-it (支持节点内容渲染)      |
+### 🚀 智能发散系统 (AI-Driven Divergence)
+
+- **零压力冷启动**：输入核心概念，AI 自动构建初始逻辑骨架，终结“白纸焦虑”。
+- **全链路上下文感知**：AI 能够理解从根节点到当前节点的完整逻辑路径。这意味着每一次“追问”都基于深度语境，而非孤立的关键词。
+- **多级思考风格**：支持“发散模式”与“严谨模式”切换。发散模式侧重灵感启发，严谨模式侧重逻辑深度。
+- **动态树形排版**：内置自适应布局算法，自动处理节点展开后的碰撞与重叠，确保图谱始终清晰有序。
+
+### 🔍 深度内容挖掘 (Deep Dive & Insights)
+
+- **专业级深度解析**：一键生成 300-500 字的深度回答，支持 Markdown 渲染，涵盖概念解释、案例分析与逻辑推演。
+- **视觉化意象生成**：集成 CogView/DALL-E 接口，为抽象概念生成具象化配图，强化感官记忆与多维认知。
+- **全局宏观洞察**：自动扫描全图拓扑结构，提取核心要点并生成全局总结。
+
+### 🛠️ 极致的交互体验 (Premium Interaction)
+
+- **沉浸式演示模式**：一键进入全屏演示，支持通过键盘（←/→）在节点间顺序跳转。
+- **全局搜索定位**：内置实时搜索引擎，支持关键词匹配并自动聚焦到目标节点。
+- **联动拖拽系统**：父子节点关联移动，保持逻辑簇的相对稳定性。
+- **子树状态管理**：支持大规模图谱的子树折叠，让你在宏观视野与微观细节间自由切换。
+- **本地优先架构**：所有配置与数据存储在浏览器 IndexedDB/LocalStorage，支持自定义任何 OpenAI 兼容接口，无平台锁定。
 
 ---
 
-## 📂 源码结构
+## 🔗 在线体验
+
+立即开启你的思考之旅：[thinkflow-ai.lz-t.top](https://thinkflow-ai.lz-t.top)
+
+---
+
+## 🛠️ 技术栈揭秘
+
+| 领域         | 技术选型                    | 核心优势                               |
+| :----------- | :-------------------------- | :------------------------------------- |
+| **核心框架** | **Vue 3 (Composition API)** | 极致的响应式体验与组件化开发效率。     |
+| **构建工具** | **Vite 5 + TypeScript**     | 秒级启动速度与严谨的类型安全保障。     |
+| **画布引擎** | **@vue-flow/core**          | 高性能的节点渲染与极高的定制化上限。   |
+| **视觉样式** | **Tailwind CSS**            | 原子化样式管理，确保 UI 的精致与统一。 |
+| **多语言**   | **Vue-I18n**                | 完善的中英双语本地化支持。             |
+| **解析引擎** | **Markdown-it**             | 节点内容的高质量渲染与代码高亮。       |
+
+---
+
+## 📂 架构概览
 
 ```text
 src/
-├── components/             # UI 组件层
-│   ├── WindowNode.vue      # 核心逻辑载体：自定义节点，集成生图/回答/追问能力
+├── components/          # 精细化 UI 组件库
+│   ├── WindowNode.vue   # 核心枢纽：集成 AI 调度与交互逻辑的自定义节点
+│   ├── TopNav.vue       # 全局控制中心
 │   └── ...
-├── services/               # 基础服务层
-│   └── config.ts           # 核心配置：API 默认地址、模型名称与全局 API Key
-├── composables/            # 领域逻辑层
-│   └── useThinkFlow.ts     # 业务心脏：响应式状态管理、API 调度、排版算法实现
-├── i18n/                   # 语言资产
-│   └── locales/            # zh.json / en.json 翻译文件
-├── App.vue                 # 应用骨架：VueFlow 容器配置与组件组装
-└── main.ts                 # 入口文件
+├── services/            # 数据与配置层
+│   └── config.ts        # 策略配置：API 网关、模型参数与默认设置
+├── composables/         # 业务逻辑大脑
+│   └── useThinkFlow.ts  # 核心逻辑：图谱状态管理、AI 请求流处理、自动排版算法
+├── i18n/                # 国际化资产 (Locales)
+├── App.vue              # 容器骨架
+└── main.ts              # 应用入口
 ```
 
 ---
 
 ## 🚀 快速开始
 
+### 1. 环境准备
+
+确保你的开发环境已安装 [Node.js](https://nodejs.org/) (建议 v18+)。
+
+### 2. 克隆并安装
+
 ```bash
-# 1. 克隆仓库
 git clone https://github.com/your-repo/ThinkFlowAI.git
-
-# 2. 安装依赖
+cd ThinkFlowAI
 npm install
+```
 
-# 3. 启动开发环境
+### 3. 启动开发服务器
+
+```bash
 npm run dev
 ```
 
 ---
 
-## ⚙️ API 服务说明 (公共演示)
+## ⚙️ 部署与私有化配置
 
-为了让用户能够开箱即用，本项目提供了一套默认的演示接口。
+### 1. 默认演示接口说明
 
-- **服务转发**：默认请求通过 **Cloudflare Workers** 进行转发与控制。
-- **模型支持**：后端对接了智谱 Bigmodel (glm-4-flash / cogview-3-flash) 的免费额度。
-- **限制**：由于是公共演示接口，可能会存在请求频率限制或额度耗尽的情况。
+项目默认通过 **Cloudflare Workers** 转发至智谱 Bigmodel (glm-4-flash/cogview-3-flash)。公共接口存在频率限制，建议开发者配置私有接口。
 
----
+### 2. 自定义 API 配置
 
-## ⚙️ 部署与配置 (私有化部署必读)
-
-如果您希望私有化部署本项目（例如部署给公司内部或朋友使用），**建议**您按照以下步骤修改后端服务配置，以免使用公共演示接口导致额度受限。
-
-### 1. 修改默认 API 配置
-
-打开 `src/services/config.ts` 文件，修改 `DEFAULT_CONFIG` 常量：
+在 [src/services/config.ts](file:///d:/lztcode/ThinkFlowAI/src/services/config.ts) 中修改 `DEFAULT_CONFIG`：
 
 ```typescript
-// src/services/config.ts
 export const DEFAULT_CONFIG = {
     chat: {
-        // 您的 Chat 接口地址 (OpenAI 兼容格式)
-        // 如果遇到跨域问题，可以配合 vite.config.ts 的 proxy 使用，例如填写 '/api/chat'
-        baseUrl: 'https://your-private-api.com/v1/chat/completions',
-        model: 'gpt-4o',
-        apiKey: '' // (可选) 私有部署建议在此处填写默认 Key
+        baseUrl: 'https://api.your-provider.com/v1/chat/completions',
+        model: '',
+        apiKey: 'sk-...' // 建议通过环境变量或 UI 设置界面配置，避免硬编码
     },
     image: {
-        baseUrl: 'https://your-private-api.com/v1/images/generations',
-        model: 'dall-e-3',
-        apiKey: ''
+        baseUrl: 'https://api.your-provider.com/v1/images/generations',
+        model: '',
+        apiKey: 'sk-...'
     }
 }
 ```
 
-### 2. 处理跨域问题 (CORS)
-
-如果您请求的 API 不支持跨域，可以在 `vite.config.ts` 中配置代理：
-
-```typescript
-// vite.config.ts
-export default defineConfig({
-    server: {
-        proxy: {
-            '/api': {
-                target: 'https://your-private-api.com/v1',
-                changeOrigin: true,
-                rewrite: path => path.replace(/^\/api/, '')
-            }
-        }
-    }
-})
-```
-
-配置代理后，将 `config.ts` 中的 `baseUrl` 修改为相对路径（如 `/api/chat/completions`）即可。
-
-### 3. 构建生产版本
+### 3. 构建生产环境
 
 ```bash
-# 执行构建
 npm run build
 ```
 
 ---
+
+<p align="center">
+  如果您觉得这个项目对您有帮助，请给一个 ⭐️ 以示支持！
+</p>
 

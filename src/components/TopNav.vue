@@ -12,7 +12,27 @@ import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { BackgroundVariant } from '@vue-flow/background'
 
 // 图标：所有按钮与状态展示
-import { ChevronDown, ChevronUp, Download, Focus, LayoutDashboard, Menu, Sparkles, Target, X, Trash2, Globe, Settings, ArrowLeftRight, Map, Palette } from 'lucide-vue-next'
+import {
+    ChevronDown,
+    ChevronUp,
+    Download,
+    Focus,
+    LayoutDashboard,
+    Menu,
+    Sparkles,
+    Target,
+    X,
+    Trash2,
+    Globe,
+    Settings,
+    ArrowLeftRight,
+    Map,
+    Palette,
+    Play,
+    Search,
+    Zap,
+    Brain
+} from 'lucide-vue-next'
 
 /**
  * props：
@@ -32,6 +52,12 @@ const props = defineProps<{
     onGenerateSummary: () => void
     onExportMarkdown: () => void
     onOpenSettings: () => void
+    isPresenting: boolean
+    onTogglePresentation: () => void
+    searchQuery: string
+    onUpdateSearchQuery: (val: string) => void
+    searchResults: any[]
+    onFocusNode: (id: string) => void
 }>()
 
 const emit = defineEmits<{
@@ -130,11 +156,57 @@ const callAndClose = (fn: () => void) => {
 
             <div class="h-6 w-[1px] bg-slate-200 mx-1 md:mx-2 flex-shrink-0"></div>
 
+            <!-- 搜索框 -->
+            <div class="hidden lg:flex items-center relative flex-grow max-w-xs group">
+                <Search class="absolute left-3 w-4 h-4 text-slate-400 group-focus-within:text-blue-500 transition-colors" />
+                <input
+                    type="text"
+                    :value="props.searchQuery"
+                    @input="e => props.onUpdateSearchQuery((e.target as HTMLInputElement).value)"
+                    :placeholder="props.t('nav.searchPlaceholder')"
+                    class="w-full bg-slate-50 border border-slate-200 rounded-full py-1.5 pl-9 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+                />
+                <!-- 搜索结果下拉 -->
+                <div
+                    v-if="props.searchQuery && props.searchResults.length > 0"
+                    class="absolute top-full left-0 right-0 mt-2 bg-white border border-slate-200 rounded-xl shadow-2xl p-2 z-[60] max-h-60 overflow-y-auto"
+                >
+                    <button
+                        v-for="node in props.searchResults"
+                        :key="node.id"
+                        @click="
+                            () => {
+                                props.onFocusNode(node.id)
+                                props.onUpdateSearchQuery('')
+                            }
+                        "
+                        class="w-full text-left px-3 py-2 hover:bg-slate-50 rounded-lg transition-colors group"
+                    >
+                        <div class="font-bold text-slate-700 text-xs truncate group-hover:text-blue-600">{{ node.data.label }}</div>
+                        <div class="text-[10px] text-slate-400 truncate">{{ node.data.description }}</div>
+                    </button>
+                </div>
+            </div>
+
+            <div class="h-6 w-[1px] bg-slate-200 mx-1 md:mx-2 flex-shrink-0 hidden lg:block"></div>
+
             <div class="hidden md:flex items-center gap-2">
                 <button @click="props.onFit" class="toolbar-btn text-blue-500 hover:bg-blue-50 border-blue-100 flex-shrink-0" :title="props.t('nav.fit')">
                     <Focus class="w-3.5 h-3.5 md:w-4 h-4" />
                     <span>{{ props.t('nav.fit') }}</span>
                 </button>
+
+                <button
+                    @click="props.onTogglePresentation"
+                    class="toolbar-btn flex-shrink-0"
+                    :class="props.isPresenting ? 'text-green-600 bg-green-50 border-green-100' : 'text-slate-500 hover:bg-slate-50 border-slate-100'"
+                    :title="props.t('nav.presentation')"
+                >
+                    <Play class="w-3.5 h-3.5 md:w-4 h-4" />
+                    <span>{{ props.t('nav.presentation') }}</span>
+                </button>
+
+                <div class="h-4 w-[1px] bg-slate-100 mx-1 flex-shrink-0"></div>
 
                 <button @click="props.onResetLayout" class="toolbar-btn text-purple-500 hover:bg-purple-50 border-purple-100 flex-shrink-0" :title="props.t('nav.layout')">
                     <LayoutDashboard class="w-3.5 h-3.5 md:w-4 h-4" />
