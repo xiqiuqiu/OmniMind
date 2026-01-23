@@ -961,7 +961,7 @@ export function useThinkFlow({ t, locale }: { t: Translate; locale: Ref<string> 
             addNodes({
                 id: rootId,
                 type: 'window',
-                position: { x: 50, y: 300 },
+                position: { x: 50, y: 50 },
                 data: {
                     label: text,
                     description: t('node.coreIdea'),
