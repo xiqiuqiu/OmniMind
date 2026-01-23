@@ -250,6 +250,8 @@ const fitToView = () => {
             <VueFlow
                 :default-edge-options="{ type: config.edgeType }"
                 :fit-view-on-init="false"
+                :min-zoom="0.05"
+                :max-zoom="4"
                 class="bg-white"
                 :class="{ 'space-pressed': isSpacePressed, 'presentation-mode': isPresenting }"
                 :pan-on-drag="panOnDrag"
