@@ -1,4 +1,4 @@
-# 🧠 ThinkFlow AI
+<h1 align="center">🧠 ThinkFlow AI</h1>
 
 <p align="center">
   <strong>ThinkFlow AI 是一个轻量级“从想法到结构化图谱”的工作台</strong>

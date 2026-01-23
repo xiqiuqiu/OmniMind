@@ -1,8 +1,4 @@
-# 🧠 ThinkFlow AI
-
-<p align="center">
-  <img src="./public/logo.png" alt="ThinkFlow AI Logo" width="120" />
-</p>
+<h1 align="center">🧠 ThinkFlow AI</h1>
 
 <p align="center">
   <strong>Give Flow to Thought, Shape to Inspiration: An AI-Driven, Local-First Thinking Space</strong>

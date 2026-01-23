@@ -30,6 +30,8 @@ import SummaryModal from './components/SummaryModal.vue'
 import TopNav from './components/TopNav.vue'
 import SideNav from './components/SideNav.vue'
 import WindowNode from './components/WindowNode.vue'
+import StickyNoteNode from './components/StickyNoteNode.vue'
+import GraphChatSidebar from './components/GraphChatSidebar.vue'
 
 // 业务层：统一的状态与动作入口
 import { useThinkFlow } from './composables/useThinkFlow'
@@ -56,6 +58,10 @@ const toggleFullscreen = () => {
 
 const handleFullscreenChange = () => {
     isFullscreen.value = !!document.fullscreenElement
+    // 如果手动退出了全屏，且当前还在演示模式，则同步退出演示模式
+    if (!document.fullscreenElement && isPresenting.value) {
+        _togglePresentation()
+    }
 }
 
 /**
@@ -98,13 +104,41 @@ const {
     expandIdea,
     aiStyle,
     isPresenting,
-    togglePresentation,
+    togglePresentation: _togglePresentation,
     nextPresentationNode,
     prevPresentationNode,
     searchQuery,
     searchResults,
-    focusNode
+    focusNode,
+    showChatSidebar,
+    isChatting,
+    graphChatMessages,
+    addStickyNote,
+    sendGraphChatMessage,
+    removeNodes
 } = useThinkFlow({ t, locale })
+
+/**
+ * 演示模式与全屏联动
+ */
+const togglePresentation = () => {
+    _togglePresentation()
+    if (isPresenting.value) {
+        // 进入演示模式 -> 开启全屏
+        if (!document.fullscreenElement) {
+            document.documentElement.requestFullscreen().catch(err => {
+                console.error(`Error attempting to enable full-screen mode: ${err.message}`)
+            })
+        }
+    } else {
+        // 退出演示模式 -> 退出全屏
+        if (document.fullscreenElement) {
+            document.exitFullscreen().catch(err => {
+                console.error(`Error attempting to exit full-screen mode: ${err.message}`)
+            })
+        }
+    }
+}
 
 /**
  * 演示模式键盘监听
@@ -181,10 +215,20 @@ const fitToView = () => {
             :onUpdateSearchQuery="val => (searchQuery = val)"
             :searchResults="searchResults"
             :onFocusNode="focusNode"
+            :onToggleChat="() => (showChatSidebar = !showChatSidebar)"
             @toggle-locale="toggleLocale"
         />
 
-        <SideNav v-if="!isPresenting" :t="t" :locale="locale" :config="config" />
+        <SideNav
+            v-if="!isPresenting"
+            :t="t"
+            :locale="locale"
+            :config="config"
+            :onFit="fitToView"
+            :onResetLayout="resetLayout"
+            :onCenterRoot="centerRoot"
+            :onAddStickyNote="addStickyNote"
+        />
 
         <div class="flex-grow relative">
             <!-- 演示模式退出提示 -->
@@ -206,6 +250,8 @@ const fitToView = () => {
             <VueFlow
                 :default-edge-options="{ type: config.edgeType }"
                 :fit-view-on-init="false"
+                :min-zoom="0.05"
+                :max-zoom="4"
                 class="bg-white"
                 :class="{ 'space-pressed': isSpacePressed, 'presentation-mode': isPresenting }"
                 :pan-on-drag="panOnDrag"
@@ -221,7 +267,7 @@ const fitToView = () => {
                     :size="config.backgroundVariant === BackgroundVariant.Dots ? 1.2 : 0.5"
                 />
                 <Controls v-if="false" :show-fullscreen="false" :show-fit-view="false">
-                    <ControlButton @click="toggleFullscreen" :title="isFullscreen ? t('nav.exitFullscreen') : t('nav.fullscreen')">
+                    <ControlButton @click="toggleFullscreen">
                         <component :is="isFullscreen ? Minimize : Maximize" class="w-4 h-4 text-slate-500" />
                     </ControlButton>
                 </Controls>
@@ -247,6 +293,10 @@ const fitToView = () => {
                         @preview="previewImageUrl = $event"
                     />
                 </template>
+
+                <template #node-sticky="{ id, data, selected }">
+                    <StickyNoteNode :id="id" :data="data" :selected="selected" :t="t" :config="config" :updateNode="updateNode" :removeNodes="removeNodes" />
+                </template>
             </VueFlow>
 
             <div class="absolute inset-0 pointer-events-none z-20">
@@ -258,6 +308,15 @@ const fitToView = () => {
             <ImagePreviewModal :url="previewImageUrl" @close="previewImageUrl = null" />
             <ResetConfirmModal :show="showResetConfirm" :t="t" @close="showResetConfirm = false" @confirm="executeReset" />
             <SummaryModal :show="showSummaryModal" :t="t" :isSummarizing="isSummarizing" :summaryContent="summaryContent" @close="showSummaryModal = false" />
+
+            <GraphChatSidebar
+                :show="showChatSidebar"
+                :t="t"
+                :isChatting="isChatting"
+                :messages="graphChatMessages"
+                :onSendMessage="sendGraphChatMessage"
+                :onClose="() => (showChatSidebar = false)"
+            />
         </div>
 
         <BottomBar
@@ -291,6 +350,29 @@ body {
 
 .toolbar-btn:hover {
     @apply border-current shadow-sm;
+}
+
+/* Tooltip Styles */
+.custom-tooltip {
+    @apply hidden md:block absolute px-2 py-1 bg-slate-900 text-white text-[10px] font-bold tracking-widest uppercase rounded opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 whitespace-nowrap z-[100] shadow-xl pointer-events-none;
+}
+
+.custom-tooltip-right {
+    @apply left-full ml-3 top-1/2 -translate-y-1/2 translate-x-[-10px] group-hover:translate-x-0;
+}
+
+.custom-tooltip-bottom {
+    @apply top-full mt-2 left-1/2 -translate-x-1/2 translate-y-[-10px] group-hover:translate-y-0;
+}
+
+.custom-tooltip-right::before {
+    content: '';
+    @apply absolute right-full top-1/2 -translate-y-1/2 border-4 border-transparent border-r-slate-900;
+}
+
+.custom-tooltip-bottom::before {
+    content: '';
+    @apply absolute bottom-full left-1/2 -translate-x-1/2 border-4 border-transparent border-b-slate-900;
 }
 
 .toolbar-select {

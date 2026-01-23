@@ -210,18 +210,48 @@ export function useThinkFlow({ t, locale }: { t: Translate; locale: Ref<string> 
         if (config.snapToAlignment) {
             const snapThreshold = 8
 
-            const getNodeSize = (n: any) => {
+            const getNodeVisualInfo = (n: any, currentPos?: { x: number; y: number }) => {
                 const width = n.dimensions?.width ?? n.measured?.width ?? 280
                 const height = n.dimensions?.height ?? n.measured?.height ?? 180
-                return { width, height }
+
+                // 核心逻辑：计算视觉缩放比例，与 WindowNode.vue 中的逻辑保持一致
+                let scale = 1.0
+                if (activeNodeId.value) {
+                    if (activePath.value.nodeIds.has(n.id)) {
+                        // 在拖拽或处于活跃路径时，节点会放大 1.05
+                        // 注意：WindowNode 中 focus 时是 1.1，但拖拽时通常 input 不会处于 focus 状态
+                        scale = 1.05
+                    } else {
+                        // 非活跃路径节点会缩小并变淡
+                        scale = 0.98
+                    }
+                }
+
+                const x = currentPos?.x ?? n.position.x
+                const y = currentPos?.y ?? n.position.y
+
+                // 因为 CSS transform: scale 默认是从中心缩放，所以视觉上的起始点 (top-left) 会发生偏移
+                const visualWidth = width * scale
+                const visualHeight = height * scale
+                const offsetX = (visualWidth - width) / 2
+                const offsetY = (visualHeight - height) / 2
+
+                return {
+                    width: visualWidth,
+                    height: visualHeight,
+                    x: x - offsetX,
+                    y: y - offsetY,
+                    scale
+                }
             }
 
-            const draggedSize = getNodeSize(draggedStoreNode)
+            const draggedInfo = getNodeVisualInfo(draggedStoreNode, { x: node.position.x, y: node.position.y })
             const proposedX = node.position.x
             const proposedY = node.position.y
 
-            const draggedAnchorsX = [proposedX, proposedX + draggedSize.width / 2, proposedX + draggedSize.width]
-            const draggedAnchorsY = [proposedY, proposedY + draggedSize.height / 2, proposedY + draggedSize.height]
+            // 使用视觉坐标进行对齐计算
+            const draggedAnchorsX = [draggedInfo.x, draggedInfo.x + draggedInfo.width / 2, draggedInfo.x + draggedInfo.width]
+            const draggedAnchorsY = [draggedInfo.y, draggedInfo.y + draggedInfo.height / 2, draggedInfo.y + draggedInfo.height]
 
             let bestX: { delta: number; guide: number } | null = null
             let bestY: { delta: number; guide: number } | null = null
@@ -230,12 +260,9 @@ export function useThinkFlow({ t, locale }: { t: Translate; locale: Ref<string> 
                 if (other.id === node.id) continue
                 if (other.hidden) continue
 
-                const otherSize = getNodeSize(other)
-                const otherX = other.position?.x ?? 0
-                const otherY = other.position?.y ?? 0
-
-                const otherAnchorsX = [otherX, otherX + otherSize.width / 2, otherX + otherSize.width]
-                const otherAnchorsY = [otherY, otherY + otherSize.height / 2, otherY + otherSize.height]
+                const otherInfo = getNodeVisualInfo(other)
+                const otherAnchorsX = [otherInfo.x, otherInfo.x + otherInfo.width / 2, otherInfo.x + otherInfo.width]
+                const otherAnchorsY = [otherInfo.y, otherInfo.y + otherInfo.height / 2, otherInfo.y + otherInfo.height]
 
                 for (const ox of otherAnchorsX) {
                     for (const ax of draggedAnchorsX) {
@@ -798,6 +825,130 @@ export function useThinkFlow({ t, locale }: { t: Translate; locale: Ref<string> 
     }
 
     /**
+     * 图谱对话状态
+     */
+    const showChatSidebar = ref(false)
+    const isChatting = ref(false)
+    const graphChatMessages = ref<{ role: 'user' | 'assistant'; content: string }[]>([])
+
+    /**
+     * 添加便签 (Sticky Note)
+     */
+    const addStickyNote = (pos?: { x: number; y: number }) => {
+        const id = 'sticky-' + Date.now()
+        const position =
+            pos ||
+            project({
+                x: window.innerWidth / 2 - 100,
+                y: window.innerHeight / 2 - 50
+            })
+
+        addNodes({
+            id,
+            type: 'sticky',
+            position,
+            data: {
+                label: '',
+                type: 'sticky'
+            }
+        })
+    }
+
+    /**
+     * 与图谱对话 (Chat with Graph)
+     */
+    const sendGraphChatMessage = async (userMessage: string) => {
+        if (!userMessage.trim() || isChatting.value) return
+
+        graphChatMessages.value.push({ role: 'user', content: userMessage })
+        isChatting.value = true
+
+        // 构建图谱上下文
+        const buildGraphContext = () => {
+            const nodesText = flowNodes.value
+                .map(n => {
+                    if (n.type === 'sticky') return `[Note]: ${n.data.label}`
+                    return `[Node]: ${n.data.label} - ${n.data.description || ''}`
+                })
+                .join('\n')
+            return nodesText
+        }
+
+        const graphContext = buildGraphContext()
+        const useConfig = apiConfig.mode === 'default' ? DEFAULT_CONFIG.chat : apiConfig.chat
+        const finalApiKey = apiConfig.mode === 'default' ? useConfig.apiKey || API_KEY : useConfig.apiKey
+
+        try {
+            const response = await fetch(useConfig.baseUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${finalApiKey}`
+                },
+                body: JSON.stringify({
+                    model: useConfig.model,
+                    stream: true,
+                    messages: [
+                        {
+                            role: 'system',
+                            content: `You are an AI assistant helping the user explore their knowledge graph. 
+                            The current graph contains the following information:
+                            ${graphContext}
+                            
+                            Please answer the user's questions based on this context. Be concise and insightful.`
+                        },
+                        ...graphChatMessages.value
+                    ]
+                })
+            })
+
+            if (!response.ok) throw new Error('Chat request failed')
+
+            // 处理流式响应
+            const reader = response.body?.getReader()
+            if (!reader) throw new Error('ReadableStream not supported')
+
+            const decoder = new TextDecoder('utf-8')
+            let assistantMessage = ''
+
+            // 先添加一个空的 assistant 消息占位
+            graphChatMessages.value.push({ role: 'assistant', content: '' })
+            const lastIdx = graphChatMessages.value.length - 1
+
+            while (true) {
+                const { done, value } = await reader.read()
+                if (done) break
+
+                const chunk = decoder.decode(value, { stream: true })
+                const lines = chunk.split('\n')
+
+                for (const line of lines) {
+                    if (line.startsWith('data: ')) {
+                        const dataStr = line.slice(6).trim()
+                        if (dataStr === '[DONE]') break
+
+                        try {
+                            const data = JSON.parse(dataStr)
+                            const content = data.choices[0]?.delta?.content || ''
+                            if (content) {
+                                assistantMessage += content
+                                graphChatMessages.value[lastIdx].content = assistantMessage
+                            }
+                        } catch (e) {
+                            // 忽略解析错误
+                        }
+                    }
+                }
+            }
+        } catch (error: any) {
+            console.error('Graph Chat Error:', error)
+            graphChatMessages.value.push({ role: 'assistant', content: `Error: ${getErrorMessage(error)}` })
+        } finally {
+            isChatting.value = false
+        }
+    }
+
+    /**
      * 总结：基于当前所有节点信息生成一段总结文本
      * - 结果展示在 SummaryModal
      */
@@ -808,11 +959,37 @@ export function useThinkFlow({ t, locale }: { t: Translate; locale: Ref<string> 
         isSummarizing.value = true
         summaryContent.value = ''
 
-        const nodesInfo = flowNodes.value.map(n => ({
-            label: n.data.label,
-            description: n.data.description,
-            type: n.data.type
-        }))
+        // 构建层级结构的文本表示，帮助 AI 更好地理解逻辑关系
+        const buildHierarchyText = () => {
+            const rootNode = flowNodes.value.find(n => n.data.type === 'root')
+            if (!rootNode) return ''
+
+            let text = `核心主题: ${rootNode.data.label}\n`
+            if (rootNode.data.description) text += `核心描述: ${rootNode.data.description}\n`
+            text += `\n思维脉络:\n`
+
+            const traverse = (parentId: string, level: number) => {
+                const children = flowEdges.value
+                    .filter(e => e.source === parentId)
+                    .map(e => flowNodes.value.find(n => n.id === e.target))
+                    .filter(n => !!n)
+
+                children.forEach(child => {
+                    const indent = '  '.repeat(level)
+                    text += `${indent}- ${child!.data.label}`
+                    if (child!.data.description) {
+                        text += `: ${child!.data.description}`
+                    }
+                    text += '\n'
+                    traverse(child!.id, level + 1)
+                })
+            }
+
+            traverse(rootNode.id, 1)
+            return text
+        }
+
+        const nodesHierarchy = buildHierarchyText()
 
         const useConfig = apiConfig.mode === 'default' ? DEFAULT_CONFIG.chat : apiConfig.chat
         const finalApiKey = apiConfig.mode === 'default' ? useConfig.apiKey || API_KEY : useConfig.apiKey
@@ -830,7 +1007,7 @@ export function useThinkFlow({ t, locale }: { t: Translate; locale: Ref<string> 
                         {
                             role: 'user',
                             content: t('prompts.summaryPrompt', {
-                                nodes: JSON.stringify(nodesInfo, null, 2)
+                                nodes: nodesHierarchy
                             })
                         }
                     ]
@@ -1231,6 +1408,12 @@ export function useThinkFlow({ t, locale }: { t: Translate; locale: Ref<string> 
         prevPresentationNode,
         searchQuery,
         searchResults,
-        focusNode
+        focusNode,
+        showChatSidebar,
+        isChatting,
+        graphChatMessages,
+        addStickyNote,
+        sendGraphChatMessage,
+        removeNodes
     }
 }
