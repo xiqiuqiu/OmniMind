@@ -80,7 +80,7 @@ const isFocused = ref(false);
  */
 const selectedText = ref("");
 const showSelectionAction = ref(false);
-const selectionPosition = ref({ x: 0, y: 0 });
+const selectionPosition = ref({ x: 0, y: 0, transformX: "-50%" });
 const { viewport } = useVueFlow();
 
 /**
@@ -108,7 +108,7 @@ const handleTextSelection = (e: MouseEvent) => {
       // 所有屏幕像素计算需除以 zoom 以转回内部相对坐标
       const buttonWidth = 100;
       const buttonHeight = 30;
-      const gap = 6;
+      const gap = 12;
       const containerWidth = container.width / zoom;
 
       // 计算差值（屏幕像素）并转为内部CSS像素
@@ -131,7 +131,15 @@ const handleTextSelection = (e: MouseEvent) => {
         y = (diffTop + rect.height) / zoom + gap;
       }
 
-      selectionPosition.value = { x, y };
+      // 根据水平位置决定变换方式
+      let transformX = "-50%";
+      if (x <= halfButton) {
+        transformX = "0%";
+      } else if (x >= containerWidth - halfButton) {
+        transformX = "-100%";
+      }
+
+      selectionPosition.value = { x, y, transformX };
     }
   } else {
     showSelectionAction.value = false;
@@ -526,11 +534,11 @@ const handleBlur = () => {
             <!-- 浮动选择操作按钮 -->
             <div
               v-if="showSelectionAction"
-              class="absolute z-50 bg-slate-900 text-white text-[10px] font-bold px-3 py-1.5 rounded-lg shadow-xl cursor-pointer hover:bg-slate-800 transition-all animate-in fade-in zoom-in-95 duration-200"
+              class="absolute z-50 bg-slate-900 text-white text-[10px] font-bold px-3 py-1.5 rounded-lg shadow-xl cursor-pointer hover:bg-slate-800 transition-all animate-in fade-in zoom-in-95 duration-200 whitespace-nowrap"
               :style="{
                 left: selectionPosition.x + 'px',
                 top: selectionPosition.y + 'px',
-                transform: 'translateX(-50%)',
+                transform: `translateX(${selectionPosition.transformX})`,
               }"
               @click.stop="handleSpawn"
             >
