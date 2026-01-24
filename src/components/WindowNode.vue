@@ -281,40 +281,44 @@ const handleBlur = () => {
             : props.t("node.moduleTitle")
         }}
       </span>
-      <button
-        v-if="props.data.childrenCount > 0"
-        type="button"
-        class="flex items-center gap-1 px-1.5 py-1 rounded-md text-[9px] font-black tracking-widest uppercase transition-colors"
-        :class="
-          props.isSubtreeCollapsed(props.id)
-            ? 'text-orange-600 bg-orange-50'
-            : 'text-slate-400 hover:bg-slate-100 hover:text-slate-600'
-        "
-        @click.stop="props.toggleSubtreeCollapse(props.id)"
-      >
-        <component
-          :is="props.isSubtreeCollapsed(props.id) ? ChevronRight : ChevronDown"
-          class="w-3 h-3"
-          :stroke-width="1.5"
-        />
-        <span
-          v-if="
-            props.isSubtreeCollapsed(props.id) &&
-            props.data.hiddenDescendantCount
+      <div class="flex items-center gap-1">
+        <button
+          v-if="props.data.childrenCount > 0"
+          type="button"
+          class="flex items-center gap-1 px-1.5 py-1 rounded-md text-[9px] font-black tracking-widest uppercase transition-colors"
+          :class="
+            props.isSubtreeCollapsed(props.id)
+              ? 'text-orange-600 bg-orange-50'
+              : 'text-slate-400 hover:bg-slate-100 hover:text-slate-600'
           "
-          class="text-[9px] font-black"
-          >{{ props.data.hiddenDescendantCount }}</span
+          @click.stop="props.toggleSubtreeCollapse(props.id)"
         >
-      </button>
-      <button
-        v-if="props.data.type !== 'root'"
-        type="button"
-        class="flex items-center gap-1 px-1.5 py-1 rounded-md text-[9px] font-black tracking-widest uppercase transition-colors text-rose-400 hover:bg-rose-50 hover:text-rose-600"
-        :title="props.t('node.delete')"
-        @click.stop="props.deleteNode(props.id)"
-      >
-        <Trash2 class="w-3 h-3" :stroke-width="1.5" />
-      </button>
+          <component
+            :is="
+              props.isSubtreeCollapsed(props.id) ? ChevronRight : ChevronDown
+            "
+            class="w-3 h-3"
+            :stroke-width="1.5"
+          />
+          <span
+            v-if="
+              props.isSubtreeCollapsed(props.id) &&
+              props.data.hiddenDescendantCount
+            "
+            class="text-[9px] font-black"
+            >{{ props.data.hiddenDescendantCount }}</span
+          >
+        </button>
+        <button
+          v-if="props.data.type !== 'root'"
+          type="button"
+          class="flex items-center gap-1 px-1.5 py-1 rounded-md text-[9px] font-black tracking-widest uppercase transition-colors text-rose-400 hover:bg-rose-50 hover:text-rose-600"
+          :title="props.t('node.delete')"
+          @click.stop="props.deleteNode(props.id)"
+        >
+          <Trash2 class="w-3 h-3" :stroke-width="1.5" />
+        </button>
+      </div>
     </div>
 
     <div
