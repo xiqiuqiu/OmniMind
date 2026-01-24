@@ -179,7 +179,7 @@ const callAndClose = (fn: () => void) => {
         <div class="w-3 h-3 bg-orange-500 rounded-sm rotate-45"></div>
         <span
           class="font-black text-slate-900 tracking-tighter text-base md:text-lg"
-          >SIGCLR</span
+          >OmniMind</span
         >
       </div>
 

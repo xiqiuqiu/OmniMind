@@ -213,7 +213,7 @@ const handleBallClick = () => {
         class="flex items-center gap-1.5 text-slate-500 hover:text-orange-500 transition-colors"
       >
         <Github class="w-3 h-3" />
-        <span>SIGCLR</span>
+        <span>OmniMind</span>
       </a>
       <span class="w-[1px] h-2 bg-slate-300 mx-1"></span>
       <span class="text-slate-400">By:Liuziting</span> -->
