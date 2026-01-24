@@ -57,7 +57,7 @@ const props = defineProps<{
   onStartNewSession: () => void;
   onGenerateSummary: () => void;
   onExportMarkdown: () => void;
-  onOpenSettings: () => void;
+  // onOpenSettings: () => void; // TODO: 暂时隐藏设置
   isPresenting: boolean;
   onTogglePresentation: () => void;
   searchQuery: string;
@@ -312,7 +312,8 @@ const callAndClose = (fn: () => void) => {
         class="hidden md:block h-4 w-[1px] bg-slate-200 mx-1 md:mx-2 flex-shrink-0"
       ></div>
 
-      <button
+      <!-- TODO: 暂时隐藏设置 -->
+      <!-- <button
         @click="props.onOpenSettings"
         class="p-1.5 md:p-2 hover:bg-slate-100 rounded-md transition-colors text-slate-400 flex items-center gap-1"
       >
@@ -320,7 +321,7 @@ const callAndClose = (fn: () => void) => {
         <span class="hidden md:inline text-[10px] md:text-xs font-bold">{{
           props.t("common.settings")
         }}</span>
-      </button>
+      </button> -->
 
       <div class="h-4 w-[1px] bg-slate-200 mx-1"></div>
 

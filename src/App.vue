@@ -89,7 +89,7 @@ const handleFullscreenChange = () => {
  */
 const {
   apiConfig,
-  showSettings,
+  // showSettings, // TODO: 暂时隐藏设置
   ideaInput,
   isLoading,
   previewImageUrl,
@@ -329,6 +329,7 @@ const fitToView = () => {
   <div
     class="h-screen w-screen bg-white font-mono text-slate-800 relative overflow-hidden flex flex-col selection:bg-orange-100"
   >
+    <!-- TODO: 暂时隐藏api设置  -->
     <TopNav
       v-if="!isPresenting"
       :t="t"
@@ -340,7 +341,6 @@ const fitToView = () => {
       :onStartNewSession="startNewSession"
       :onGenerateSummary="generateSummary"
       :onExportMarkdown="exportMarkdown"
-      :onOpenSettings="() => (showSettings = true)"
       :aiStyle="aiStyle"
       :onToggleAiStyle="
         () => (aiStyle = aiStyle === 'creative' ? 'precise' : 'creative')
@@ -482,12 +482,13 @@ const fitToView = () => {
         ></div>
       </div>
 
-      <SettingsModal
+      <!-- TODO: 暂时隐藏设置 -->
+      <!-- <SettingsModal
         :show="showSettings"
         :t="t"
         :apiConfig="apiConfig"
         @close="showSettings = false"
-      />
+      /> -->
       <ImagePreviewModal
         :url="previewImageUrl"
         @close="previewImageUrl = null"
