@@ -204,19 +204,19 @@ const handleBallClick = () => {
 
     <!-- 底部信息 -->
     <div
-      class="flex items-center gap-2 px-3 py-1 bg-white/60 backdrop-blur-sm border border-slate-200/50 rounded-full text-[10px] font-black tracking-widest uppercase select-none shadow-sm"
+      class="flex items-center gap-2 px-3 py-1 rounded-full text-[10px] font-black tracking-widest uppercase select-none shadow-sm"
     >
-      <a
+      <!-- <a
         href="https://github.com/liu-ziting/ThinkFlowAI"
         target="_blank"
         rel="noopener noreferrer"
         class="flex items-center gap-1.5 text-slate-500 hover:text-orange-500 transition-colors"
       >
         <Github class="w-3 h-3" />
-        <span>ThinkFlowAI</span>
+        <span>SIGCLR</span>
       </a>
       <span class="w-[1px] h-2 bg-slate-300 mx-1"></span>
-      <span class="text-slate-400">By:Liuziting</span>
+      <span class="text-slate-400">By:Liuziting</span> -->
     </div>
   </div>
 </template>
