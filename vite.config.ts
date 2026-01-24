@@ -18,4 +18,7 @@ export default defineConfig({
     // 生产环境移除 console 和 debugger
     drop: process.env.NODE_ENV === "production" ? ["console", "debugger"] : [],
   },
+  build: {
+    chunkSizeWarningLimit: 1000,
+  },
 });

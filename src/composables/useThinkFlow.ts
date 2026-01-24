@@ -659,6 +659,16 @@ export function useThinkFlow({
     const savedEdges = localStorage.getItem("thinkflow_edges");
     const savedCollapsed = localStorage.getItem("thinkflow_collapsed");
 
+    // [Debug Config] 输出调试信息，定位线上环境配置问题
+    console.log("[Debug Config] Env:", import.meta.env);
+    console.log("[Debug Config] DEFAULT_CONFIG:", DEFAULT_CONFIG);
+    console.log("[Debug Config] apiConfig:", toRaw(apiConfig));
+    console.log("[Debug Config] current mode:", apiConfig.mode);
+    console.log(
+      "[Debug Config] effective chat config:",
+      apiConfig.mode === "default" ? DEFAULT_CONFIG.chat : apiConfig.chat,
+    );
+
     if (savedNodes && savedEdges) {
       try {
         const nodes = JSON.parse(savedNodes);
