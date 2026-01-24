@@ -1,10 +1,11 @@
 <script setup lang="ts">
 /**
  * ProjectSelector - 项目选择器组件
- * 显示项目列表，支持创建、切换、删除项目
+ * 显示项目列表，支持创建、切换、删除、编辑项目
  */
-import { ref, watch } from "vue";
+import { ref, watch, nextTick } from "vue";
 import { useProjects } from "@/composables/useProjects";
+import type { Project } from "@/lib/database.types";
 import { useAuth } from "@/composables/useAuth";
 import {
   FolderOpen,
@@ -13,6 +14,7 @@ import {
   ChevronDown,
   Check,
   Loader2,
+  Pencil,
 } from "lucide-vue-next";
 
 const props = defineProps<{
@@ -26,6 +28,7 @@ const {
   loading,
   fetchProjects,
   createProject,
+  updateProject,
   deleteProject,
   selectProject,
 } = useProjects();
@@ -34,6 +37,38 @@ const {
 const isOpen = ref(false);
 const isCreating = ref(false);
 const newProjectName = ref("");
+const editingProjectId = ref<string | null>(null);
+const editingProjectName = ref("");
+const editInputRef = ref<HTMLInputElement | null>(null);
+
+// 开始编辑项目名称
+const startEdit = (project: (typeof projects.value)[0], e: Event) => {
+  e.stopPropagation();
+  editingProjectId.value = project.id;
+  editingProjectName.value = project.name;
+  nextTick(() => {
+    editInputRef.value?.focus();
+    editInputRef.value?.select();
+  });
+};
+
+// 保存编辑
+const saveEdit = async () => {
+  if (!editingProjectId.value || !editingProjectName.value.trim()) {
+    cancelEdit();
+    return;
+  }
+  await updateProject(editingProjectId.value, {
+    name: editingProjectName.value.trim(),
+  });
+  cancelEdit();
+};
+
+// 取消编辑
+const cancelEdit = () => {
+  editingProjectId.value = null;
+  editingProjectName.value = "";
+};
 
 // 监听认证状态变化，自动获取项目列表
 watch(
@@ -43,7 +78,7 @@ watch(
       await fetchProjects();
       // 自动选择第一个项目
       if (projects.value.length > 0 && !currentProject.value) {
-        selectProject(projects.value[0]);
+        selectProject(projects.value[0] as Project);
       }
     }
   },
@@ -121,30 +156,51 @@ const handleSelect = (project: (typeof projects.value)[0]) => {
             {{ t("project.empty") }}
           </div>
 
-          <button
+          <div
             v-else
             v-for="project in projects"
             :key="project.id"
-            @click="handleSelect(project)"
-            class="w-full flex items-center gap-3 px-4 py-3 hover:bg-slate-50 transition-colors group text-left"
+            @click="editingProjectId !== project.id && handleSelect(project)"
+            class="w-full flex items-center gap-3 px-4 py-3 hover:bg-slate-50 transition-colors group text-left cursor-pointer"
           >
             <FolderOpen
-              class="w-4 h-4 text-slate-400 group-hover:text-orange-500 transition-colors"
+              class="w-4 h-4 text-slate-400 group-hover:text-orange-500 transition-colors flex-shrink-0"
             />
-            <span class="flex-1 text-sm text-slate-700 truncate">
-              {{ project.name }}
-            </span>
-            <Check
-              v-if="currentProject?.id === project.id"
-              class="w-4 h-4 text-green-500"
-            />
-            <button
-              @click="handleDelete(project.id, $event)"
-              class="opacity-0 group-hover:opacity-100 p-1 hover:bg-rose-100 rounded transition-all"
-            >
-              <Trash2 class="w-3 h-3 text-rose-400" />
-            </button>
-          </button>
+            <!-- 编辑模式 -->
+            <template v-if="editingProjectId === project.id">
+              <input
+                ref="editInputRef"
+                v-model="editingProjectName"
+                @keyup.enter="saveEdit"
+                @keyup.escape="cancelEdit"
+                @blur="saveEdit"
+                @click.stop
+                class="flex-1 px-2 py-1 bg-white border border-orange-400 rounded text-sm text-slate-700 focus:outline-none"
+              />
+            </template>
+            <!-- 显示模式 -->
+            <template v-else>
+              <span class="flex-1 text-sm text-slate-700 truncate">
+                {{ project.name }}
+              </span>
+              <Check
+                v-if="currentProject?.id === project.id"
+                class="w-4 h-4 text-green-500 flex-shrink-0"
+              />
+              <button
+                @click="startEdit(project, $event)"
+                class="opacity-0 group-hover:opacity-100 p-1 hover:bg-blue-100 rounded transition-all"
+              >
+                <Pencil class="w-3 h-3 text-blue-400" />
+              </button>
+              <button
+                @click="handleDelete(project.id, $event)"
+                class="opacity-0 group-hover:opacity-100 p-1 hover:bg-rose-100 rounded transition-all"
+              >
+                <Trash2 class="w-3 h-3 text-rose-400" />
+              </button>
+            </template>
+          </div>
         </div>
 
         <!-- Create New -->
