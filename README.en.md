@@ -1,4 +1,4 @@
-<h1 align="center">🧠 ThinkFlow AI</h1>
+<h1 align="center">🧠 OmniMind</h1>
 
 <p align="center">
   <strong>Give Flow to Thought, Shape to Inspiration: An AI-Driven, Local-First Thinking Space</strong>
@@ -20,9 +20,9 @@
 
 ## 💡 Vision & Philosophy
 
-**ThinkFlow AI** is dedicated to creating a high-efficiency workbench that transforms "ideas" into "structured graphs."
+**OmniMind** is dedicated to creating a high-efficiency workbench that transforms "ideas" into "structured graphs."
 
-In traditional creation, inspiration is often fragmented and fuzzy. ThinkFlow AI redefines this process: simply input a core idea, and the application leverages the divergent power of AI to expand it into a hierarchical, interactive **Knowledge Graph**.
+In traditional creation, inspiration is often fragmented and fuzzy. OmniMind redefines this process: simply input a core idea, and the application leverages the divergent power of AI to expand it into a hierarchical, interactive **Knowledge Graph**.
 
 - **Modular Expansion**: Starting from core concepts, it automatically deduces and generates sub-modules, building a logically rigorous thinking network.
 - **Infinite Depth Exploration**: Every node is just a beginning. You can continue to **follow-up and expand** any branch or dive deep into professional details through the "**Deep Answer**" feature.
@@ -59,7 +59,7 @@ This is more than just a tool; it is a local-first thinking space that grows wit
 
 ## 🔗 Live Demo
 
-Start your thinking journey now: [https://thinkflow-ai.lz-t.top/](https://thinkflow-ai.lz-t.top/)
+Start your thinking journey now: [https://omnimind.sigclr.com/](https://omnimind.sigclr.com/)
 
 ---
 
@@ -104,7 +104,7 @@ Ensure your development environment has [Node.js](https://nodejs.org/) installed
 ### 2. Clone and Install
 
 ```bash
-git clone https://github.com/your-repo/ThinkFlowAI.git
+git clone https://github.com/xiqiuqiu/ThinkFlowAI.git
 cd ThinkFlowAI
 npm install
 ```
@@ -125,21 +125,21 @@ The project defaults to proxying requests via **Cloudflare Workers** to Zhipu Bi
 
 ### 2. Custom API Configuration
 
-Modify `DEFAULT_CONFIG` in [src/services/config.ts](file:///d:/lztcode/ThinkFlowAI/src/services/config.ts):
+Modify `DEFAULT_CONFIG` in [src/services/config.ts](./src/services/config.ts):
 
 ```typescript
 export const DEFAULT_CONFIG = {
-    chat: {
-        baseUrl: 'https://api.your-provider.com/v1/chat/completions',
-        model: 'gpt-4o',
-        apiKey: 'sk-...' // Recommended to configure via environment variables or UI settings to avoid hardcoding
-    },
-    image: {
-        baseUrl: 'https://api.your-provider.com/v1/images/generations',
-        model: 'dall-e-3',
-        apiKey: 'sk-...'
-    }
-}
+  chat: {
+    baseUrl: "https://api.your-provider.com/v1/chat/completions",
+    model: "gpt-4o",
+    apiKey: "sk-...", // Recommended to configure via environment variables or UI settings to avoid hardcoding
+  },
+  image: {
+    baseUrl: "https://api.your-provider.com/v1/images/generations",
+    model: "dall-e-3",
+    apiKey: "sk-...",
+  },
+};
 ```
 
 ### 3. Build for Production
@@ -154,3 +154,9 @@ npm run build
   If you find this project helpful, please give it a ⭐️ to show your support!
 </p>
 
+---
+
+## ❤️ Acknowledgements
+
+This project is based on [ThinkFlowAI](https://github.com/ThinkFlowAI/ThinkFlowAI).
+Thanks to the original author [lz-t](https://github.com/lz-t) and the [ThinkFlowAI Team](https://github.com/ThinkFlowAI) for their excellent contribution and open source spirit.

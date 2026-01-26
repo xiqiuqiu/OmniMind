@@ -1,7 +1,7 @@
-<h1 align="center">🧠 ThinkFlow AI</h1>
+<h1 align="center">🧠 OmniMind</h1>
 
 <p align="center">
-  <strong>ThinkFlow AI 是一个轻量级“从想法到结构化图谱”的工作台</strong>
+  <strong>OmniMind 是一个轻量级“从想法到结构化图谱”的工作台</strong>
 </p>
 
 <p align="center">
@@ -20,9 +20,9 @@
 
 ## 💡 愿景与理念
 
-**ThinkFlow AI** 致力于打造一个从“想法”到“结构化图谱”的高效工作台。
+**OmniMind** 致力于打造一个从“想法”到“结构化图谱”的高效工作台。
 
-在传统创作中，灵感往往是碎片化且模糊的。ThinkFlow AI 重新定义了这一过程：你只需输入一个核心想法，应用便会利用 AI 的发散性能力将其扩展为一套层次分明、可交互浏览的**知识图谱**。
+在传统创作中，灵感往往是碎片化且模糊的。OmniMind 重新定义了这一过程：你只需输入一个核心想法，应用便会利用 AI 的发散性能力将其扩展为一套层次分明、可交互浏览的**知识图谱**。
 
 - **模块化扩展**：从核心概念出发，自动推演并生成子模块，构建逻辑严密的思维网络。
 - **无限深度探索**：每一个节点都不是终点。你可以针对任何分支继续**追问扩展**，或者通过“**深度回答**”功能深挖背后的专业详情。
@@ -44,7 +44,7 @@
 ### 🔍 深度内容挖掘 (Deep Dive & Insights)
 
 - **专业级深度解析**：一键生成 300-500 字的深度回答，支持 Markdown 渲染，涵盖概念解释、案例分析与逻辑推演。
-- **视觉化意象生成**：集成 CogView/DALL-E 接口，为抽象概念生成具象化配图，强化感官记忆与多维认知。
+- **视觉化意象生成**：集成生图接口，为抽象概念生成具象化配图，强化感官记忆与多维认知。
 - **全局宏观洞察**：自动扫描全图拓扑结构，提取核心要点并生成全局总结。
 
 ### 🛠️ 极致的交互体验 (Premium Interaction)
@@ -53,13 +53,12 @@
 - **全局搜索定位**：内置实时搜索引擎，支持关键词匹配并自动聚焦到目标节点。
 - **联动拖拽系统**：父子节点关联移动，保持逻辑簇的相对稳定性。
 - **子树状态管理**：支持大规模图谱的子树折叠，让你在宏观视野与微观细节间自由切换。
-- **本地优先架构**：所有配置与数据存储在浏览器 IndexedDB/LocalStorage，支持自定义任何 OpenAI 兼容接口，无平台锁定。
 
 ---
 
 ## 🔗 在线体验
 
-立即开启你的思考之旅：[thinkflow-ai.lz-t.top](https://thinkflow-ai.lz-t.top)
+立即开启你的思考之旅：[omnimind.sigclr.com](https://omnimind.sigclr.com/)
 
 ---
 
@@ -104,7 +103,7 @@ src/
 ### 2. 克隆并安装
 
 ```bash
-git clone https://github.com/your-repo/ThinkFlowAI.git
+git clone https://github.com/xiqiuqiu/ThinkFlowAI.git
 cd ThinkFlowAI
 npm install
 ```
@@ -125,21 +124,21 @@ npm run dev
 
 ### 2. 自定义 API 配置
 
-在 [src/services/config.ts](file:///d:/lztcode/ThinkFlowAI/src/services/config.ts) 中修改 `DEFAULT_CONFIG`：
+在 [src/services/config.ts](./src/services/config.ts) 中修改 `DEFAULT_CONFIG`：
 
 ```typescript
 export const DEFAULT_CONFIG = {
-    chat: {
-        baseUrl: 'https://api.your-provider.com/v1/chat/completions',
-        model: '',
-        apiKey: 'sk-...' // 建议通过环境变量或 UI 设置界面配置，避免硬编码
-    },
-    image: {
-        baseUrl: 'https://api.your-provider.com/v1/images/generations',
-        model: '',
-        apiKey: 'sk-...'
-    }
-}
+  chat: {
+    baseUrl: "https://api.your-provider.com/v1/chat/completions",
+    model: "",
+    apiKey: "sk-...", // 建议通过环境变量或 UI 设置界面配置，避免硬编码
+  },
+  image: {
+    baseUrl: "https://api.your-provider.com/v1/images/generations",
+    model: "",
+    apiKey: "sk-...",
+  },
+};
 ```
 
 ### 3. 构建生产环境
@@ -154,3 +153,9 @@ npm run build
   如果您觉得这个项目对您有帮助，请给一个 ⭐️ 以示支持！
 </p>
 
+---
+
+## ❤️ 致谢
+
+本项目基于 [ThinkFlowAI](https://github.com/ThinkFlowAI/ThinkFlowAI) 开发。
+感谢原作者 [lz-t](https://github.com/lz-t) 及 [ThinkFlowAI 团队](https://github.com/ThinkFlowAI) 的卓越贡献与开源精神。
