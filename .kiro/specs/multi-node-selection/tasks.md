@@ -6,14 +6,14 @@ This implementation plan focuses on extending the existing `handleNodeDrag` func
 
 ## Tasks
 
-- [~] 1. Set up testing infrastructure
+- [ ] 1. Set up testing infrastructure
   - Install fast-check library for property-based testing
   - Create test file structure for multi-selection tests
   - Set up test utilities for generating random node structures
   - _Requirements: All (testing foundation)_
 
 - [ ] 2. Implement core group movement logic
-  - [~] 2.1 Modify handleNodeDrag to detect multi-selection
+  - [ ] 2.1 Modify handleNodeDrag to detect multi-selection
     - At start of handleNodeDrag, query flowNodes for selected nodes
     - Store selected nodes list for use throughout drag operation
     - _Requirements: 3.1, 3.2, 7.1_

@@ -1,7 +1,8 @@
 <h1 align="center">🧠 OmniMind</h1>
 
 <p align="center">
-  <strong>OmniMind 是一个轻量级“从想法到结构化图谱”的工作台</strong>
+  <strong>用 AI 将想法变成可视化知识图谱</strong><br>
+  <em>本地优先 · 隐私安全 · 无限探索</em>
 </p>
 
 <p align="center">
@@ -18,144 +19,200 @@
 
 ---
 
-## 💡 愿景与理念
+## 🎯 这是什么？
 
-**OmniMind** 致力于打造一个从“想法”到“结构化图谱”的高效工作台。
+**OmniMind** 是一个 AI 驱动的思维导图工具，帮你把模糊的想法变成清晰的知识结构。
 
-在传统创作中，灵感往往是碎片化且模糊的。OmniMind 重新定义了这一过程：你只需输入一个核心想法，应用便会利用 AI 的发散性能力将其扩展为一套层次分明、可交互浏览的**知识图谱**。
+只需输入一个核心概念，AI 会自动帮你：
+- 🌳 **展开思维树** - 从一个想法生成完整的知识框架
+- 💬 **对话式探索** - 像聊天一样深入任何感兴趣的分支
+- 📝 **深度解析** - 为任何节点生成 300-500 字的专业分析
+- 🎨 **可视化配图** - 用 AI 生成图片帮助理解抽象概念
+- 📊 **全局总结** - 自动提取整个思维图谱的核心要点
 
-- **模块化扩展**：从核心概念出发，自动推演并生成子模块，构建逻辑严密的思维网络。
-- **无限深度探索**：每一个节点都不是终点。你可以针对任何分支继续**追问扩展**，或者通过“**深度回答**”功能深挖背后的专业详情。
-- **多维感知融合**：支持为节点一键生成**视觉配图**，让抽象的逻辑与具象的视觉意象交织，实现全感官的知识内化。
-
-这不仅是一个工具，更是一个能与你共同成长的本地优先思考空间。
-
----
-
-## ✨ 核心特性
-
-### 🚀 智能发散系统 (AI-Driven Divergence)
-
-- **零压力冷启动**：输入核心概念，AI 自动构建初始逻辑骨架，终结“白纸焦虑”。
-- **全链路上下文感知**：AI 能够理解从根节点到当前节点的完整逻辑路径。这意味着每一次“追问”都基于深度语境，而非孤立的关键词。
-- **多级思考风格**：支持“发散模式”与“严谨模式”切换。发散模式侧重灵感启发，严谨模式侧重逻辑深度。
-- **动态树形排版**：内置自适应布局算法，自动处理节点展开后的碰撞与重叠，确保图谱始终清晰有序。
-
-### 🔍 深度内容挖掘 (Deep Dive & Insights)
-
-- **专业级深度解析**：一键生成 300-500 字的深度回答，支持 Markdown 渲染，涵盖概念解释、案例分析与逻辑推演。
-- **视觉化意象生成**：集成生图接口，为抽象概念生成具象化配图，强化感官记忆与多维认知。
-- **全局宏观洞察**：自动扫描全图拓扑结构，提取核心要点并生成全局总结。
-
-### 🛠️ 极致的交互体验 (Premium Interaction)
-
-- **沉浸式演示模式**：一键进入全屏演示，支持通过键盘（←/→）在节点间顺序跳转。
-- **全局搜索定位**：内置实时搜索引擎，支持关键词匹配并自动聚焦到目标节点。
-- **联动拖拽系统**：父子节点关联移动，保持逻辑簇的相对稳定性。
-- **子树状态管理**：支持大规模图谱的子树折叠，让你在宏观视野与微观细节间自由切换。
+**本地优先设计** - 所有数据存储在你的浏览器中，支持任何 OpenAI 兼容的 API，无需担心隐私泄露。
 
 ---
 
-## 🔗 在线体验
+## ✨ 核心功能
 
-立即开启你的思考之旅：[omnimind.sigclr.com](https://omnimind.sigclr.com/)
+### 🚀 智能思维扩展
+
+**告别"白纸焦虑"** - 不知道从哪开始？输入一个想法，AI 自动帮你构建初始框架。
+
+- **上下文感知追问** - AI 理解从根节点到当前节点的完整路径，每次回答都基于完整的上下文
+- **两种思考模式** - 切换"发散模式"（创意优先）和"严谨模式"（逻辑优先）
+- **智能布局** - 自动排列节点，避免重叠，保持图谱清晰
+
+### 🔍 深度内容挖掘
+
+**不止于大纲** - 每个节点都可以深入探索：
+
+- **深度回答** - 一键生成详细解析，支持 Markdown 格式
+- **AI 配图** - 为抽象概念生成视觉化图片
+- **图谱对话** - 基于整个知识图谱与 AI 对话提问
+- **全局总结** - 自动分析整个思维图谱，提取关键洞察
+
+### 🎨 强大的交互体验
+
+**像操作思维一样自然** - 流畅的交互让你专注于思考：
+
+- **演示模式** - 全屏展示，用键盘（←/→）在节点间导航
+- **实时搜索** - 快速定位任何节点
+- **层级拖拽** - 拖动父节点时子节点自动跟随
+- **子树折叠** - 管理大型图谱，在宏观和细节间自由切换
+- **对齐辅助线** - 拖动节点时显示智能对齐参考线
+- **便签功能** - 在画布上添加自由便签记录灵感
+- **导出 Markdown** - 将整个思维图谱导出为结构化文档
+
+### 🔐 隐私与灵活性
+
+- **本地优先** - 数据存储在浏览器 localStorage，完全掌控你的数据
+- **云端同步**（可选）- 支持 Supabase 云存储，多设备同步
+- **多项目管理** - 创建和切换多个独立的思维图谱项目
+- **API 自由** - 支持任何 OpenAI 兼容的 API（OpenAI、智谱、通义千问等）
+- **中英双语** - 完整的界面本地化支持
 
 ---
 
-## 🛠️ 技术栈揭秘
+## 🎬 快速开始
 
-| 领域         | 技术选型                    | 核心优势                               |
-| :----------- | :-------------------------- | :------------------------------------- |
-| **核心框架** | **Vue 3 (Composition API)** | 极致的响应式体验与组件化开发效率。     |
-| **构建工具** | **Vite 5 + TypeScript**     | 秒级启动速度与严谨的类型安全保障。     |
-| **画布引擎** | **@vue-flow/core**          | 高性能的节点渲染与极高的定制化上限。   |
-| **视觉样式** | **Tailwind CSS**            | 原子化样式管理，确保 UI 的精致与统一。 |
-| **多语言**   | **Vue-I18n**                | 完善的中英双语本地化支持。             |
-| **解析引擎** | **Markdown-it**             | 节点内容的高质量渲染与代码高亮。       |
+### 在线体验
 
----
+立即访问：[omnimind.sigclr.com](https://omnimind.sigclr.com/)
 
-## 📂 架构概览
-
-```text
-src/
-├── components/          # 精细化 UI 组件库
-│   ├── WindowNode.vue   # 核心枢纽：集成 AI 调度与交互逻辑的自定义节点
-│   ├── TopNav.vue       # 全局控制中心
-│   └── ...
-├── services/            # 数据与配置层
-│   └── config.ts        # 策略配置：API 网关、模型参数与默认设置
-├── composables/         # 业务逻辑大脑
-│   └── useThinkFlow.ts  # 核心逻辑：图谱状态管理、AI 请求流处理、自动排版算法
-├── i18n/                # 国际化资产 (Locales)
-├── App.vue              # 容器骨架
-└── main.ts              # 应用入口
-```
-
----
-
-## 🚀 快速开始
-
-### 1. 环境准备
-
-确保你的开发环境已安装 [Node.js](https://nodejs.org/) (建议 v18+)。
-
-### 2. 克隆并安装
+### 本地运行
 
 ```bash
+# 1. 克隆项目
 git clone https://github.com/xiqiuqiu/ThinkFlowAI.git
 cd ThinkFlowAI
+
+# 2. 安装依赖
 npm install
-```
 
-### 3. 启动开发服务器
-
-```bash
+# 3. 启动开发服务器
 npm run dev
 ```
 
+访问 `http://localhost:5173` 即可使用。
+
 ---
 
-## ⚙️ 部署与私有化配置
+## ⚙️ 配置你的 API
 
-### 1. 默认演示接口说明
+项目默认使用 **OpenRouter** 服务（支持多种 AI 模型的统一接口）。
 
-项目默认通过 **Cloudflare Workers** 转发至智谱 Bigmodel (glm-4-flash/cogview-3-flash)。公共接口存在频率限制，建议开发者配置私有接口。
+### 方式一：使用 OpenRouter（推荐）
 
-### 2. 自定义 API 配置
+1. 访问 [OpenRouter](https://openrouter.ai/) 注册并获取 API Key
+2. 点击右上角的 ⚙️ 设置按钮
+3. 选择"自定义配置"，填入：
+   - **对话 API**：
+     - Base URL: `https://openrouter.ai/api/v1/chat/completions`
+     - Model: `google/gemini-2.5-flash`（或其他支持的模型）
+     - API Key: 你的 OpenRouter Key
+   - **图片 API**：
+     - Base URL: `https://openrouter.ai/api/v1/chat/completions`
+     - Model: `bytedance-seed/seedream-4.5`（或其他支持的图片模型）
+     - API Key: 你的 OpenRouter Key
 
-在 [src/services/config.ts](./src/services/config.ts) 中修改 `DEFAULT_CONFIG`：
+### 方式二：使用环境变量
 
-```typescript
-export const DEFAULT_CONFIG = {
-  chat: {
-    baseUrl: "https://api.your-provider.com/v1/chat/completions",
-    model: "",
-    apiKey: "sk-...", // 建议通过环境变量或 UI 设置界面配置，避免硬编码
-  },
-  image: {
-    baseUrl: "https://api.your-provider.com/v1/images/generations",
-    model: "",
-    apiKey: "sk-...",
-  },
-};
-```
-
-### 3. 构建生产环境
+创建 `.env` 文件：
 
 ```bash
+VITE_CHAT_BASE_URL=https://openrouter.ai/api/v1/chat/completions
+VITE_CHAT_MODEL=google/gemini-2.5-flash
+VITE_CHAT_API_KEY=your-openrouter-key
+
+VITE_IMAGE_BASE_URL=https://openrouter.ai/api/v1/chat/completions
+VITE_IMAGE_MODEL=bytedance-seed/seedream-4.5
+VITE_IMAGE_API_KEY=your-openrouter-key
+```
+
+### 兼容性说明
+
+- **对话 API**：完全兼容 OpenAI Chat Completions 格式，可以使用任何兼容的服务（OpenAI、智谱、通义千问等）
+- **图片 API**：目前使用 OpenRouter 的图片生成格式，如需使用 OpenAI DALL-E 或其他服务，需要修改 `src/composables/useThinkFlow.ts` 中的响应解析代码
+
+---
+
+## 🎯 使用场景
+
+- **学习新知识** - 输入一个主题，AI 帮你构建完整的知识框架
+- **头脑风暴** - 从一个想法出发，探索各种可能性
+- **写作大纲** - 快速生成文章或报告的结构
+- **项目规划** - 分解复杂项目为可执行的子任务
+- **知识整理** - 将碎片化的信息组织成结构化的知识图谱
+- **演讲准备** - 用演示模式展示你的思维过程
+
+---
+
+## 🛠️ 技术栈
+
+- **Vue 3** - 现代化的响应式框架
+- **TypeScript** - 类型安全
+- **Vite** - 极速开发体验
+- **VueFlow** - 强大的流程图引擎
+- **Tailwind CSS** - 优雅的界面设计
+- **Supabase**（可选）- 云端数据同步
+
+---
+
+## 📦 部署
+
+### 部署到 Cloudflare Pages（推荐）
+
+项目已配置好 Cloudflare Pages 部署：
+
+```bash
+# 一键构建并部署
+npm run deploy
+```
+
+首次部署需要先登录 Cloudflare：
+```bash
+npx wrangler login
+```
+
+### 部署到其他平台
+
+项目是标准的 Vite 应用，也可以部署到其他静态托管服务：
+
+```bash
+# 构建生产版本
 npm run build
 ```
 
+生成的 `dist/` 目录可以部署到：
+- **Vercel** - 导入 GitHub 仓库，自动识别 Vite 项目
+- **Netlify** - 拖拽 `dist` 文件夹或连接 Git 仓库
+- **GitHub Pages** - 使用 GitHub Actions 自动部署
+- 任何支持静态文件的服务器
+
 ---
 
-<p align="center">
-  如果您觉得这个项目对您有帮助，请给一个 ⭐️ 以示支持！
-</p>
+## 🤝 贡献
+
+欢迎提交 Issue 和 Pull Request！
+
+---
+
+## 📄 开源协议
+
+MIT License - 自由使用、修改和分发
 
 ---
 
 ## ❤️ 致谢
 
 本项目基于 [ThinkFlowAI](https://github.com/ThinkFlowAI/ThinkFlowAI) 开发。
-感谢原作者 [lz-t](https://github.com/lz-t) 及 [ThinkFlowAI 团队](https://github.com/ThinkFlowAI) 的卓越贡献与开源精神。
+
+感谢原作者 [lz-t](https://github.com/lz-t) 及 [ThinkFlowAI 团队](https://github.com/ThinkFlowAI) 的开源贡献。
+
+---
+
+<p align="center">
+  如果这个项目对你有帮助，请给一个 ⭐️ 支持一下！
+</p>

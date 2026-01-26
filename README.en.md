@@ -1,7 +1,8 @@
 <h1 align="center">🧠 OmniMind</h1>
 
 <p align="center">
-  <strong>Give Flow to Thought, Shape to Inspiration: An AI-Driven, Local-First Thinking Space</strong>
+  <strong>Transform Ideas into Visual Knowledge Graphs with AI</strong><br>
+  <em>Local-First · Privacy-Focused · Infinite Exploration</em>
 </p>
 
 <p align="center">
@@ -18,145 +19,200 @@
 
 ---
 
-## 💡 Vision & Philosophy
+## 🎯 What is OmniMind?
 
-**OmniMind** is dedicated to creating a high-efficiency workbench that transforms "ideas" into "structured graphs."
+**OmniMind** is an AI-powered mind mapping tool that transforms vague ideas into clear, structured knowledge graphs.
 
-In traditional creation, inspiration is often fragmented and fuzzy. OmniMind redefines this process: simply input a core idea, and the application leverages the divergent power of AI to expand it into a hierarchical, interactive **Knowledge Graph**.
+Simply input a core concept, and AI will automatically:
+- 🌳 **Expand Mind Trees** - Generate complete knowledge frameworks from a single idea
+- 💬 **Conversational Exploration** - Dive deep into any branch through natural dialogue
+- 📝 **Deep Analysis** - Generate 300-500 word professional analyses for any node
+- 🎨 **Visual Imagery** - Create AI-generated images to illustrate abstract concepts
+- 📊 **Global Summaries** - Extract key insights from your entire knowledge graph
 
-- **Modular Expansion**: Starting from core concepts, it automatically deduces and generates sub-modules, building a logically rigorous thinking network.
-- **Infinite Depth Exploration**: Every node is just a beginning. You can continue to **follow-up and expand** any branch or dive deep into professional details through the "**Deep Answer**" feature.
-- **Multidimensional Sensory Fusion**: Supports one-click **image generation** for nodes, weaving abstract logic with concrete visual imagery to achieve full-sensory knowledge internalization.
-
-This is more than just a tool; it is a local-first thinking space that grows with you.
-
----
-
-## ✨ Key Features
-
-### 🚀 Intelligent Divergence System (AI-Driven Divergence)
-
-- **Zero-Pressure Cold Start**: Enter a core concept, and the AI automatically builds the initial logical skeleton, ending "blank page anxiety."
-- **Full-Chain Context Awareness**: The AI understands the complete logical path from the root node to the current node. This means every "follow-up" is based on deep context rather than isolated keywords.
-- **Multi-style AI Generation**: Switch between "Creative" and "Precise" modes to control the breadth and depth of AI expansions.
-- **Dynamic Tree Layout**: Built-in adaptive layout algorithm automatically handles collisions and overlaps when nodes expand, ensuring the graph remains clear and organized.
-
-### 🔍 Deep Content Exploration (Deep Dive & Insights)
-
-- **Professional-Grade Deep Analysis**: Generate 300-500 words of deep answers with one click, supporting Markdown rendering, covering concept explanations, case studies, and logical deductions.
-- **Visual Imagery Generation**: Integrated CogView/DALL-E interfaces generate concrete images for abstract concepts, reinforcing sensory memory and multi-dimensional cognition.
-- **Global Macro Insights**: Automatically scans the entire graph topology to extract key points and generate a global summary.
-
-### 🛠️ Premium Interaction Experience
-
-- **Immersive Presentation Mode**: One-click full-screen presentation with keyboard navigation (Arrow keys) to guide your audience through the map.
-- **Global Search & Focus**: Real-time search for nodes by label or description with automatic viewport focusing.
-- **Linked Dragging System**: Parent and child nodes move together, maintaining the relative stability of logical clusters.
-- **Subtree State Management**: Supports subtree collapsing for large-scale graphs, allowing you to switch freely between macro vision and micro details.
-- **Local-First Architecture**: All configurations and data are stored in the browser's IndexedDB/LocalStorage. Supports any OpenAI-compatible interface with no platform lock-in.
+**Local-First Design** - All data stored in your browser, supports any OpenAI-compatible API, no privacy concerns.
 
 ---
 
-## 🔗 Live Demo
+## ✨ Core Features
 
-Start your thinking journey now: [https://omnimind.sigclr.com/](https://omnimind.sigclr.com/)
+### 🚀 Intelligent Mind Expansion
+
+**Say Goodbye to "Blank Page Anxiety"** - Don't know where to start? Input an idea and AI builds the initial framework for you.
+
+- **Context-Aware Follow-ups** - AI understands the complete path from root to current node, every response is contextually grounded
+- **Two Thinking Modes** - Switch between "Creative Mode" (idea-focused) and "Precise Mode" (logic-focused)
+- **Smart Layout** - Automatically arranges nodes to avoid overlaps and keep your graph clean
+
+### 🔍 Deep Content Exploration
+
+**More Than Just Outlines** - Every node can be explored in depth:
+
+- **Deep Dive Answers** - Generate detailed analyses with one click, Markdown supported
+- **AI-Generated Images** - Create visual representations for abstract concepts
+- **Graph Chat** - Ask questions based on your entire knowledge graph
+- **Global Summaries** - Automatically analyze your entire mind map and extract key insights
+
+### 🎨 Powerful Interaction Experience
+
+**As Natural as Thinking** - Smooth interactions keep you focused on ideas:
+
+- **Presentation Mode** - Full-screen display with keyboard navigation (←/→) between nodes
+- **Real-time Search** - Quickly locate any node
+- **Hierarchical Dragging** - Child nodes automatically follow when dragging parent nodes
+- **Subtree Collapse** - Manage large graphs, freely switch between macro and micro views
+- **Alignment Guides** - Smart alignment references when dragging nodes
+- **Sticky Notes** - Add free-form notes anywhere on the canvas
+- **Markdown Export** - Export your entire mind map as a structured document
+
+### 🔐 Privacy & Flexibility
+
+- **Local-First** - Data stored in browser localStorage, you control your data
+- **Cloud Sync** (Optional) - Supabase cloud storage support for multi-device sync
+- **Multi-Project Management** - Create and switch between multiple independent mind maps
+- **API Freedom** - Support any OpenAI-compatible API (OpenAI, Zhipu, Tongyi, etc.)
+- **Bilingual** - Complete UI localization in English and Chinese
 
 ---
 
-## 🛠️ Tech Stack Revealed
+## 🎬 Quick Start
 
-| Domain             | Tech Choice                 | Core Advantages                                                             |
-| :----------------- | :-------------------------- | :-------------------------------------------------------------------------- |
-| **Core Framework** | **Vue 3 (Composition API)** | Ultimate reactive experience and component-based development efficiency.    |
-| **Build Tool**     | **Vite 5 + TypeScript**     | Second-level startup speed and rigorous type safety.                        |
-| **Canvas Engine**  | **@vue-flow/core**          | High-performance node rendering and extremely high customization potential. |
-| **Visual Styling** | **Tailwind CSS**            | Atomic style management, ensuring a refined and unified UI.                 |
-| **i18n**           | **Vue-I18n**                | Comprehensive localized support for English and Chinese.                    |
-| **Parsing Engine** | **Markdown-it**             | High-quality rendering of node content with code highlighting.              |
+### Try Online
 
----
+Visit now: [omnimind.sigclr.com](https://omnimind.sigclr.com/)
 
-## 📂 Architecture Overview
-
-```text
-src/
-├── components/          # Refined UI Component Library
-│   ├── WindowNode.vue   # Core Hub: Custom node integrating AI scheduling and interaction logic
-│   ├── TopNav.vue       # Global Control Center
-│   └── ...
-├── services/            # Data & Configuration Layer
-│   └── config.ts        # Strategy Config: API gateways, model parameters, and default settings
-├── composables/         # Business Logic Brain
-│   └── useThinkFlow.ts  # Core Logic: Graph state management, AI request stream processing, auto-layout algorithm
-├── i18n/                # Internationalization Assets (Locales)
-├── App.vue              # Container Skeleton
-└── main.ts              # Application Entry Point
-```
-
----
-
-## 🚀 Quick Start
-
-### 1. Prerequisites
-
-Ensure your development environment has [Node.js](https://nodejs.org/) installed (v18+ recommended).
-
-### 2. Clone and Install
+### Run Locally
 
 ```bash
+# 1. Clone the repository
 git clone https://github.com/xiqiuqiu/ThinkFlowAI.git
 cd ThinkFlowAI
+
+# 2. Install dependencies
 npm install
-```
 
-### 3. Start Development Server
-
-```bash
+# 3. Start development server
 npm run dev
 ```
 
+Visit `http://localhost:5173` to use.
+
 ---
 
-## ⚙️ Deployment & Private Configuration
+## ⚙️ Configure Your API
 
-### 1. Default Demo Endpoint Description
+The project uses **OpenRouter** by default (a unified interface for multiple AI models).
 
-The project defaults to proxying requests via **Cloudflare Workers** to Zhipu Bigmodel (glm-4-flash/cogview-3-flash). Public interfaces have rate limits; developers are encouraged to configure private endpoints.
+### Method 1: Use OpenRouter (Recommended)
 
-### 2. Custom API Configuration
+1. Visit [OpenRouter](https://openrouter.ai/) to register and get an API Key
+2. Click the ⚙️ Settings button in the top right
+3. Select "Custom Configuration" and fill in:
+   - **Chat API**:
+     - Base URL: `https://openrouter.ai/api/v1/chat/completions`
+     - Model: `google/gemini-2.5-flash` (or other supported models)
+     - API Key: Your OpenRouter Key
+   - **Image API**:
+     - Base URL: `https://openrouter.ai/api/v1/chat/completions`
+     - Model: `bytedance-seed/seedream-4.5` (or other supported image models)
+     - API Key: Your OpenRouter Key
 
-Modify `DEFAULT_CONFIG` in [src/services/config.ts](./src/services/config.ts):
+### Method 2: Use Environment Variables
 
-```typescript
-export const DEFAULT_CONFIG = {
-  chat: {
-    baseUrl: "https://api.your-provider.com/v1/chat/completions",
-    model: "gpt-4o",
-    apiKey: "sk-...", // Recommended to configure via environment variables or UI settings to avoid hardcoding
-  },
-  image: {
-    baseUrl: "https://api.your-provider.com/v1/images/generations",
-    model: "dall-e-3",
-    apiKey: "sk-...",
-  },
-};
-```
-
-### 3. Build for Production
+Create a `.env` file:
 
 ```bash
+VITE_CHAT_BASE_URL=https://openrouter.ai/api/v1/chat/completions
+VITE_CHAT_MODEL=google/gemini-2.5-flash
+VITE_CHAT_API_KEY=your-openrouter-key
+
+VITE_IMAGE_BASE_URL=https://openrouter.ai/api/v1/chat/completions
+VITE_IMAGE_MODEL=bytedance-seed/seedream-4.5
+VITE_IMAGE_API_KEY=your-openrouter-key
+```
+
+### Compatibility Notes
+
+- **Chat API**: Fully compatible with OpenAI Chat Completions format, works with any compatible service (OpenAI, Zhipu, Tongyi, etc.)
+- **Image API**: Currently uses OpenRouter's image generation format. To use OpenAI DALL-E or other services, you'll need to modify the response parsing code in `src/composables/useThinkFlow.ts`
+
+---
+
+## 🎯 Use Cases
+
+- **Learning New Topics** - Input a subject, AI builds a complete knowledge framework
+- **Brainstorming** - Start with one idea, explore all possibilities
+- **Writing Outlines** - Quickly generate article or report structures
+- **Project Planning** - Break down complex projects into actionable subtasks
+- **Knowledge Organization** - Transform fragmented information into structured knowledge graphs
+- **Presentation Prep** - Use presentation mode to showcase your thinking process
+
+---
+
+## 🛠️ Tech Stack
+
+- **Vue 3** - Modern reactive framework
+- **TypeScript** - Type safety
+- **Vite** - Lightning-fast development
+- **VueFlow** - Powerful flow diagram engine
+- **Tailwind CSS** - Elegant UI design
+- **Supabase** (Optional) - Cloud data sync
+
+---
+
+## 📦 Deployment
+
+### Deploy to Cloudflare Pages (Recommended)
+
+The project is pre-configured for Cloudflare Pages deployment:
+
+```bash
+# Build and deploy in one command
+npm run deploy
+```
+
+First-time deployment requires Cloudflare login:
+```bash
+npx wrangler login
+```
+
+### Deploy to Other Platforms
+
+As a standard Vite application, you can also deploy to other static hosting services:
+
+```bash
+# Build for production
 npm run build
 ```
 
+The generated `dist/` directory can be deployed to:
+- **Vercel** - Import GitHub repository, auto-detects Vite projects
+- **Netlify** - Drag and drop `dist` folder or connect Git repository
+- **GitHub Pages** - Use GitHub Actions for automatic deployment
+- Any static file hosting service
+
 ---
 
-<p align="center">
-  If you find this project helpful, please give it a ⭐️ to show your support!
-</p>
+## 🤝 Contributing
+
+Issues and Pull Requests are welcome!
+
+---
+
+## 📄 License
+
+MIT License - Free to use, modify, and distribute
 
 ---
 
 ## ❤️ Acknowledgements
 
 This project is based on [ThinkFlowAI](https://github.com/ThinkFlowAI/ThinkFlowAI).
-Thanks to the original author [lz-t](https://github.com/lz-t) and the [ThinkFlowAI Team](https://github.com/ThinkFlowAI) for their excellent contribution and open source spirit.
+
+Thanks to the original author [lz-t](https://github.com/lz-t) and the [ThinkFlowAI Team](https://github.com/ThinkFlowAI) for their open source contributions.
+
+---
+
+<p align="center">
+  If this project helps you, please give it a ⭐️ to show your support!
+</p>
