@@ -16,6 +16,7 @@ import {
   ChevronDown,
   ChevronUp,
   Download,
+  FileCode,
   Focus,
   LayoutDashboard,
   Menu,
@@ -57,6 +58,7 @@ const props = defineProps<{
   onStartNewSession: () => void;
   onGenerateSummary: () => void;
   onExportMarkdown: () => void;
+  onExportHTML: () => void;
   // onOpenSettings: () => void; // TODO: 暂时隐藏设置
   isPresenting: boolean;
   onTogglePresentation: () => void;
@@ -263,7 +265,15 @@ const callAndClose = (fn: () => void) => {
           class="toolbar-btn text-indigo-600 hover:bg-indigo-50 border-indigo-100 flex-shrink-0"
         >
           <Download class="w-3.5 h-3.5 md:w-4 h-4" />
-          <span>{{ props.t("nav.export") }}</span>
+          <span>{{ props.t("nav.exportMd") }}</span>
+        </button>
+
+        <button
+          @click="props.onExportHTML"
+          class="toolbar-btn text-emerald-600 hover:bg-emerald-50 border-emerald-100 flex-shrink-0"
+        >
+          <FileCode class="w-3.5 h-3.5 md:w-4 h-4" />
+          <span>{{ props.t("nav.exportHtml") }}</span>
         </button>
 
         <div class="h-4 w-[1px] bg-slate-100 mx-1 flex-shrink-0"></div>
@@ -528,7 +538,15 @@ const callAndClose = (fn: () => void) => {
         class="toolbar-btn text-indigo-600 hover:bg-indigo-50 border-indigo-100"
       >
         <Download class="w-4 h-4" />
-        <span>{{ props.t("nav.export") }}</span>
+        <span>{{ props.t("nav.exportMd") }}</span>
+      </button>
+
+      <button
+        @click="callAndClose(props.onExportHTML)"
+        class="toolbar-btn text-emerald-600 hover:bg-emerald-50 border-emerald-100"
+      >
+        <FileCode class="w-4 h-4" />
+        <span>{{ props.t("nav.exportHtml") }}</span>
       </button>
     </div>
   </Transition>

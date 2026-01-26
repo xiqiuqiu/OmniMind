@@ -61,6 +61,8 @@
     "map": "MAP",
     "summary": "SUMMARY",
     "export": "EXPORT",
+    "exportMd": "MD",
+    "exportHtml": "HTML",
     "fullscreen": "Fullscreen",
     "exitFullscreen": "Exit Fullscreen",
     "hierarchicalDragging": "Linked Drag",

@@ -116,6 +116,7 @@ const {
   executeReset,
   generateSummary,
   exportMarkdown,
+  exportHTML,
   generateNodeImage,
   deepDive,
   expandIdea,
@@ -341,6 +342,7 @@ const fitToView = () => {
       :onStartNewSession="startNewSession"
       :onGenerateSummary="generateSummary"
       :onExportMarkdown="exportMarkdown"
+      :onExportHTML="exportHTML"
       :aiStyle="aiStyle"
       :onToggleAiStyle="
         () => (aiStyle = aiStyle === 'creative' ? 'precise' : 'creative')
