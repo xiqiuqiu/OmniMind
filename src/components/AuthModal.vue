@@ -33,8 +33,13 @@ const toggleMode = () => {
   error.value = "";
 };
 
+// 注册成功提示状态
+const showEmailConfirmation = ref(false);
+const registeredEmail = ref("");
+
 const handleSubmit = async () => {
   error.value = "";
+  showEmailConfirmation.value = false;
 
   if (!email.value || !password.value) {
     error.value = props.t("auth.fillAllFields");
@@ -49,10 +54,19 @@ const handleSubmit = async () => {
   try {
     if (isLogin.value) {
       await signInWithEmail(email.value, password.value);
+      emit("close");
     } else {
-      await signUpWithEmail(email.value, password.value);
+      const result = await signUpWithEmail(email.value, password.value);
+
+      if (result.needsEmailConfirmation) {
+        // 需要邮箱确认，显示提示信息
+        showEmailConfirmation.value = true;
+        registeredEmail.value = email.value;
+      } else {
+        // 无需确认（如Supabase禁用了邮箱确认），直接关闭
+        emit("close");
+      }
     }
-    emit("close");
   } catch (err: any) {
     error.value = err.message || props.t("auth.unknownError");
   }
@@ -110,6 +124,33 @@ const handleOAuth = async (provider: "google" | "github") => {
             >
               <AlertCircle class="w-4 h-4 flex-shrink-0" />
               <span>{{ error }}</span>
+            </div>
+
+            <!-- Email Confirmation Notice -->
+            <div
+              v-if="showEmailConfirmation"
+              class="flex flex-col gap-2 px-4 py-4 bg-green-50 border border-green-200 rounded-lg text-green-700 text-sm"
+            >
+              <div class="flex items-center gap-2 font-bold">
+                <Mail class="w-5 h-5" />
+                <span>{{ t("auth.emailSent") || "确认邮件已发送" }}</span>
+              </div>
+              <p class="text-xs text-green-600">
+                {{
+                  t("auth.checkEmailDesc") ||
+                  `请查收 ${registeredEmail} 的邮件并点击确认链接完成注册。`
+                }}
+              </p>
+              <button
+                type="button"
+                @click="
+                  mode = 'login';
+                  showEmailConfirmation = false;
+                "
+                class="mt-2 text-xs text-green-700 underline hover:text-green-900"
+              >
+                {{ t("auth.goToLogin") || "返回登录" }}
+              </button>
             </div>
 
             <!-- Email -->

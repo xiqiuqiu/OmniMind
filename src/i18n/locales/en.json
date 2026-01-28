@@ -124,7 +124,10 @@
     "unknownError": "An unknown error occurred",
     "logout": "Logout",
     "loginRequired": "Login required to use this feature",
-    "loginToUnlock": "Login to unlock more features"
+    "loginToUnlock": "Login to unlock more features",
+    "emailSent": "Confirmation email sent",
+    "checkEmailDesc": "Please check your inbox and click the confirmation link to complete registration",
+    "goToLogin": "Back to login"
   },
 
   "project": {

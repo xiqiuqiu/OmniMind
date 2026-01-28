@@ -124,7 +124,10 @@
     "unknownError": "发生未知错误",
     "logout": "退出登录",
     "loginRequired": "此功能需要登录后使用",
-    "loginToUnlock": "登录解锁更多功能"
+    "loginToUnlock": "登录解锁更多功能",
+    "emailSent": "确认邮件已发送",
+    "checkEmailDesc": "请查收您的邮箱并点击确认链接完成注册",
+    "goToLogin": "返回登录"
   },
 
   "project": {

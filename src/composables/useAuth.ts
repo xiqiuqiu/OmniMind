@@ -31,6 +31,7 @@ export function useAuth() {
 
   /**
    * 邮箱密码注册
+   * @returns { user, session, needsEmailConfirmation }
    */
   const signUpWithEmail = async (email: string, password: string) => {
     loading.value = true;
@@ -40,7 +41,10 @@ export function useAuth() {
     });
     loading.value = false;
     if (error) throw error;
-    return data;
+
+    // 判断是否需要邮箱确认：有user但无session表示需要确认邮箱
+    const needsEmailConfirmation = !!data.user && !data.session;
+    return { ...data, needsEmailConfirmation };
   };
 
   /**
