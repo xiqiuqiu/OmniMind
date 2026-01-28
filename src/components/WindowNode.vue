@@ -261,6 +261,34 @@ const handleFocus = () => {
 const handleBlur = () => {
   isFocused.value = false;
 };
+
+/**
+ * 调试：记录按钮点击时的状态
+ */
+const handleExpandClick = () => {
+  console.log("[WindowNode Debug] 回答按钮点击:", {
+    nodeId: props.id,
+    followUp: props.data.followUp,
+    isExpanding: props.data.isExpanding,
+    dataSnapshot: JSON.stringify(props.data),
+    flowNodeData: props.flowNodes.find((n: any) => n.id === props.id)?.data,
+  });
+
+  if (!checkAccess()) {
+    console.log("[WindowNode Debug] checkAccess 返回 false");
+    return;
+  }
+
+  console.log("[WindowNode Debug] 调用 expandIdea...");
+  props.expandIdea(
+    {
+      id: props.id,
+      data: props.data,
+      position: getNodePosition(props.id),
+    },
+    props.data.followUp,
+  );
+};
 </script>
 
 <template>
@@ -709,17 +737,7 @@ const handleBlur = () => {
               :disabled="props.data.isExpanding"
             />
             <button
-              @click.stop="
-                checkAccess() &&
-                props.expandIdea(
-                  {
-                    id: props.id,
-                    data: props.data,
-                    position: getNodePosition(props.id),
-                  },
-                  props.data.followUp,
-                )
-              "
+              @click.stop="handleExpandClick"
               :disabled="!props.data.followUp?.trim() || props.data.isExpanding"
               class="transition-all transform active:scale-90"
               :style="{

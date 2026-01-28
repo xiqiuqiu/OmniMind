@@ -1831,8 +1831,29 @@ export function useThinkFlow({
     const text =
       customInput || (parentNode ? parentNode.data.label : ideaInput.value);
 
-    if (!text || (parentNode ? parentNode.data.isExpanding : isLoading.value))
+    // 调试：记录 expandIdea 入口参数
+    console.log("[expandIdea Debug] 入口参数:", {
+      hasParam: !!param,
+      paramId: param?.id,
+      customInput,
+      text,
+      parentNodeExists: !!parentNode,
+      parentNodeData: parentNode?.data,
+      isExpandingOnParent: parentNode?.data?.isExpanding,
+      isLoadingGlobal: isLoading.value,
+      followUp: parentNode?.data?.followUp,
+    });
+
+    if (!text || (parentNode ? parentNode.data.isExpanding : isLoading.value)) {
+      console.log("[expandIdea Debug] 早退条件满足:", {
+        textEmpty: !text,
+        parentIsExpanding: parentNode?.data?.isExpanding,
+        globalLoading: isLoading.value,
+      });
       return;
+    }
+
+    console.log("[expandIdea Debug] 通过检查，继续执行...");
 
     let currentParentId = parentNode?.id;
 

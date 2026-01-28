@@ -294,7 +294,15 @@ export function useCloudStorage() {
       if (edgesRes.error) throw edgesRes.error;
 
       // 转换并缓存节点
+      console.log("[CloudSync Debug] 原始云端节点数据:", nodesRes.data);
+
       const nodes = ((nodesRes.data || []) as DbNode[]).map((n) => {
+        // 调试：记录每个节点原始的 is_expanding 状态
+        console.log(
+          `[CloudSync Debug] 节点 ${n.node_id} 原始 is_expanding:`,
+          n.is_expanding,
+        );
+
         const node = {
           id: n.node_id,
           type: n.type,
@@ -306,7 +314,9 @@ export function useCloudStorage() {
             detailedContent: n.detailed_content,
             imageUrl: n.image_url,
             childrenCount: n.children_count,
-            isExpanding: n.is_expanding,
+            // 关键修复：从云端加载后，强制重置 isExpanding 为 false
+            // 防止因上次保存时的中间状态导致点击无效
+            isExpanding: false,
             followUp: n.follow_up,
             type: n.type,
           },
