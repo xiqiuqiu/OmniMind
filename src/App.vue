@@ -120,6 +120,7 @@ const {
   generateNodeImage,
   deepDive,
   expandIdea,
+  generateDerivedQuestions,
   aiStyle,
   isPresenting,
   togglePresentation: _togglePresentation,
@@ -452,6 +453,7 @@ const fitToView = () => {
             :toggleSubtreeCollapse="toggleSubtreeCollapse"
             :isSubtreeCollapsed="isSubtreeCollapsed"
             :deleteNode="deleteNode"
+            :generateDerivedQuestions="generateDerivedQuestions"
             :isAuthenticated="isAuthenticated"
             :onShowAuthModal="() => (showAuthModal = true)"
             @preview="previewImageUrl = $event"

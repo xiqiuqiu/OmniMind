@@ -20,6 +20,7 @@ import {
   ChevronRight,
   GripVertical,
   Image as ImageIcon,
+  Lightbulb,
   Maximize2,
   RefreshCw,
   Shield,
@@ -56,6 +57,7 @@ const props = defineProps<{
   toggleSubtreeCollapse: (id: string) => void;
   isSubtreeCollapsed: (id: string) => boolean;
   deleteNode: (id: string) => void;
+  generateDerivedQuestions: (id: string) => void;
   // 游客模式限制
   isAuthenticated: boolean;
   onShowAuthModal: () => void;
@@ -615,6 +617,49 @@ const handleBlur = () => {
                 {{ props.t("node.spawn") }}
               </span>
             </div>
+          </div>
+        </div>
+
+        <!-- AI衍生问题气泡（在 detailedContent 生成后自动显示） -->
+        <div v-if="props.data.detailedContent" class="mb-3">
+          <div class="flex items-center mb-2">
+            <span
+              class="text-[9px] font-black text-slate-400 uppercase tracking-widest"
+              >{{ props.t("node.derivedQuestions") }}</span
+            >
+          </div>
+
+          <!-- 生成中状态 -->
+          <div
+            v-if="props.data.isGeneratingQuestions"
+            class="flex items-center gap-2 py-2"
+          >
+            <Sparkles
+              class="w-4 h-4 text-purple-400 animate-ai-glow"
+              :stroke-width="1.5"
+            />
+            <span class="text-[9px] font-bold text-slate-400 animate-pulse">{{
+              props.t("common.generating")
+            }}</span>
+          </div>
+
+          <!-- 衍生问题气泡 -->
+          <div
+            v-else-if="props.data.derivedQuestions?.length"
+            class="flex flex-wrap gap-1.5"
+          >
+            <button
+              v-for="(question, idx) in props.data.derivedQuestions"
+              :key="idx"
+              @click.stop="
+                props.updateNode(props.id, {
+                  data: { ...props.data, followUp: question },
+                })
+              "
+              class="px-2.5 py-1.5 text-[10px] font-bold rounded-full transition-all hover:scale-105 active:scale-95 border"
+            >
+              {{ question }}
+            </button>
           </div>
         </div>
 

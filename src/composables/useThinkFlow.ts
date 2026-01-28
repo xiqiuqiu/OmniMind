@@ -1738,6 +1738,9 @@ export function useThinkFlow({
           error: null,
         },
       });
+
+      // 自动生成衍生问题
+      generateDerivedQuestions(nodeId, content);
     } catch (error: any) {
       console.error("Deep Dive Error:", error);
       updateNode(nodeId, {
@@ -2073,6 +2076,9 @@ export function useThinkFlow({
         setTimeout(() => {
           fitView({ nodes: [childId], padding: 0.5, duration: 800 });
         }, 100);
+
+        // 自动生成衍生问题
+        generateDerivedQuestions(childId, answerContent);
       } catch (error: any) {
         console.error("Follow-up Error:", error);
         const nodeObj = flowNodes.value.find((n) => n.id === parentNode.id);
@@ -2086,6 +2092,98 @@ export function useThinkFlow({
           });
         }
       }
+    }
+  };
+
+  /**
+   * 生成衍生问题：为指定节点生成3条探索性问题
+   * - 在 detailedContent 生成后自动调用
+   * - 用户可点击问题气泡填入 followUp 输入框进行追问
+   */
+  const generateDerivedQuestions = async (
+    nodeId: string,
+    detailedContent?: string,
+  ) => {
+    const node = flowNodes.value.find((n) => n.id === nodeId);
+    if (!node || node.data.isGeneratingQuestions) return;
+
+    // 标记生成状态
+    updateNode(nodeId, {
+      data: {
+        ...node.data,
+        isGeneratingQuestions: true,
+        derivedQuestions: [],
+      },
+    });
+
+    const useConfig =
+      apiConfig.mode === "default" ? DEFAULT_CONFIG.chat : apiConfig.chat;
+    const finalApiKey =
+      apiConfig.mode === "default"
+        ? useConfig.apiKey || API_KEY
+        : useConfig.apiKey;
+
+    try {
+      const rootNode = flowNodes.value.find(
+        (n) => n.id.startsWith("root-") || n.data.type === "root",
+      );
+      const rootTopic = rootNode?.data?.label || "";
+      const path = findPathToNode(nodeId);
+      const context = path.join(" -> ");
+      const topic = node.data.label || "";
+      // 使用传入的 detailedContent 或节点已有的 detailedContent
+      const detail = detailedContent || node.data.detailedContent || "";
+
+      const response = await fetch(useConfig.baseUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${finalApiKey}`,
+        },
+        body: JSON.stringify({
+          model: useConfig.model,
+          messages: [
+            {
+              role: "user",
+              content: t("prompts.derivedQuestionsPrompt", {
+                rootTopic,
+                context,
+                topic,
+                detail,
+              }),
+            },
+          ],
+          response_format: { type: "json_object" },
+          temperature: 0.9,
+        }),
+      });
+
+      if (!response.ok) {
+        const error: any = new Error("Derived questions request failed");
+        error.status = response.status;
+        throw error;
+      }
+
+      const data = await response.json();
+      const result = JSON.parse(data.choices[0].message.content);
+      const questions = result.questions || [];
+
+      updateNode(nodeId, {
+        data: {
+          ...node.data,
+          derivedQuestions: questions.slice(0, 3),
+          isGeneratingQuestions: false,
+        },
+      });
+    } catch (error: any) {
+      console.error("Generate Derived Questions Error:", error);
+      updateNode(nodeId, {
+        data: {
+          ...node.data,
+          isGeneratingQuestions: false,
+          derivedQuestions: [],
+        },
+      });
     }
   };
 
@@ -2154,6 +2252,7 @@ export function useThinkFlow({
     generateNodeImage,
     deepDive,
     expandIdea,
+    generateDerivedQuestions,
     aiStyle,
     isPresenting,
     togglePresentation,

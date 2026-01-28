@@ -99,7 +99,9 @@
     "mainTitle": "Root Node",
     "moduleTitle": "Sub Module",
     "spawn": "Spawn",
-    "delete": "Delete"
+    "delete": "Delete",
+    "derivedQuestions": "AI Suggest",
+    "generateQuestions": "Generate"
   },
 
   "auth": {
@@ -146,6 +148,7 @@
     "deepDivePrompt": "You are generating an in-depth answer for a node in a mind map. You MUST ground the explanation in the root question and the full context path from root to the current node to avoid drifting.\n\nRoot question / Core idea: {rootTopic}\nContext path (root -> current): {context}\nCurrent node: {topic}\nNode description / hints: {detail}\n\nRequirements:\n1. About 100-300 words, well-structured: background, core principles, key points, and practical applications/examples.\n2. Explicitly connect back to the root question/core idea, and explain the role of this node within the path.\n3. If information is insufficient, make reasonable assumptions and label them as \"Assumption\".\n4. Output the body directly (Markdown headings/lists allowed). Do NOT output JSON. No opening/closing remarks.",
     "summaryPrompt": "You are a thinking summary expert. Please generate a profound, insightful, and structured full-session summary based on the provided mind map hierarchy.\n\nMind map data:\n{nodes}\n\nRequirements:\n1. **Core Overview**: Use one paragraph to accurately refine the core value and objectives of the entire mind map.\n2. **Key Dimension Analysis**: Extract 3-4 key dimensions from the main branches of the map and deeply analyze the internal logical connections between them.\n3. **Insights & Actionable Advice**: Based on the analysis, summarize 2-3 inspiring core insights or practical action recommendations.\n4. **Style Requirements**: Concise language with logical beauty. Use Markdown format (appropriate use of bold, lists, quotes, etc.). Avoid simple chronological listing.\n5. **Direct Output**: Do not include JSON format, and do not include any opening remarks (e.g., \"Sure, here is your summary...\").",
     "styleCreative": "[Style: Divergent] Please broaden your thinking as much as possible, generating ideas that are creative, highly relevant, but unconventional. Encourage interdisciplinary and multi-perspective thinking.",
-    "stylePrecise": "[Style: Strict] Please generate structured, rigorous, and in-depth ideas strictly based on logic, common sense, and professional knowledge. Avoid overly vague or mystical vocabulary."
+    "stylePrecise": "[Style: Strict] Please generate structured, rigorous, and in-depth ideas strictly based on logic, common sense, and professional knowledge. Avoid overly vague or mystical vocabulary.",
+    "derivedQuestionsPrompt": "Generate 3 short exploration questions based on the detailed content below. Questions must be directly related to the detailed content.\n\nRoot: {rootTopic}\nPath: {context}\nNode: {topic}\nDetailed content: {detail}\n\nRequirements:\n1. Each question max 10 words\n2. Questions must directly relate to the detailed content\n3. Return strict JSON array format with questions field"
   }
 }
