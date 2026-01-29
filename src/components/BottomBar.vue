@@ -103,30 +103,36 @@ const handleBallClick = () => {
     class="fixed bottom-4 md:bottom-4 left-1/2 -translate-x-1/2 z-50 flex flex-col items-center gap-3 w-full max-w-2xl px-4 md:px-6"
   >
     <div
-      class="flex items-center gap-2 md:gap-3 w-full relative"
+      class="flex items-center justify-center w-full relative"
       @mouseenter="handleContainerMouseEnter"
       @mouseleave="handleContainerMouseLeave"
     >
       <div
         :class="[
-          'flex items-center gap-2 md:gap-3 bg-slate-50/80 backdrop-blur-xl border border-slate-200/60 px-3 md:px-5 py-2 md:py-3',
-          'focus-within:bg-white/90 focus-within:shadow-2xl focus-within:shadow-slate-200/50 focus-within:border-slate-300/80',
-          'transform-gpu will-change-transform',
+          'flex items-center bg-slate-50/80 backdrop-blur-xl border-slate-200/60',
+          'transform-gpu will-change-transform overflow-hidden',
           isExpanded
-            ? 'opacity-100 scale-100 rounded-xl md:rounded-2xl w-full'
-            : 'opacity-0 scale-90 rounded-full w-0 pointer-events-none',
+            ? 'opacity-100 w-full py-2 md:py-3 px-3 md:px-5 gap-2 md:gap-3 rounded-xl md:rounded-2xl border translate-y-0 shadow-2xl shadow-slate-200/50'
+            : 'opacity-0 w-12 h-12 md:w-14 md:h-14 p-0 gap-0 rounded-full border-0 translate-y-2 pointer-events-none',
         ]"
         :style="{
-          transition:
-            'all 700ms cubic-bezier(0.23, 1, 0.32, 1), opacity 500ms cubic-bezier(0.23, 1, 0.32, 1)',
+          transition: 'all 600ms cubic-bezier(0.34, 1.56, 0.64, 1)',
         }"
       >
-        <Terminal class="w-4 h-4 md:w-5 h-5 text-slate-400 flex-shrink-0" />
+        <Terminal
+          class="flex-shrink-0 transition-all duration-500"
+          :class="
+            isExpanded
+              ? 'w-4 h-4 md:w-5 h-5 text-slate-400 opacity-100'
+              : 'w-0 h-0 opacity-0'
+          "
+        />
         <input
           ref="inputRef"
           :value="props.modelValue"
           :placeholder="props.t('nav.placeholder')"
-          class="flex-grow bg-transparent border-none outline-none text-xs md:text-sm font-bold text-slate-700 placeholder:text-slate-400 min-w-0"
+          class="flex-grow bg-transparent border-none outline-none text-xs md:text-sm font-bold text-slate-700 placeholder:text-slate-400 min-w-0 transition-opacity duration-300 delay-100"
+          :class="isExpanded ? 'opacity-100' : 'opacity-0'"
           @input="
             emit('update:modelValue', ($event.target as HTMLInputElement).value)
           "
@@ -139,12 +145,13 @@ const handleBallClick = () => {
           @click="handleStyleToggle"
           @mousedown.prevent
           type="button"
-          class="flex items-center gap-1 md:gap-1.5 px-2 md:px-3 py-1.5 md:py-2 rounded-lg border text-[9px] md:text-[10px] font-bold tracking-widest uppercase transition-all shadow-sm flex-shrink-0 hover:scale-105 active:scale-95"
-          :class="
+          class="flex items-center gap-1 md:gap-1.5 px-2 md:px-3 py-1.5 md:py-2 rounded-lg border text-[9px] md:text-[10px] font-bold tracking-widest uppercase transition-all shadow-sm flex-shrink-0 hover:scale-105 active:scale-95 delay-75"
+          :class="[
+            isExpanded ? 'opacity-100 scale-100' : 'opacity-0 scale-50',
             props.aiStyle === 'creative'
               ? 'bg-amber-50 border-amber-200 text-amber-600 shadow-amber-100/50 hover:bg-amber-100'
-              : 'bg-cyan-50 border-cyan-200 text-cyan-700 shadow-cyan-100/50 hover:bg-cyan-100'
-          "
+              : 'bg-cyan-50 border-cyan-200 text-cyan-700 shadow-cyan-100/50 hover:bg-cyan-100',
+          ]"
         >
           <component
             :is="props.aiStyle === 'creative' ? Sparkles : Brain"
@@ -162,7 +169,8 @@ const handleBallClick = () => {
           @mousedown.prevent
           type="button"
           :disabled="props.isLoading || !props.modelValue.trim()"
-          class="flex items-center gap-1.5 md:gap-2 px-3 md:px-4 py-2 md:py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-lg md:rounded-xl transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed group/btn flex-shrink-0"
+          class="flex items-center gap-1.5 md:gap-2 px-3 md:px-4 py-2 md:py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-lg md:rounded-xl transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed group/btn flex-shrink-0 delay-100"
+          :class="isExpanded ? 'opacity-100 scale-100' : 'opacity-0 scale-50'"
         >
           <span
             class="text-[9px] md:text-[10px] font-black tracking-widest uppercase"
@@ -186,11 +194,10 @@ const handleBallClick = () => {
           'flex items-center justify-center group',
           !isExpanded
             ? 'opacity-100 scale-100 hover:scale-105'
-            : 'opacity-0 scale-50 pointer-events-none',
+            : 'opacity-0 scale-0 pointer-events-none',
         ]"
         :style="{
-          transition:
-            'all 600ms cubic-bezier(0.23, 1, 0.32, 1), opacity 400ms cubic-bezier(0.23, 1, 0.32, 1)',
+          transition: 'all 600ms cubic-bezier(0.23, 1, 0.32, 1)',
         }"
         @click="handleBallClick"
       >
