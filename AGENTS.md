@@ -1,185 +1,162 @@
-# ThinkFlowAI - Agent Development Guide
+# ThinkFlowAI Agent Guide
 
-This document provides essential information for agentic coding agents working in the ThinkFlowAI repository.
+This document is for agentic coding assistants working in this repository.
 
 ## Project Overview
 
-ThinkFlowAI is a Vue 3 + TypeScript application for AI-powered mind mapping and idea expansion. It uses Vue Flow for interactive node-based canvas, Supabase for cloud storage, and Tailwind CSS for styling.
+ThinkFlowAI (OmniMind) is a Vue 3 + TypeScript app for AI-powered mind mapping. It uses Vue Flow for the canvas, Tailwind CSS for styling, and optional Supabase sync.
 
-## Build & Development Commands
+## Source of Truth
+
+- Existing agent rules: `docs/code-rules.md` (aligned and included here)
+- Cursor rules: none found in `.cursor/rules/` or `.cursorrules`
+- Copilot rules: none found in `.github/copilot-instructions.md`
+
+## Commands (Build/Lint/Test)
 
 ```bash
-# Development server
+# Install
+npm install
+
+# Dev server
 npm run dev
 
 # Production build
 npm run build
 
-# Deploy to Cloudflare Workers
-npm run deploy
-
-# Preview production build
+# Preview build
 npm run preview
 
-# Type checking (Vue TypeScript)
-npm run type-check  # (if available, use vue-tsc)
+# Deploy (Cloudflare Pages via Wrangler)
+npm run deploy
 
-# Note: No linting or testing framework currently configured
+# Run tests (Vitest, jsdom)
+npm run test
+
+# Run tests with UI
+npm run test:ui
 ```
+
+Testing and linting:
+- No lint script configured.
+- Test framework: Vitest + @vue/test-utils + jsdom.
+- Single-test command:
+  - `npx vitest run path/to/file.test.ts`
+  - `npx vitest run -t "test name"`
 
 ## Project Structure
 
 ```
 src/
 ├── components/          # Vue components
-├── composables/         # Vue composables (business logic)
+├── composables/         # Business logic and shared state
 ├── services/           # API and configuration services
-├── lib/                # External library integrations (Supabase)
+├── lib/                # Supabase client + types
 ├── i18n/               # Internationalization
-└── main.ts            # Application entry point
+└── main.ts             # App entry point
 ```
 
 ## Code Style Guidelines
 
-### TypeScript & Vue 3
-- Use `<script setup lang="ts">` for all Vue components
-- Strict TypeScript enabled - always type props, refs, and function parameters
-- Use composition API with `ref`, `reactive`, `computed`, and `watch`
-- Export composables as functions returning reactive state/methods
+### Vue + TypeScript
+- Use `<script setup lang="ts">` for components.
+- TypeScript `strict` is enabled; always type props, refs, emits, and function params.
+- Prefer Composition API: `ref`, `reactive`, `computed`, `watch`.
+- Use `defineProps`/`defineEmits` with explicit types.
 
-### Import Organization
-```typescript
-// 1. Vue core imports
+### Import Order
+```ts
+// 1) Vue core
 import { ref, computed, onMounted } from 'vue'
 
-// 2. Third-party libraries
+// 2) Third-party
 import { useVueFlow } from '@vue-flow/core'
 import { createClient } from '@supabase/supabase-js'
 
-// 3. Internal imports (use @ alias)
+// 3) Internal (use @ alias)
 import { DEFAULT_CONFIG } from '@/services/config'
 import { useAuth } from '@/composables/useAuth'
 ```
 
-### Naming Conventions
-- **Components**: PascalCase (WindowNode.vue, TopNav.vue)
-- **Composables**: camelCase with `use` prefix (useThinkFlow.ts, useAuth.ts)
-- **Functions**: camelCase, descriptive names (expandIdea, generateSummary)
-- **Variables**: camelCase, semantic naming (activeNodeId, isLoading)
-- **Constants**: UPPER_SNAKE_CASE (DEFAULT_CONFIG, API_KEY)
+### Naming
+- Components: PascalCase (WindowNode.vue)
+- Composables: `useXxx` camelCase (useThinkFlow.ts)
+- Functions/vars: camelCase (expandIdea, activeNodeId)
+- Constants: UPPER_SNAKE_CASE
 
-### Vue Component Structure
+### Component Structure
 ```vue
 <script setup lang="ts">
-/**
- * Component purpose description
- * - Key responsibilities
- * - Important interactions
- */
-
-// 1. Imports (Vue, third-party, internal)
-// 2. Props & emits definition
-// 3. Component state (refs, computed)
-// 4. Event handlers
-// 5. Lifecycle hooks
+// 1. Imports
+// 2. Props & emits
+// 3. State (refs, computed)
+// 4. Handlers
+// 5. Lifecycle
 </script>
 
 <template>
-  <!-- Component template -->
+  <!-- Markup -->
 </template>
 
 <style scoped>
-/* Component-specific styles */
+/* Use only when Tailwind is insufficient */
 </style>
 ```
 
 ### Error Handling
-- Use try-catch for async operations
-- Log errors with context: `console.error('[ComponentName] Error description:', error)`
-- Provide user feedback for critical errors
-- Handle API errors gracefully with fallback states
+- Wrap async calls with try/catch.
+- Log with context: `console.error('[Feature] message:', error)`.
+- Surface user-friendly errors for critical failures.
 
 ### State Management
-- Use composables for business logic and state
-- Keep component state local when possible
-- Use reactive objects for related state
-- Prefer `computed` for derived state
+- Keep UI state local when possible.
+- Centralize business logic in composables.
+- Use `computed` for derived values.
 
-### Styling Guidelines
-- Use Tailwind CSS classes primarily
-- Custom CSS only for complex animations or Vue Flow overrides
-- Scoped styles in components when needed
-- Follow existing color scheme (slate, orange accents)
-- Maintain responsive design patterns
+### Styling
+- Tailwind first; scoped CSS only for complex animations or Vue Flow overrides.
+- Keep color scheme consistent (slate + orange accent).
+- Maintain responsive layout patterns.
 
-### API Integration
-- Use axios for HTTP requests
-- Handle loading states and errors
-- Use environment variables for sensitive data
-- Implement proper error boundaries
+### API and Data
+- Use Axios for HTTP requests.
+- Store credentials in `.env` with `VITE_` prefix or via UI settings; never hardcode secrets.
+- Text generation uses OpenAI-compatible Chat Completions.
+- Image generation uses OpenRouter-compatible responses; changing providers requires updating parsing in `src/composables/useThinkFlow.ts`.
 
-### Vue Flow Specific
-- Custom node types: `window`, `sticky`
-- Use Handle components for connections
-- Implement proper node positioning and sizing
-- Handle viewport and zoom states
-- Custom styling via CSS overrides
+### Supabase/Cloud Sync
+- Supabase is optional and used for auth + sync.
+- Route cloud writes through composables (`useAuth`, `useProjects`, `useCloudStorage`).
+- Local storage is source of truth when unauthenticated.
+- Keep `src/lib/database.types.ts` aligned with Supabase schema.
 
-## Key Dependencies
+## Formatting
 
-- **Vue 3**: Frontend framework
-- **TypeScript**: Type safety
-- **Vue Flow**: Interactive node canvas
-- **Tailwind CSS**: Utility-first styling
-- **Supabase**: Backend/database
-- **Vue I18n**: Internationalization
-- **Axios**: HTTP client
+- Follow existing file style (mostly single quotes in `.ts`, double quotes in `vite.config.ts`).
+- Use 2-space indentation in Vue templates/CSS when present.
+- Avoid unnecessary comments; add only for non-obvious logic.
 
-## Development Notes
+## Build/Runtime Notes
 
-- No test framework currently configured
-- No linting tools set up (consider adding ESLint + Prettier)
-- Uses Vite for build tooling
-- Cloudflare Workers for deployment
-- Chinese/English bilingual support
+- Vite alias `@` -> `src` (see `tsconfig.json`).
+- `vite.config.ts` drops `console` and `debugger` in production builds.
+- Bilingual UI (English/Chinese) via `src/i18n`.
 
-## Common Patterns
+## Commit Message Conventions
 
-### Composable Pattern
-```typescript
-export function useFeatureName() {
-  const state = ref()
-  const computed = computed(() => state.value)
-  
-  const action = async () => {
-    try {
-      // logic
-    } catch (error) {
-      console.error('[FeatureName] Error:', error)
-    }
-  }
-  
-  return { state, computed, action }
-}
+提交信息允许中文，必须带类型前缀：
+
+```
+<type>: <中文简短说明，描述目的/原因>
 ```
 
-### Component Props
-```typescript
-interface Props {
-  t: Translate
-  config: Config
-  onAction: () => void
-}
+Types: feat | change | fix | refactor | perf | style | docs | chore | test
 
-const props = defineProps<Props>()
-```
+## Quick Reference
 
-### Event Handling
-```typescript
-const emit = defineEmits<{
-  close: []
-  update: [value: string]
-}>()
-```
-
-When working in this codebase, prioritize type safety, follow the established patterns, and maintain consistency with existing code style.
+- Entry: `src/main.ts`
+- App shell: `src/App.vue`
+- Components: `src/components`
+- Composables: `src/composables`
+- Services: `src/services`
+- Supabase: `src/lib`
