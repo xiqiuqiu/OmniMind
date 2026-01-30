@@ -439,7 +439,7 @@ const fitToView = () => {
           'presentation-mode': isPresenting,
         }"
         :pan-on-drag="panOnDrag"
-        :selection-key-code="true"
+        :selection-key-code="'Shift'"
         :snap-to-grid="config.snapToGrid"
         :snap-grid="config.snapGrid"
         @node-drag="handleNodeDrag"
