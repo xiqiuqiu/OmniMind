@@ -34,7 +34,7 @@ const toggleSearch = () => {
 
 <template>
   <div
-    class="fixed left-4 top-1/2 -translate-y-1/2 z-30 hidden md:flex flex-col gap-3"
+    class="absolute left-4 top-1/2 -translate-y-1/2 z-30 hidden md:flex flex-col gap-3"
   >
     <div
       class="glass rounded-xl shadow-terminal p-2 flex flex-col gap-2 relative bg-white/90 backdrop-blur-xl border border-slate-200/60"

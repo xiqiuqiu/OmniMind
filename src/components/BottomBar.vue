@@ -100,7 +100,7 @@ const handleBallClick = () => {
 
 <template>
   <div
-    class="fixed bottom-4 md:bottom-4 left-1/2 -translate-x-1/2 z-50 flex flex-col items-center gap-3 w-full max-w-2xl px-4 md:px-6"
+    class="absolute bottom-4 md:bottom-4 left-1/2 -translate-x-1/2 z-30 flex flex-col items-center gap-3 w-full max-w-2xl px-4 md:px-6"
   >
     <div
       class="flex items-center justify-center w-full relative"

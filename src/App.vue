@@ -361,227 +361,227 @@ const fitToView = () => {
 
 <template>
   <div
-    class="h-screen w-screen bg-slate-50 dark:bg-slate-900 font-body text-slate-800 dark:text-slate-100 relative overflow-hidden flex flex-col selection:bg-primary-100 dark:selection:bg-primary-900/50"
+    class="h-screen w-screen bg-slate-50 dark:bg-slate-900 font-body text-slate-800 dark:text-slate-100 relative overflow-hidden flex flex-row selection:bg-primary-100 dark:selection:bg-primary-900/50"
   >
-    <!-- TODO: 暂时隐藏api设置  -->
-    <TopNav
-      v-if="!isPresenting"
-      :t="t"
-      :locale="locale"
-      :config="config"
-      :onStartNewSession="startNewSession"
-      :onGenerateSummary="generateSummary"
-      :onExportMarkdown="exportMarkdown"
-      :onExportHTML="exportHTML"
-      :isPresenting="isPresenting"
-      :onTogglePresentation="togglePresentation"
-      :isAuthenticated="isAuthenticated"
-      :user="user"
-      :onShowAuthModal="() => (showAuthModal = true)"
-      :onSignOut="signOut"
-      @toggle-locale="toggleLocale"
-    />
-
-    <SideNav
-      v-if="!isPresenting"
-      :t="t"
-      :locale="locale"
-      :config="config"
-      :searchQuery="searchQuery"
-      :onUpdateSearchQuery="(val) => (searchQuery = val)"
-      :searchResults="searchResults"
-      :onFocusNode="focusNode"
-    />
-
-    <BottomStatusBar
-      v-if="!isPresenting"
-      :t="t"
-      :config="config"
-      :onFit="fitToView"
-      :onCenterRoot="centerRoot"
-      :onResetLayout="resetLayout"
-    />
-
+    <!-- 左侧主要内容区域 (TopNav + Canvas) -->
     <div
-      class="flex-grow min-h-0 flex relative transition-all duration-300 gap-3 p-3 pt-0"
+      class="flex flex-col flex-grow relative min-w-0 transition-all duration-300"
     >
-      <!-- 演示模式退出提示 -->
-      <div
-        v-if="isPresenting"
-        class="absolute top-6 left-1/2 -translate-x-1/2 z-[100] bg-black/80 backdrop-blur-md text-white px-6 py-3 rounded-full flex items-center gap-4 shadow-2xl animate-bounce-in"
-      >
-        <span class="text-xs font-bold tracking-widest uppercase">{{
-          t("nav.presentationMode")
-        }}</span>
-        <div class="h-4 w-px bg-white/20"></div>
-        <div class="flex items-center gap-2">
-          <kbd class="px-2 py-1 bg-white/10 rounded text-[10px]">←/→</kbd>
-          <span class="text-[10px] opacity-60">{{
-            t("nav.presentationNav")
-          }}</span>
-        </div>
-        <button
-          @click="togglePresentation"
-          class="ml-2 p-1 hover:bg-white/20 rounded-full transition-colors"
-        >
-          <X class="w-4 h-4" />
-        </button>
-      </div>
-
-      <VueFlow
-        :default-edge-options="{ type: config.edgeType }"
-        :fit-view-on-init="false"
-        :min-zoom="0.05"
-        :max-zoom="4"
-        class="flex-grow bg-white rounded-xl border border-slate-200 overflow-hidden"
-        :class="{
-          'space-pressed': isSpacePressed,
-          'presentation-mode': isPresenting,
-        }"
-        :pan-on-drag="panOnDrag"
-        :selection-key-code="'Shift'"
-        :snap-to-grid="config.snapToGrid"
-        :snap-grid="config.snapGrid"
-        @node-drag="handleNodeDrag"
-      >
-        <Background
-          :variant="config.backgroundVariant"
-          :pattern-color="
-            config.backgroundVariant === BackgroundVariant.Dots
-              ? '#94a3b8'
-              : '#f1f5f9'
-          "
-          :gap="config.backgroundVariant === BackgroundVariant.Dots ? 16 : 24"
-          :size="
-            config.backgroundVariant === BackgroundVariant.Dots ? 1.2 : 0.5
-          "
-        />
-        <Controls v-if="false" :show-fullscreen="false" :show-fit-view="false">
-          <ControlButton @click="toggleFullscreen">
-            <component
-              :is="isFullscreen ? Minimize : Maximize"
-              class="w-4 h-4 text-slate-500"
-            />
-          </ControlButton>
-        </Controls>
-        <MiniMap v-if="config.showMiniMap" pannable zoomable />
-
-        <template #node-window="{ id, data, selected }">
-          <WindowNode
-            :id="id"
-            :data="data"
-            :selected="selected"
-            :t="t"
-            :config="config"
-            :activeNodeId="activeNodeId"
-            :activePath="activePath"
-            :flowNodes="flowNodes"
-            :updateNode="updateNode"
-            :generateNodeImage="generateNodeImage"
-            :expandIdea="expandIdea"
-            :toggleSubtreeCollapse="toggleSubtreeCollapse"
-            :isSubtreeCollapsed="isSubtreeCollapsed"
-            :deleteNode="deleteNode"
-            @preview="previewImageUrl = $event"
-          />
-        </template>
-
-        <template #node-sticky="{ id, data, selected }">
-          <StickyNoteNode
-            :id="id"
-            :data="data"
-            :selected="selected"
-            :t="t"
-            :config="config"
-            :updateNode="updateNode"
-            :removeNodes="removeNodes"
-          />
-        </template>
-      </VueFlow>
-
-      <div class="absolute inset-0 pointer-events-none z-20">
-        <div
-          v-if="config.showAlignmentGuides && verticalGuideStyle"
-          class="absolute top-0 bottom-0 w-px bg-orange-300/70"
-          :style="verticalGuideStyle"
-        ></div>
-        <div
-          v-if="config.showAlignmentGuides && horizontalGuideStyle"
-          class="absolute left-0 right-0 h-px bg-orange-300/70"
-          :style="horizontalGuideStyle"
-        ></div>
-      </div>
-
-      <!-- TODO: 暂时隐藏设置 -->
-      <!-- <SettingsModal
-        :show="showSettings"
+      <TopNav
+        v-if="!isPresenting"
         :t="t"
-        :apiConfig="apiConfig"
-        @close="showSettings = false"
-      /> -->
-      <ImagePreviewModal
-        :url="previewImageUrl"
-        @close="previewImageUrl = null"
-      />
-      <ResetConfirmModal
-        :show="showResetConfirm"
-        :t="t"
-        @close="showResetConfirm = false"
-        @confirm="executeReset"
-      />
-      <SummaryModal
-        :show="showSummaryModal"
-        :t="t"
-        :isSummarizing="isSummarizing"
-        :summaryContent="summaryContent"
-        @close="showSummaryModal = false"
-      />
-
-      <!-- 右侧详情面板 -->
-      <NodeDetailPanel
-        v-if="showNodeDetailPanel"
-        :show="showNodeDetailPanel"
-        :nodeData="panelNodeData"
-        :locked="isDetailPanelLocked"
-        :t="t"
+        :locale="locale"
+        :config="config"
+        :onStartNewSession="startNewSession"
+        :onGenerateSummary="generateSummary"
+        :onExportMarkdown="exportMarkdown"
+        :onExportHTML="exportHTML"
+        :isPresenting="isPresenting"
+        :onTogglePresentation="togglePresentation"
         :isAuthenticated="isAuthenticated"
+        :user="user"
         :onShowAuthModal="() => (showAuthModal = true)"
-        @close="closeRightPanel"
-        @toggleLock="togglePanelLock"
-        @followUp="handlePanelFollowUp"
-        @deepDive="(nodeId, topic) => deepDive(nodeId, topic)"
-        @generateImage="(nodeId, topic) => generateNodeImage(nodeId, topic)"
-        @preview="(url) => (previewImageUrl = url)"
-        @clickQuestion="handlePanelClickQuestion"
+        :onSignOut="signOut"
+        @toggle-locale="toggleLocale"
       />
 
-      <!-- 右侧聊天面板 -->
-      <GraphChatSidebar
-        v-if="showChatSidebar"
-        :show="showChatSidebar"
-        :t="t"
-        :isChatting="isChatting"
-        :messages="graphChatMessages"
-        :onSendMessage="sendGraphChatMessage"
-        :onClose="closeRightPanel"
-      />
+      <!-- 画布容器 (包含悬浮控件) -->
+      <div class="flex-grow relative w-full h-full min-h-0 overflow-hidden">
+        <SideNav
+          v-if="!isPresenting"
+          :t="t"
+          :locale="locale"
+          :config="config"
+          :searchQuery="searchQuery"
+          :onUpdateSearchQuery="(val) => (searchQuery = val)"
+          :searchResults="searchResults"
+          :onFocusNode="focusNode"
+        />
+
+        <BottomStatusBar
+          v-if="!isPresenting"
+          :t="t"
+          :config="config"
+          :onFit="fitToView"
+          :onCenterRoot="centerRoot"
+          :onResetLayout="resetLayout"
+        />
+
+        <!-- 演示模式退出提示 -->
+        <div
+          v-if="isPresenting"
+          class="absolute top-6 left-1/2 -translate-x-1/2 z-[100] bg-black/80 backdrop-blur-md text-white px-6 py-3 rounded-full flex items-center gap-4 shadow-2xl animate-bounce-in"
+        >
+          <span class="text-xs font-bold tracking-widest uppercase">{{
+            t("nav.presentationMode")
+          }}</span>
+          <div class="h-4 w-px bg-white/20"></div>
+          <div class="flex items-center gap-2">
+            <kbd class="px-2 py-1 bg-white/10 rounded text-[10px]">←/→</kbd>
+            <span class="text-[10px] opacity-60">{{
+              t("nav.presentationNav")
+            }}</span>
+          </div>
+          <button
+            @click="togglePresentation"
+            class="ml-2 p-1 hover:bg-white/20 rounded-full transition-colors"
+          >
+            <X class="w-4 h-4" />
+          </button>
+        </div>
+
+        <VueFlow
+          :default-edge-options="{ type: config.edgeType }"
+          :fit-view-on-init="false"
+          :min-zoom="0.05"
+          :max-zoom="4"
+          class="w-full h-full bg-white"
+          :class="{
+            'space-pressed': isSpacePressed,
+            'presentation-mode': isPresenting,
+          }"
+          :pan-on-drag="panOnDrag"
+          :selection-key-code="'Shift'"
+          :snap-to-grid="config.snapToGrid"
+          :snap-grid="config.snapGrid"
+          @node-drag="handleNodeDrag"
+        >
+          <Background
+            :variant="config.backgroundVariant"
+            :pattern-color="
+              config.backgroundVariant === BackgroundVariant.Dots
+                ? '#94a3b8'
+                : '#f1f5f9'
+            "
+            :gap="config.backgroundVariant === BackgroundVariant.Dots ? 16 : 24"
+            :size="
+              config.backgroundVariant === BackgroundVariant.Dots ? 1.2 : 0.5
+            "
+          />
+          <Controls
+            v-if="false"
+            :show-fullscreen="false"
+            :show-fit-view="false"
+          >
+            <ControlButton @click="toggleFullscreen">
+              <component
+                :is="isFullscreen ? Minimize : Maximize"
+                class="w-4 h-4 text-slate-500"
+              />
+            </ControlButton>
+          </Controls>
+          <MiniMap v-if="config.showMiniMap" pannable zoomable />
+
+          <template #node-window="{ id, data, selected }">
+            <WindowNode
+              :id="id"
+              :data="data"
+              :selected="selected"
+              :t="t"
+              :config="config"
+              :activeNodeId="activeNodeId"
+              :activePath="activePath"
+              :flowNodes="flowNodes"
+              :updateNode="updateNode"
+              :generateNodeImage="generateNodeImage"
+              :expandIdea="expandIdea"
+              :toggleSubtreeCollapse="toggleSubtreeCollapse"
+              :isSubtreeCollapsed="isSubtreeCollapsed"
+              :deleteNode="deleteNode"
+              @preview="previewImageUrl = $event"
+            />
+          </template>
+
+          <template #node-sticky="{ id, data, selected }">
+            <StickyNoteNode
+              :id="id"
+              :data="data"
+              :selected="selected"
+              :t="t"
+              :config="config"
+              :updateNode="updateNode"
+              :removeNodes="removeNodes"
+            />
+          </template>
+        </VueFlow>
+
+        <div class="absolute inset-0 pointer-events-none z-20">
+          <div
+            v-if="config.showAlignmentGuides && verticalGuideStyle"
+            class="absolute top-0 bottom-0 w-px bg-orange-300/70"
+            :style="verticalGuideStyle"
+          ></div>
+          <div
+            v-if="config.showAlignmentGuides && horizontalGuideStyle"
+            class="absolute left-0 right-0 h-px bg-orange-300/70"
+            :style="horizontalGuideStyle"
+          ></div>
+        </div>
+
+        <ImagePreviewModal
+          :url="previewImageUrl"
+          @close="previewImageUrl = null"
+        />
+        <ResetConfirmModal
+          :show="showResetConfirm"
+          :t="t"
+          @close="showResetConfirm = false"
+          @confirm="executeReset"
+        />
+        <SummaryModal
+          :show="showSummaryModal"
+          :t="t"
+          :isSummarizing="isSummarizing"
+          :summaryContent="summaryContent"
+          @close="showSummaryModal = false"
+        />
+
+        <BottomBar
+          v-if="!isPresenting"
+          :t="t"
+          :isLoading="isLoading"
+          v-model="ideaInput"
+          :aiStyle="aiStyle"
+          :onToggleAiStyle="
+            () => (aiStyle = aiStyle === 'creative' ? 'precise' : 'creative')
+          "
+          :forceExpanded="showIdeaInput"
+          @expand="expandIdea"
+        />
+      </div>
     </div>
 
-    <!-- 登录弹窗 -->
-    <AuthModal :show="showAuthModal" :t="t" @close="showAuthModal = false" />
-
-    <BottomBar
-      v-if="!isPresenting"
+    <!-- 右侧详情面板 (独立于左侧内容) -->
+    <NodeDetailPanel
+      v-if="showNodeDetailPanel"
+      :show="showNodeDetailPanel"
+      :nodeData="panelNodeData"
+      :locked="isDetailPanelLocked"
       :t="t"
-      :isLoading="isLoading"
-      v-model="ideaInput"
-      :aiStyle="aiStyle"
-      :onToggleAiStyle="
-        () => (aiStyle = aiStyle === 'creative' ? 'precise' : 'creative')
-      "
-      :forceExpanded="showIdeaInput"
-      @expand="expandIdea"
+      :isAuthenticated="isAuthenticated"
+      :onShowAuthModal="() => (showAuthModal = true)"
+      @close="closeRightPanel"
+      @toggleLock="togglePanelLock"
+      @followUp="handlePanelFollowUp"
+      @deepDive="(nodeId, topic) => deepDive(nodeId, topic)"
+      @generateImage="(nodeId, topic) => generateNodeImage(nodeId, topic)"
+      @preview="(url) => (previewImageUrl = url)"
+      @clickQuestion="handlePanelClickQuestion"
     />
+
+    <!-- 右侧聊天面板 -->
+    <GraphChatSidebar
+      v-if="showChatSidebar"
+      :show="showChatSidebar"
+      :t="t"
+      :isChatting="isChatting"
+      :messages="graphChatMessages"
+      :onSendMessage="sendGraphChatMessage"
+      :onClose="closeRightPanel"
+    />
+
+    <!-- 登录弹窗 (全局) -->
+    <AuthModal :show="showAuthModal" :t="t" @close="showAuthModal = false" />
   </div>
 </template>
 

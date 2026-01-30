@@ -75,7 +75,7 @@ const action = (fn: () => void) => {
 
 <template>
   <nav
-    class="flex-none fixed top-0 left-0 right-0 z-40 px-4 py-3 flex items-center justify-between pointer-events-none"
+    class="flex-none w-full bg-white/90 backdrop-blur-md border-b border-slate-200/60 z-30 px-4 py-3 flex items-center justify-between"
   >
     <!-- 左侧：项目选择器 (Pointer events enabled) -->
     <div class="pointer-events-auto flex items-center gap-4">

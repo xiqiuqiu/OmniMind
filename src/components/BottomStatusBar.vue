@@ -85,7 +85,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="fixed right-6 bottom-4 z-40 flex items-center gap-2">
+  <div class="absolute right-6 bottom-4 z-30 flex items-center gap-2">
     <div class="glass rounded-xl shadow-glass p-1.5 flex items-center gap-1">
       <!-- 适配视图 -->
       <button
