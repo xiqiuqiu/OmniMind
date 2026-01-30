@@ -225,9 +225,19 @@ const handleSpawn = () => {
   >
     <!-- Resize Handle -->
     <div
-      class="absolute left-0 top-0 bottom-0 w-1 cursor-ew-resize hover:bg-orange-400/50 hover:w-1.5 transition-all z-[100] -translate-x-1/2"
+      class="absolute left-0 top-0 bottom-0 w-5 cursor-ew-resize flex justify-center z-[100] -translate-x-1/2 group/resize touch-none select-none"
       @mousedown.prevent="startResize"
-    ></div>
+    >
+      <!-- Interactive Highlight Line -->
+      <div
+        class="w-0.5 h-full bg-transparent group-hover/resize:bg-orange-400/30 transition-colors duration-200"
+      ></div>
+
+      <!-- Visual Grip Handle -->
+      <div
+        class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-2 h-10 bg-stone-300/80 rounded-full shadow-sm backdrop-blur-sm group-hover/resize:bg-orange-500 group-hover/resize:w-1.5 group-hover/resize:h-14 transition-all duration-200 ease-out border border-white/50"
+      ></div>
+    </div>
 
     <!-- Header -->
     <div
@@ -323,9 +333,9 @@ const handleSpawn = () => {
         </div>
 
         <!-- Description -->
-        <div v-if="nodeDescription" class="text-slate-600 leading-relaxed">
+        <!-- <div v-if="nodeDescription" class="text-slate-600 leading-relaxed">
           {{ nodeDescription }}
-        </div>
+        </div> -->
 
         <!-- Error -->
         <div
