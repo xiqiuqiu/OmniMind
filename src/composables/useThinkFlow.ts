@@ -2053,6 +2053,7 @@ export function useThinkFlow({
         processSubNodes(result.nodes, rootId, startX, startY);
 
         setTimeout(() => {
+          resetLayout(); // 强制重排，确保对齐
           const childEdges = flowEdges.value.filter((e) => e.source === rootId);
           const childIds = childEdges.map((e) => e.target);
           const nodesToFit = [rootId, ...childIds];
@@ -2216,6 +2217,7 @@ export function useThinkFlow({
 
         // 聚焦新节点
         setTimeout(() => {
+          resetLayout(); // 强制重排
           fitView({ nodes: [childId], padding: 0.5, duration: 800 });
         }, 100);
 

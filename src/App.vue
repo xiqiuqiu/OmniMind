@@ -439,7 +439,7 @@ const fitToView = () => {
           'presentation-mode': isPresenting,
         }"
         :pan-on-drag="panOnDrag"
-        :selection-key-code="'Shift'"
+        :selection-key-code="true"
         :snap-to-grid="config.snapToGrid"
         :snap-grid="config.snapGrid"
         @node-drag="handleNodeDrag"
@@ -536,36 +536,36 @@ const fitToView = () => {
         :summaryContent="summaryContent"
         @close="showSummaryModal = false"
       />
+
+      <!-- 右侧详情面板 -->
+      <NodeDetailPanel
+        v-if="showNodeDetailPanel"
+        :show="showNodeDetailPanel"
+        :nodeData="panelNodeData"
+        :locked="isDetailPanelLocked"
+        :t="t"
+        :isAuthenticated="isAuthenticated"
+        :onShowAuthModal="() => (showAuthModal = true)"
+        @close="closeRightPanel"
+        @toggleLock="togglePanelLock"
+        @followUp="handlePanelFollowUp"
+        @deepDive="(nodeId, topic) => deepDive(nodeId, topic)"
+        @generateImage="(nodeId, topic) => generateNodeImage(nodeId, topic)"
+        @preview="(url) => (previewImageUrl = url)"
+        @clickQuestion="handlePanelClickQuestion"
+      />
+
+      <!-- 右侧聊天面板 -->
+      <GraphChatSidebar
+        v-if="showChatSidebar"
+        :show="showChatSidebar"
+        :t="t"
+        :isChatting="isChatting"
+        :messages="graphChatMessages"
+        :onSendMessage="sendGraphChatMessage"
+        :onClose="closeRightPanel"
+      />
     </div>
-
-    <!-- 右侧详情面板 -->
-    <NodeDetailPanel
-      v-if="showNodeDetailPanel"
-      :show="showNodeDetailPanel"
-      :nodeData="panelNodeData"
-      :locked="isDetailPanelLocked"
-      :t="t"
-      :isAuthenticated="isAuthenticated"
-      :onShowAuthModal="() => (showAuthModal = true)"
-      @close="closeRightPanel"
-      @toggleLock="togglePanelLock"
-      @followUp="handlePanelFollowUp"
-      @deepDive="(nodeId, topic) => deepDive(nodeId, topic)"
-      @generateImage="(nodeId, topic) => generateNodeImage(nodeId, topic)"
-      @preview="(url) => (previewImageUrl = url)"
-      @clickQuestion="handlePanelClickQuestion"
-    />
-
-    <!-- 右侧聊天面板 -->
-    <GraphChatSidebar
-      v-if="showChatSidebar"
-      :show="showChatSidebar"
-      :t="t"
-      :isChatting="isChatting"
-      :messages="graphChatMessages"
-      :onSendMessage="sendGraphChatMessage"
-      :onClose="closeRightPanel"
-    />
 
     <!-- 登录弹窗 -->
     <AuthModal :show="showAuthModal" :t="t" @close="showAuthModal = false" />
