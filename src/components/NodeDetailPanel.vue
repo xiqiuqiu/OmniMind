@@ -244,11 +244,6 @@ const handleSpawn = () => {
       class="p-4 border-b border-stone-100 flex items-center justify-between flex-shrink-0 bg-white z-10"
     >
       <div class="min-w-0">
-        <div
-          class="text-[9px] font-black uppercase tracking-widest text-stone-400"
-        >
-          {{ t("node.view") }}
-        </div>
         <h2 class="text-sm font-black text-slate-900 truncate">
           {{ nodeTitle || t("node.coreIdea") }}
         </h2>
@@ -279,7 +274,7 @@ const handleSpawn = () => {
 
     <!-- Content (Scrollable) -->
     <div
-      class="flex-grow overflow-y-auto min-h-0 p-4 text-[14px] space-y-4 custom-scrollbar"
+      class="flex-grow overflow-y-auto min-h-0 p-4 text-[14px] space-y-4 bg-slate-50/50 custom-scrollbar"
     >
       <div v-if="!nodeData" class="h-full flex items-center justify-center">
         <span class="text-slate-400">{{ t("node.view") }}</span>
