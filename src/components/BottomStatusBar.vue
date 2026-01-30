@@ -236,10 +236,10 @@ onUnmounted(() => {
 
 <style scoped>
 .glass {
-  @apply bg-white/80 backdrop-blur-md border border-white/20;
+  @apply bg-white/95 backdrop-blur-md border border-stone-200/60 shadow-sm;
 }
 
 .status-btn {
-  @apply p-2 rounded-lg border border-transparent transition-all active:scale-90 hover:shadow-sm;
+  @apply p-2 rounded-lg border border-transparent transition-all active:scale-90 hover:shadow-sm hover:bg-stone-100;
 }
 </style>

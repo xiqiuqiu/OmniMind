@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap");
 
 @tailwind base;
 @tailwind components;
@@ -9,35 +9,45 @@
    ======================================== */
 :root {
   /* 主色渐变 */
-  --color-primary: #FF6B35;
-  --color-primary-dark: #F72585;
-  --color-primary-deep: #7209B7;
-  
+  --color-primary: #ff6b35;
+  --color-primary-dark: #f72585;
+  --color-primary-deep: #7209b7;
+
   /* 语义色 */
-  --color-success: #10B981;
-  --color-warning: #F59E0B;
-  --color-error: #EF4444;
-  --color-info: #3B82F6;
-  
+  --color-success: #10b981;
+  --color-warning: #f59e0b;
+  --color-error: #ef4444;
+  --color-info: #3b82f6;
+
+  /* Heptabase 风格色彩 */
+  --bg-paper: #fafafa;
+  --bg-canvas: #f5f5f4;
+  --neutral-warm: #78716c;
+  --highlight-yellow: #fde047;
+  --border-card: rgba(0, 0, 0, 0.06);
+  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.03);
+  --shadow-card-hover:
+    0 4px 12px rgba(0, 0, 0, 0.08), 0 2px 4px rgba(0, 0, 0, 0.04);
+
   /* 表面色 */
   --bg-base: #ffffff;
   --bg-surface: rgba(255, 255, 255, 0.6);
-  --bg-glass: rgba(255, 255, 255, 0.7);
-  
+  --bg-glass: rgba(255, 255, 255, 0.85);
+
   /* 文字色 */
-  --text-primary: #0f172a;
-  --text-secondary: #475569;
-  --text-muted: #94a3b8;
-  
+  --text-primary: #1c1917;
+  --text-secondary: #57534e;
+  --text-muted: #a8a29e;
+
   /* 边框 */
   --border-glass: rgba(255, 255, 255, 0.3);
-  --border-subtle: rgba(226, 232, 240, 0.8);
-  
+  --border-subtle: rgba(214, 211, 209, 0.8);
+
   /* 字体 */
-  --font-heading: 'Space Grotesk', system-ui, sans-serif;
-  --font-body: 'Inter', system-ui, sans-serif;
-  --font-mono: 'JetBrains Mono', monospace;
-  
+  --font-heading: "Space Grotesk", system-ui, sans-serif;
+  --font-body: "Inter", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+
   /* z-index 层级 */
   --z-base: 0;
   --z-node: 10;
@@ -50,13 +60,13 @@
   --z-toast: 80;
   --z-tooltip: 90;
   --z-presentation: 100;
-  
+
   font-family: var(--font-body);
   line-height: 1.5;
   font-weight: 400;
   color-scheme: light dark;
   color: var(--text-primary);
-  background-color: var(--bg-base);
+  background-color: var(--bg-canvas);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -94,42 +104,56 @@ body {
     border: 1px solid var(--border-glass);
     box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.08);
   }
-  
+
   .glass-subtle {
     background: rgba(255, 255, 255, 0.5);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
     border: 1px solid rgba(255, 255, 255, 0.2);
   }
-  
+
   .glass-dark {
     background: rgba(15, 23, 42, 0.7);
     backdrop-filter: blur(24px);
     -webkit-backdrop-filter: blur(24px);
     border: 1px solid rgba(255, 255, 255, 0.1);
   }
-  
+
   /* 渐变文字 */
   .text-gradient {
-    background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark), var(--color-primary-deep));
+    background: linear-gradient(
+      135deg,
+      var(--color-primary),
+      var(--color-primary-dark),
+      var(--color-primary-deep)
+    );
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
-  
+
   /* 渐变边框 */
   .border-gradient {
     position: relative;
   }
   .border-gradient::before {
-    content: '';
+    content: "";
     position: absolute;
     inset: 0;
     padding: 2px;
     border-radius: inherit;
-    background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark), var(--color-primary-deep));
-    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    background: linear-gradient(
+      135deg,
+      var(--color-primary),
+      var(--color-primary-dark),
+      var(--color-primary-deep)
+    );
+    -webkit-mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
     -webkit-mask-composite: xor;
     mask-composite: exclude;
     pointer-events: none;
@@ -140,7 +164,9 @@ body {
    Reduced Motion 无障碍
    ======================================== */
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
+  *,
+  *::before,
+  *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;

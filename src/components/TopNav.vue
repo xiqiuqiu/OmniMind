@@ -75,22 +75,19 @@ const action = (fn: () => void) => {
 
 <template>
   <nav
-    class="flex-none w-full bg-white/90 backdrop-blur-md border-b border-slate-200/60 z-30 px-4 py-3 flex items-center justify-between"
+    class="flex-none w-full bg-white/95 backdrop-blur-md border-b border-stone-200/60 z-30 px-4 py-2 flex items-center justify-between"
   >
     <!-- 左侧：项目选择器 (Pointer events enabled) -->
-    <div class="pointer-events-auto flex items-center gap-4">
-      <!-- Logo (Optional, minimalist) -->
+    <div class="pointer-events-auto flex items-center gap-3">
+      <!-- Logo (极简文字标识) -->
       <div class="flex items-center gap-2">
-        <div
-          class="w-3 h-3 bg-gradient-to-br from-primary to-primary-dark rounded-sm rotate-45"
-        ></div>
         <span
-          class="font-heading font-bold text-slate-700 tracking-tighter text-lg hidden md:block"
+          class="font-heading font-bold text-stone-700 tracking-tight text-base"
           >OmniMind</span
         >
       </div>
 
-      <div class="h-6 w-px bg-slate-200 hidden md:block"></div>
+      <div class="h-5 w-px bg-stone-200 hidden md:block"></div>
 
       <ProjectSelector :t="props.t" />
     </div>

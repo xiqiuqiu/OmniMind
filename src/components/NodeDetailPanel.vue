@@ -49,6 +49,42 @@ const showSelectionAction = ref(false);
 const selectionPosition = ref({ x: 0, y: 0, transformX: "-50%" });
 const contentRef = ref<HTMLElement | null>(null);
 
+// 面板宽度调整
+const panelWidth = ref(400);
+const startX = ref(0);
+const startWidth = ref(0);
+const isResizing = ref(false);
+
+const startResize = (e: MouseEvent) => {
+  isResizing.value = true;
+  startX.value = e.clientX;
+  startWidth.value = panelWidth.value;
+  document.addEventListener("mousemove", resize);
+  document.addEventListener("mouseup", stopResize);
+  document.body.style.cursor = "ew-resize";
+  document.body.style.userSelect = "none"; // 防止拖拽时选中文本
+};
+
+const resize = (e: MouseEvent) => {
+  if (!isResizing.value) return;
+  const dx = startX.value - e.clientX; // 向左拖拽增加宽度
+  let newWidth = startWidth.value + dx;
+
+  // 限制宽度范围
+  if (newWidth < 300) newWidth = 300;
+  if (newWidth > 800) newWidth = 800;
+
+  panelWidth.value = newWidth;
+};
+
+const stopResize = () => {
+  isResizing.value = false;
+  document.removeEventListener("mousemove", resize);
+  document.removeEventListener("mouseup", stopResize);
+  document.body.style.cursor = "";
+  document.body.style.userSelect = "";
+};
+
 const renderedContent = computed(() => {
   if (!props.nodeData?.data?.detailedContent) return "";
   return md.render(props.nodeData.data.detailedContent);
@@ -116,7 +152,7 @@ const handleTextSelection = () => {
   if (!rect) return;
 
   const buttonWidth = 100;
-  const buttonHeight = 30;
+  const buttonHeight = 20;
   const gap = 12;
   const containerWidth = container.width;
 
@@ -184,15 +220,22 @@ const handleSpawn = () => {
 
 <template>
   <div
-    class="h-full min-h-0 w-[400px] flex-shrink-0 bg-white border border-slate-200 rounded-xl z-50 flex flex-col shadow-xl overflow-hidden"
+    class="h-full min-h-0 flex-shrink-0 bg-stone-50 border-l-2 border-stone-100 z-50 flex flex-col overflow-hidden relative transition-[width] duration-0"
+    :style="{ width: panelWidth + 'px' }"
   >
+    <!-- Resize Handle -->
+    <div
+      class="absolute left-0 top-0 bottom-0 w-1 cursor-ew-resize hover:bg-orange-400/50 hover:w-1.5 transition-all z-[100] -translate-x-1/2"
+      @mousedown.prevent="startResize"
+    ></div>
+
     <!-- Header -->
     <div
-      class="p-4 border-b border-slate-100 flex items-center justify-between flex-shrink-0 bg-white z-10"
+      class="p-4 border-b border-stone-100 flex items-center justify-between flex-shrink-0 bg-white z-10"
     >
       <div class="min-w-0">
         <div
-          class="text-[9px] font-black uppercase tracking-widest text-slate-400"
+          class="text-[9px] font-black uppercase tracking-widest text-stone-400"
         >
           {{ t("node.view") }}
         </div>
@@ -226,10 +269,10 @@ const handleSpawn = () => {
 
     <!-- Content (Scrollable) -->
     <div
-      class="flex-grow overflow-y-auto min-h-0 p-4 space-y-4 custom-scrollbar"
+      class="flex-grow overflow-y-auto min-h-0 p-4 text-[14px] space-y-4 custom-scrollbar"
     >
       <div v-if="!nodeData" class="h-full flex items-center justify-center">
-        <span class="text-xs text-slate-400">{{ t("node.view") }}</span>
+        <span class="text-slate-400">{{ t("node.view") }}</span>
       </div>
 
       <template v-else>
@@ -280,10 +323,7 @@ const handleSpawn = () => {
         </div>
 
         <!-- Description -->
-        <div
-          v-if="nodeDescription"
-          class="text-xs text-slate-600 leading-relaxed"
-        >
+        <div v-if="nodeDescription" class="text-slate-600 leading-relaxed">
           {{ nodeDescription }}
         </div>
 
@@ -317,7 +357,7 @@ const handleSpawn = () => {
         <div v-else-if="nodeData.data.detailedContent" class="relative">
           <div
             ref="contentRef"
-            class="markdown-body text-[12px] text-slate-700 leading-relaxed font-medium"
+            class="markdown-body text-slate-700 leading-relaxed font-medium"
             v-html="renderedContent"
             @mouseup="handleTextSelection"
           ></div>

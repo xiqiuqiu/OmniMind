@@ -37,7 +37,7 @@ const toggleSearch = () => {
     class="absolute left-4 top-1/2 -translate-y-1/2 z-30 hidden md:flex flex-col gap-3"
   >
     <div
-      class="glass rounded-xl shadow-terminal p-2 flex flex-col gap-2 relative bg-white/90 backdrop-blur-xl border border-slate-200/60"
+      class="glass rounded-xl shadow-sm p-2 flex flex-col gap-2 relative bg-white/95 backdrop-blur-xl border border-stone-200/60"
     >
       <!-- 搜索按钮 (带浮动输入框) -->
       <div class="relative">
@@ -46,8 +46,8 @@ const toggleSearch = () => {
           class="side-btn group"
           :class="
             isSearchOpen
-              ? 'bg-blue-50 text-blue-500 border-blue-100'
-              : 'text-slate-400 hover:text-blue-500 hover:bg-blue-50/50'
+              ? 'bg-stone-100 text-stone-600 border-stone-200'
+              : 'text-stone-400 hover:text-stone-600 hover:bg-stone-100'
           "
         >
           <Search v-if="!isSearchOpen" class="w-5 h-5" />
@@ -70,7 +70,7 @@ const toggleSearch = () => {
         >
           <div
             v-if="isSearchOpen"
-            class="absolute left-full ml-3 top-0 h-10 w-64 bg-white border border-slate-200 rounded-xl shadow-xl flex items-center px-3 z-[60]"
+            class="absolute left-full ml-3 top-0 h-10 w-64 bg-white border border-stone-200 rounded-xl shadow-md flex items-center px-3 z-[60]"
           >
             <Search class="w-4 h-4 text-slate-400 mr-2 flex-shrink-0" />
             <input
@@ -128,6 +128,6 @@ const toggleSearch = () => {
   @apply w-10 h-10 flex items-center justify-center rounded-xl border border-transparent transition-all active:scale-90 relative;
 }
 .side-btn:hover {
-  @apply border-slate-200 shadow-sm;
+  @apply border-stone-200 shadow-sm;
 }
 </style>

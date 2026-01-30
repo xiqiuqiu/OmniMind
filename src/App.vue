@@ -361,7 +361,7 @@ const fitToView = () => {
 
 <template>
   <div
-    class="h-screen w-screen bg-slate-50 dark:bg-slate-900 font-body text-slate-800 dark:text-slate-100 relative overflow-hidden flex flex-row selection:bg-primary-100 dark:selection:bg-primary-900/50"
+    class="h-screen w-screen bg-stone-100 font-body text-stone-800 relative overflow-hidden flex flex-row gap-1.5 selection:bg-primary-100"
   >
     <!-- 左侧主要内容区域 (TopNav + Canvas) -->
     <div

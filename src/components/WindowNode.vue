@@ -99,7 +99,6 @@ const { viewport } = useVueFlow();
 
 const getNodePosition = (id: string) =>
   props.flowNodes.find((n) => n.id === id)?.position;
-
 </script>
 
 <template>
@@ -114,17 +113,16 @@ const getNodePosition = (id: string) =>
     }"
     :style="{
       width: nodeWidth + 'px',
-      borderColor:
-        props.activePath.nodeIds.has(props.id)
-          ? props.config.edgeColor
-          : props.config.edgeColor + '40',
-      boxShadow: props.activeNodeId === props.id
+      borderColor: props.activePath.nodeIds.has(props.id)
+        ? props.config.edgeColor
+        : props.config.edgeColor + '40',
+      boxShadow:
+        props.activeNodeId === props.id
           ? `0 20px 50px -12px ${props.config.edgeColor}40`
           : '',
-      '--tw-ring-color':
-        props.selected
-          ? props.config.edgeColor + '40'
-          : 'transparent',
+      '--tw-ring-color': props.selected
+        ? props.config.edgeColor + '40'
+        : 'transparent',
     }"
   >
     <Handle
@@ -147,35 +145,35 @@ const getNodePosition = (id: string) =>
       class="window-header"
       :style="{
         backgroundColor: props.activePath.nodeIds.has(props.id)
-          ? props.config.edgeColor + '15'
-          : props.config.edgeColor + '05',
+          ? props.config.edgeColor + '08'
+          : 'transparent',
       }"
     >
-      <div class="flex gap-1.5 group/traffic px-1">
+      <!-- 极简状态指示 -->
+      <div class="flex items-center gap-2">
         <div
-          class="w-2.5 h-2.5 rounded-full bg-[#FF5F56] border border-[#E0443E] shadow-sm"
+          class="w-2 h-2 rounded-full"
+          :style="{
+            backgroundColor: props.data.isExpanding
+              ? props.config.edgeColor
+              : '#a8a29e',
+          }"
         ></div>
-        <div
-          class="w-2.5 h-2.5 rounded-full bg-[#FFBD2E] border border-[#DEA123] shadow-sm"
-        ></div>
-        <div
-          class="w-2.5 h-2.5 rounded-full bg-[#27C93F] border border-[#1AAB29] shadow-sm"
-        ></div>
+        <span
+          class="window-title"
+          :style="{
+            color: props.activePath.nodeIds.has(props.id)
+              ? props.config.edgeColor
+              : '',
+          }"
+        >
+          {{
+            props.data.type === "root"
+              ? props.t("node.mainTitle")
+              : props.t("node.moduleTitle")
+          }}
+        </span>
       </div>
-      <span
-        class="window-title"
-        :style="{
-          color: props.activePath.nodeIds.has(props.id)
-            ? props.config.edgeColor
-            : '',
-        }"
-      >
-        {{
-          props.data.type === "root"
-            ? props.t("node.mainTitle")
-            : props.t("node.moduleTitle")
-        }}
-      </span>
       <div class="flex items-center gap-1">
         <button
           v-if="props.data.childrenCount > 0"
@@ -374,19 +372,27 @@ const getNodePosition = (id: string) =>
 }
 
 .window-node {
-  @apply relative rounded-xl overflow-hidden shadow-terminal;
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(0, 0, 0, 0.08);
+  @apply relative rounded-xl overflow-hidden;
+  background: #ffffff;
+  border: 1px solid var(--border-card, rgba(0, 0, 0, 0.06));
+  box-shadow: var(
+    --shadow-card,
+    0 1px 3px rgba(0, 0, 0, 0.05),
+    0 1px 2px rgba(0, 0, 0, 0.03)
+  );
   min-width: 220px;
   max-width: 400px;
-  transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
 .window-node:hover {
-  @apply shadow-2xl scale-[1.01] -translate-y-1;
-  border-color: rgba(0, 0, 0, 0.15);
+  box-shadow: var(
+    --shadow-card-hover,
+    0 4px 12px rgba(0, 0, 0, 0.08),
+    0 2px 4px rgba(0, 0, 0, 0.04)
+  );
+  border-color: rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
 }
 
 .window-node.resizing {
@@ -402,7 +408,7 @@ const getNodePosition = (id: string) =>
 }
 
 .window-header {
-  @apply flex items-center justify-between px-3 py-2 border-b border-slate-50;
+  @apply flex items-center justify-between px-3 py-2 border-b border-stone-100;
 }
 
 .window-title {
