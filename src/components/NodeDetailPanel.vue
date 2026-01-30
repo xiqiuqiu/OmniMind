@@ -184,11 +184,11 @@ const handleSpawn = () => {
 
 <template>
   <div
-    class="h-full w-[400px] flex-shrink-0 bg-white border border-slate-200 rounded-xl z-50 flex flex-col shadow-xl"
+    class="h-full min-h-0 w-[400px] flex-shrink-0 bg-white border border-slate-200 rounded-xl z-50 flex flex-col shadow-xl overflow-hidden"
   >
     <!-- Header -->
     <div
-      class="p-4 border-b border-slate-100 flex items-center justify-between"
+      class="p-4 border-b border-slate-100 flex items-center justify-between flex-shrink-0 bg-white z-10"
     >
       <div class="min-w-0">
         <div
@@ -224,8 +224,10 @@ const handleSpawn = () => {
       </div>
     </div>
 
-    <!-- Content -->
-    <div class="flex-grow overflow-y-auto p-4 space-y-4 custom-scrollbar">
+    <!-- Content (Scrollable) -->
+    <div
+      class="flex-grow overflow-y-auto min-h-0 p-4 space-y-4 custom-scrollbar"
+    >
       <div v-if="!nodeData" class="h-full flex items-center justify-center">
         <span class="text-xs text-slate-400">{{ t("node.view") }}</span>
       </div>
@@ -234,7 +236,7 @@ const handleSpawn = () => {
         <!-- Image -->
         <div
           v-if="nodeData.data.imageUrl || nodeData.data.isImageLoading"
-          class="rounded-xl overflow-hidden bg-slate-50 border border-slate-100 aspect-video flex items-center justify-center relative group/img cursor-pointer"
+          class="rounded-xl overflow-hidden bg-slate-50 border border-slate-100 aspect-video flex items-center justify-center relative group/img cursor-pointer flex-shrink-0"
           @click="
             nodeData.data.imageUrl
               ? emit('preview', nodeData.data.imageUrl)
@@ -337,106 +339,115 @@ const handleSpawn = () => {
             </span>
           </div>
         </div>
-
-        <!-- Derived Questions -->
-        <div
-          v-if="
-            nodeData.data.detailedContent &&
-            (nodeData.data.derivedQuestions?.length ||
-              nodeData.data.isGeneratingQuestions)
-          "
-          class="pt-2"
-        >
-          <div
-            class="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2"
-          >
-            {{ t("node.derivedQuestions") }}
-          </div>
-
-          <div
-            v-if="nodeData.data.isGeneratingQuestions"
-            class="flex items-center gap-2"
-          >
-            <Sparkles
-              class="w-4 h-4 text-orange-400 animate-ai-glow"
-              :stroke-width="1.5"
-            />
-            <span class="text-[10px] font-bold text-slate-400 animate-pulse">{{
-              t("common.generating")
-            }}</span>
-          </div>
-
-          <div v-else class="flex flex-wrap gap-1.5">
-            <button
-              v-for="(question, idx) in nodeData.data.derivedQuestions"
-              :key="idx"
-              @click.stop="handleQuestionClick(question)"
-              class="px-2.5 py-1.5 text-[10px] font-bold rounded-full transition-all hover:scale-105 active:scale-95 border border-slate-200 text-slate-600 hover:text-slate-800"
-            >
-              {{ question }}
-            </button>
-          </div>
-        </div>
       </template>
     </div>
 
-    <!-- Footer -->
-    <div class="p-4 border-t border-slate-100 bg-slate-50/40">
+    <!-- Derived Questions (AI Generated) -->
+    <div
+      v-if="
+        nodeData?.data?.detailedContent &&
+        (nodeData.data.derivedQuestions?.length ||
+          nodeData.data.isGeneratingQuestions)
+      "
+      class="border-t border-slate-100 bg-slate-50/50 p-4 max-h-[190px] custom-scrollbar flex-shrink-0"
+    >
       <div
-        class="flex items-center gap-2 bg-white border border-slate-200 rounded-xl px-3 py-2 focus-within:ring-2 focus-within:ring-orange-400/20 focus-within:border-orange-400 transition-all"
+        class="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-3 flex items-center justify-between"
       >
-        <Terminal class="w-3.5 h-3.5 text-orange-500" />
+        <span>{{ t("node.derivedQuestions") }}</span>
+        <div
+          v-if="nodeData.data.isGeneratingQuestions"
+          class="flex items-center gap-2"
+        >
+          <Sparkles
+            class="w-3 h-3 text-orange-400 animate-ai-glow"
+            :stroke-width="1.5"
+          />
+        </div>
+      </div>
+
+      <div class="flex flex-wrap gap-2">
+        <button
+          v-for="(question, idx) in nodeData.data.derivedQuestions"
+          :key="idx"
+          @click.stop="handleQuestionClick(question)"
+          class="px-3 py-2 text-[11px] font-medium rounded-lg text-left transition-all bg-white border border-slate-200 text-slate-600 hover:text-slate-900 hover:border-slate-300 hover:shadow-sm active:scale-[0.98] w-full"
+        >
+          {{ question }}
+        </button>
+      </div>
+    </div>
+
+    <!-- User Input Area -->
+    <div class="p-4 border-t border-slate-100 bg-white flex-shrink-0 z-20">
+      <!-- Status Indicators -->
+      <div
+        v-if="
+          nodeData?.data?.isExpanding ||
+          nodeData?.data?.isDeepDiving ||
+          nodeData?.data?.isImageLoading
+        "
+        class="flex items-center gap-2 mb-2 px-1"
+      >
+        <Sparkles class="w-3 h-3 text-orange-400 animate-ai-glow" />
+        <span
+          class="text-[9px] font-black uppercase tracking-widest text-orange-400 animate-pulse"
+        >
+          {{ t("common.processing") }}
+        </span>
+      </div>
+
+      <div
+        class="flex items-center gap-2 bg-slate-50 border border-slate-200 rounded-xl px-2 py-2 focus-within:bg-white focus-within:ring-2 focus-within:ring-orange-400/20 focus-within:border-orange-400 transition-all shadow-sm"
+      >
+        <!-- Action Buttons in Input -->
+        <div
+          class="flex items-center gap-0.5 border-r border-slate-200 pr-1 mr-1"
+        >
+          <button
+            @click="handleDeepDive"
+            class="p-1.5 rounded-lg text-slate-400 hover:text-orange-500 hover:bg-orange-50 transition-colors"
+            :class="{
+              'text-orange-500 bg-orange-50': nodeData?.data?.isDeepDiving,
+            }"
+            :disabled="!nodeData || nodeData.data.isDeepDiving"
+            :title="t('node.deepDive')"
+          >
+            <BookOpen class="w-4 h-4" :stroke-width="1.5" />
+          </button>
+          <button
+            @click="handleGenerateImage"
+            class="p-1.5 rounded-lg text-slate-400 hover:text-blue-500 hover:bg-blue-50 transition-colors"
+            :class="{
+              'text-blue-500 bg-blue-50': nodeData?.data?.isImageLoading,
+            }"
+            :disabled="!nodeData || nodeData.data.isImageLoading"
+            :title="t('node.imgAction')"
+          >
+            <ImageIcon class="w-4 h-4" :stroke-width="1.5" />
+          </button>
+        </div>
+
         <input
           v-model="followUp"
           @keyup.enter="handleSendFollowUp"
           :placeholder="t('node.followUp')"
-          class="flex-grow bg-transparent border-none outline-none text-xs font-mono text-slate-700 placeholder:text-slate-300"
+          class="flex-grow bg-transparent border-none outline-none text-xs font-medium text-slate-700 placeholder:text-slate-400 min-w-0"
           :disabled="!nodeData || nodeData.data.isExpanding"
         />
+
         <button
           @click="handleSendFollowUp"
           :disabled="!followUp.trim() || !nodeData || nodeData.data.isExpanding"
-          class="p-1.5 rounded-lg transition-all"
+          class="p-1.5 rounded-lg transition-all flex-shrink-0"
           :class="
             followUp.trim()
-              ? 'bg-orange-500 text-white shadow-lg shadow-orange-500/30'
+              ? 'bg-orange-500 text-white shadow-md hover:bg-orange-600'
               : 'text-slate-300'
           "
         >
-          <Sparkles class="w-3.5 h-3.5" />
+          <Terminal class="w-3.5 h-3.5" :stroke-width="2" />
         </button>
-      </div>
-
-      <div class="mt-3 flex items-center justify-between">
-        <div class="flex items-center gap-2">
-          <button
-            @click="handleDeepDive"
-            class="text-[10px] font-black uppercase tracking-widest text-orange-500 hover:text-orange-600 flex items-center gap-1 transition-colors"
-            :disabled="!nodeData || nodeData.data.isDeepDiving"
-          >
-            <BookOpen class="w-3 h-3" />
-            {{ t("node.deepDive") }}
-          </button>
-          <button
-            @click="handleGenerateImage"
-            class="text-[10px] font-black uppercase tracking-widest text-blue-500 hover:text-blue-600 flex items-center gap-1 transition-colors"
-            :disabled="!nodeData || nodeData.data.isImageLoading"
-          >
-            <ImageIcon class="w-3 h-3" />
-            {{ t("node.imgAction") }}
-          </button>
-        </div>
-        <div
-          v-if="nodeData?.data?.isExpanding"
-          class="flex items-center gap-1.5"
-        >
-          <Sparkles class="w-3 h-3 text-orange-400 animate-ai-glow" />
-          <span
-            class="text-[9px] font-black uppercase tracking-widest text-orange-400 animate-pulse"
-          >
-            {{ t("common.loading") }}
-          </span>
-        </div>
       </div>
     </div>
   </div>

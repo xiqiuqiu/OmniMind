@@ -403,7 +403,7 @@ const fitToView = () => {
     />
 
     <div
-      class="flex-grow flex relative transition-all duration-300 gap-3 p-3 pt-0"
+      class="flex-grow min-h-0 flex relative transition-all duration-300 gap-3 p-3 pt-0"
     >
       <!-- 演示模式退出提示 -->
       <div
