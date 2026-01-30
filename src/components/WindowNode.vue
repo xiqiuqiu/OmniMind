@@ -51,6 +51,10 @@ const props = defineProps<{
  */
 const emit = defineEmits<{
   (e: "preview", url: string): void;
+  (
+    e: "contextmenu",
+    payload: { event: MouseEvent; id: string; data: any },
+  ): void;
 }>();
 
 /**
@@ -104,6 +108,9 @@ const getNodePosition = (id: string) =>
 <template>
   <div
     class="window-node group transition-all duration-500"
+    @contextmenu.prevent.stop="
+      emit('contextmenu', { event: $event, id: props.id, data: props.data })
+    "
     :class="{
       'opacity-40 grayscale-[0.4] blur-[0.5px] scale-[0.98] pointer-events-none':
         props.activeNodeId && !props.activePath.nodeIds.has(props.id),
@@ -193,15 +200,6 @@ const getNodePosition = (id: string) =>
             class="text-[9px] font-black"
             >{{ props.data.hiddenDescendantCount }}</span
           >
-        </button>
-        <button
-          v-if="props.data.type !== 'root' && !props.id.startsWith('root')"
-          type="button"
-          class="flex items-center gap-1 px-1.5 py-1 rounded-md text-[9px] font-black tracking-widest uppercase transition-colors text-rose-400 hover:bg-rose-50 hover:text-rose-600"
-          :title="props.t('node.delete')"
-          @click.stop="props.deleteNode(props.id)"
-        >
-          <Trash2 class="w-3 h-3" :stroke-width="1.5" />
         </button>
       </div>
     </div>

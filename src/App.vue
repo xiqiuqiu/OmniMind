@@ -36,6 +36,7 @@ import GraphChatSidebar from "./components/GraphChatSidebar.vue";
 import NodeDetailPanel from "./components/NodeDetailPanel.vue";
 import AuthModal from "./components/AuthModal.vue";
 import ProjectSelector from "./components/ProjectSelector.vue";
+import ContextMenu from "./components/ContextMenu.vue";
 
 // 认证状态
 import { useAuth } from "./composables/useAuth";
@@ -139,11 +140,13 @@ const {
   openGraphChat,
   isChatting,
   graphChatMessages,
+
   addStickyNote,
   sendGraphChatMessage,
   removeNodes,
   deleteNode,
   initCloudSync,
+
   loadProjectData,
   showIdeaInput,
   clearCanvas,
@@ -357,6 +360,42 @@ const toggleLocale = () => {
 const fitToView = () => {
   fitView({ padding: 0.2, duration: 800 });
 };
+
+/**
+ * 右键菜单状态
+ */
+const menuState = ref({
+  show: false,
+  x: 0,
+  y: 0,
+  nodeId: "",
+});
+
+const onNodeContextMenu = (event: any) => {
+  event.event.preventDefault(); // 阻止默认菜单
+  console.log("Context menu triggered", event);
+
+  // 只允许在非 root 节点上弹出
+  if (event.node.type === "root" || event.node.id.startsWith("root")) {
+    return;
+  }
+
+  menuState.value = {
+    show: true,
+    x: event.event.clientX,
+    y: event.event.clientY,
+    nodeId: event.node.id,
+  };
+};
+
+const closeContextMenu = () => {
+  menuState.value.show = false;
+};
+
+const handleDeleteFromMenu = (id: string) => {
+  deleteNode(id);
+  closeContextMenu();
+};
 </script>
 
 <template>
@@ -445,7 +484,22 @@ const fitToView = () => {
           :snap-to-grid="config.snapToGrid"
           :snap-grid="config.snapGrid"
           @node-drag="handleNodeDrag"
+          @node-contextmenu.prevent="onNodeContextMenu"
+          @pane-click="closeContextMenu"
+          @node-click="closeContextMenu"
+          @move-start="closeContextMenu"
         >
+          <!-- 全局邮件菜单 -->
+          <ContextMenu
+            v-if="menuState.show"
+            :x="menuState.x"
+            :y="menuState.y"
+            :nodeId="menuState.nodeId"
+            :t="t"
+            @close="closeContextMenu"
+            @delete="handleDeleteFromMenu"
+          />
+
           <Background
             :variant="config.backgroundVariant"
             :pattern-color="
@@ -489,6 +543,10 @@ const fitToView = () => {
               :isSubtreeCollapsed="isSubtreeCollapsed"
               :deleteNode="deleteNode"
               @preview="previewImageUrl = $event"
+              @contextmenu="
+                ({ event, id }) =>
+                  onNodeContextMenu({ event, node: { id, type: 'window' } })
+              "
             />
           </template>
 
