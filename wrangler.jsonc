@@ -1,5 +1,5 @@
 {
-  "name": "OmniMind-v1",
+  "name": "omnimind-v1",
   "compatibility_date": "2026-01-21",
   "main": "src/worker.js",
   "assets": {
