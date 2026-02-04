@@ -81,9 +81,9 @@ watch(
         const savedProjectId = localStorage.getItem(
           "thinkflow_current_project_id",
         );
-        const savedProject = savedProjectId
+        const savedProject: Project | undefined = savedProjectId
           ? projects.value.find((p) => p.id === savedProjectId)
-          : null;
+          : undefined;
         selectProject((savedProject || projects.value[0]) as Project);
       }
     }
@@ -117,14 +117,14 @@ const handleSelect = (project: (typeof projects.value)[0]) => {
     <!-- Trigger Button -->
     <button
       @click="isOpen = !isOpen"
-      class="flex items-center gap-2 px-3 py-1.5 bg-white border border-slate-200 rounded-lg text-xs font-bold text-slate-600 hover:border-slate-300 hover:shadow-sm transition-all"
+      class="flex items-center gap-1.5 px-2.5 py-1.5 bg-slate-50 border border-gray-200 rounded-lg text-xs font-medium text-slate-700 hover:bg-slate-100 hover:border-gray-300 transition-all"
     >
-      <FolderOpen class="w-4 h-4 text-orange-500" />
-      <span class="max-w-[120px] truncate">
+      <FolderOpen class="w-3.5 h-3.5 text-orange-500 flex-shrink-0" />
+      <span class="max-w-[100px] md:max-w-[140px] truncate">
         {{ currentProject?.name || t("project.select") }}
       </span>
       <ChevronDown
-        class="w-3 h-3 text-slate-400 transition-transform"
+        class="w-3 h-3 text-slate-400 transition-transform flex-shrink-0"
         :class="{ 'rotate-180': isOpen }"
       />
     </button>

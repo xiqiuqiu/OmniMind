@@ -112,8 +112,7 @@ const getNodePosition = (id: string) =>
       emit('contextmenu', { event: $event, id: props.id, data: props.data })
     "
     :class="{
-      'opacity-40 grayscale-[0.4] blur-[0.5px] scale-[0.98] pointer-events-none':
-        props.activeNodeId && !props.activePath.nodeIds.has(props.id),
+      'pointer-events-none': props.data.isExpanding,
       'opacity-100 grayscale-0 blur-0 scale-105 z-50 ring-2 ring-offset-4':
         props.activePath.nodeIds.has(props.id),
       resizing: isResizing,

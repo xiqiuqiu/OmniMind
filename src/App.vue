@@ -179,6 +179,9 @@ const { currentProject, resetProject, createProject, selectProject } =
 // 初始项目加载状态（首次加载项目数据时为 true）
 const isInitialProjectLoading = ref(false);
 
+// 标记：正在处理游客数据（避免 watch 竞态）
+const isHandlingGuestData = ref(false);
+
 // 应用就绪状态：
 // - 认证初始化完成
 // - 无初始项目加载中
@@ -247,6 +250,8 @@ watch(
       const hasGuestData = guestNodes.length > 0;
 
       if (hasGuestData) {
+        // 设置标志，防止 currentProject watch 竞态
+        isHandlingGuestData.value = true;
         // 游客有数据，自动保存为新项目
         console.log("[App] 检测到游客数据，自动创建项目保存");
         try {
@@ -276,9 +281,13 @@ watch(
               saveEdgesToCloud(guestEdges),
             ]);
             console.log("[App] 游客数据已保存到新项目");
+            // 清理游客项目ID
+            localStorage.removeItem("thinkflow_guest_project_id");
           }
         } catch (error) {
           console.error("[App] 保存游客数据失败:", error);
+        } finally {
+          isHandlingGuestData.value = false;
         }
       } else {
         // 游客无数据，正常启用云端同步
@@ -309,6 +318,8 @@ watch(
       clearCanvas();
       resetSyncState();
       showIdeaInput.value = true;
+      // 清理游客项目ID，确保下次作为新游客
+      localStorage.removeItem("thinkflow_guest_project_id");
     }
     // 游客模式无需特殊处理，authLoading 由 useAuth 内部管理
   },
@@ -319,6 +330,11 @@ watch(
 watch(
   () => currentProject.value,
   async (project, oldProject) => {
+    // 游客数据处理中，跳过加载（由 isAuthenticated watch 完成保存）
+    if (isHandlingGuestData.value) {
+      console.log("[App] 游客数据处理中，跳过 loadProjectData");
+      return;
+    }
     if (project && isAuthenticated.value) {
       // 首次加载（从无项目到有项目）设置初始加载状态
       if (!oldProject) {

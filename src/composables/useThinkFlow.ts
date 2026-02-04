@@ -452,12 +452,13 @@ export function useThinkFlow({
 
   /**
    * 当前激活节点 id
-   * 优先级：正在展开的节点 > 选中的节点 > 正在拖拽的节点
+   * 优先级：选中的节点 > 正在展开的节点 > 正在拖拽的节点
+   * 改动原因：允许用户在 expanding 期间点击其他节点切换面板
    */
   const activeNodeId = computed(() => {
-    const expandingNode = flowNodes.value.find((n) => n.data.isExpanding);
     const selectedNode = flowNodes.value.find((n) => n.selected);
-    return expandingNode?.id || selectedNode?.id || draggingNodeId.value;
+    const expandingNode = flowNodes.value.find((n) => n.data.isExpanding);
+    return selectedNode?.id || expandingNode?.id || draggingNodeId.value;
   });
 
   /**
@@ -747,9 +748,25 @@ export function useThinkFlow({
    * 初始化时从本地存储恢复状态
    */
   onMounted(async () => {
-    const savedNodes = localStorage.getItem("thinkflow_nodes");
-    const savedEdges = localStorage.getItem("thinkflow_edges");
-    const savedCollapsed = localStorage.getItem("thinkflow_collapsed");
+    // 优先读取项目隔离的数据（游客模式或已登录用户）
+    let savedNodes: string | null = null;
+    let savedEdges: string | null = null;
+    let savedCollapsed: string | null = null;
+
+    if (currentProjectId.value) {
+      // 有项目ID（游客或已登录），读取项目隔离数据
+      const projectId = currentProjectId.value;
+      savedNodes = localStorage.getItem(`thinkflow_${projectId}_nodes`);
+      savedEdges = localStorage.getItem(`thinkflow_${projectId}_edges`);
+      savedCollapsed = localStorage.getItem(`thinkflow_${projectId}_collapsed`);
+      console.log(`[ThinkFlow] 尝试从项目 ${projectId} 恢复数据`);
+    } else {
+      // 兼容旧版本：读取非项目隔离的数据
+      savedNodes = localStorage.getItem("thinkflow_nodes");
+      savedEdges = localStorage.getItem("thinkflow_edges");
+      savedCollapsed = localStorage.getItem("thinkflow_collapsed");
+      console.log("[ThinkFlow] 尝试从旧版格式恢复数据");
+    }
 
     if (savedNodes && savedEdges) {
       try {
@@ -781,14 +798,18 @@ export function useThinkFlow({
           setEdges(edges);
           collapsedNodeIds.value = collapsed;
 
+          console.log(`[ThinkFlow] 成功恢复 ${nodes.length} 个节点`);
+
           // 恢复后自适应一次视图
           setTimeout(() => {
             fitView({ padding: 0.2, duration: 800 });
           }, 150);
         }
       } catch (e) {
-        console.error("Failed to restore ThinkFlow state:", e);
+        console.error("[ThinkFlow] 恢复状态失败:", e);
       }
+    } else {
+      console.log("[ThinkFlow] 未找到可恢复的数据");
     }
 
     // 确保在所有初始化操作（包括可能的 setNodes）完成后再开启保存
@@ -817,6 +838,22 @@ export function useThinkFlow({
 
   // 当前项目 ID（用于 localStorage 隔离）
   const currentProjectId = ref<string | null>(null);
+
+  // 游客模式默认项目ID初始化
+  // 确保游客也有projectId，使持久化逻辑正常工作
+  if (!currentProjectId.value) {
+    const guestProjectId = localStorage.getItem("thinkflow_guest_project_id");
+    if (guestProjectId) {
+      currentProjectId.value = guestProjectId;
+      console.log(`[ThinkFlow] 恢复游客项目ID: ${guestProjectId}`);
+    } else {
+      // 为游客生成唯一项目ID
+      const newGuestId = `guest-${Date.now()}`;
+      currentProjectId.value = newGuestId;
+      localStorage.setItem("thinkflow_guest_project_id", newGuestId);
+      console.log(`[ThinkFlow] 创建游客项目ID: ${newGuestId}`);
+    }
+  }
 
   /**
    * 清空画布
