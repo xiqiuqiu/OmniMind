@@ -148,6 +148,82 @@ export function useThinkFlow({
    */
   const isPresenting = ref(false);
   const presentationIndex = ref(-1);
+  const presentationNodes = ref<string[]>([]); // 存储排序后的节点ID列表
+
+  /**
+   * 计算演示模式的节点逻辑顺序 (DFS + Y轴排序)
+   * 规则：
+   * 1. 从根节点开始
+   * 2. 深度优先遍历
+   * 3. 同级节点按 Y 轴坐标从上到下排序
+   * 4. 孤立节点按 Y 轴排序追加在其后
+   */
+  const getPresentationOrder = (): string[] => {
+    const nodes = flowNodes.value;
+    const edges = flowEdges.value;
+    if (nodes.length === 0) return [];
+
+    // 1. 构建邻接表
+    const childrenMap = new Map<string, string[]>();
+    // 记录所有作为 target 的节点，用于寻找根
+    const targetNodeIds = new Set<string>();
+
+    edges.forEach((edge) => {
+      if (!childrenMap.has(edge.source)) {
+        childrenMap.set(edge.source, []);
+      }
+      childrenMap.get(edge.source)!.push(edge.target);
+      targetNodeIds.add(edge.target);
+    });
+
+    // 2. 寻找根节点 (type === 'root' 或 没有入边的节点)
+    // 优先处理明确标记为 root 的节点
+    let rootNodes = nodes.filter(
+      (n) => n.data.type === "root" || n.id.startsWith("root"),
+    );
+
+    // 如果没有明确的 root，则寻找没有入边的节点
+    if (rootNodes.length === 0) {
+      rootNodes = nodes.filter((n) => !targetNodeIds.has(n.id));
+    }
+
+    // 对根节点也按 Y 轴排序
+    rootNodes.sort((a, b) => a.position.y - b.position.y);
+
+    // 记录已访问节点，防止循环引用
+    const visited = new Set<string>();
+    const sortedIds: string[] = [];
+
+    const dfs = (nodeId: string) => {
+      if (visited.has(nodeId)) return;
+      visited.add(nodeId);
+      sortedIds.push(nodeId);
+
+      const childrenIds = childrenMap.get(nodeId) || [];
+      if (childrenIds.length > 0) {
+        // 获取子节点实例并按 Y 轴排序
+        const children = childrenIds
+          .map((id) => nodes.find((n) => n.id === id))
+          .filter((n): n is (typeof nodes)[0] => !!n) // 过滤掉找不到的
+          .sort((a, b) => a.position.y - b.position.y);
+
+        children.forEach((child) => dfs(child.id));
+      }
+    };
+
+    // 3. 从每个根开始 DFS
+    rootNodes.forEach((root) => dfs(root.id));
+
+    // 4. 处理孤立/未连接的节点 (如果有漏网之鱼)
+    if (visited.size < nodes.length) {
+      const remainingNodes = nodes
+        .filter((n) => !visited.has(n.id))
+        .sort((a, b) => a.position.y - b.position.y);
+      remainingNodes.forEach((n) => sortedIds.push(n.id));
+    }
+
+    return sortedIds;
+  };
 
   /**
    * 搜索状态
@@ -174,29 +250,33 @@ export function useThinkFlow({
   };
 
   const nextPresentationNode = () => {
-    if (flowNodes.value.length === 0) return;
+    if (presentationNodes.value.length === 0) return;
     presentationIndex.value =
-      (presentationIndex.value + 1) % flowNodes.value.length;
-    focusNode(flowNodes.value[presentationIndex.value].id);
+      (presentationIndex.value + 1) % presentationNodes.value.length;
+    focusNode(presentationNodes.value[presentationIndex.value]);
   };
 
   const prevPresentationNode = () => {
-    if (flowNodes.value.length === 0) return;
+    if (presentationNodes.value.length === 0) return;
     presentationIndex.value =
-      (presentationIndex.value - 1 + flowNodes.value.length) %
-      flowNodes.value.length;
-    focusNode(flowNodes.value[presentationIndex.value].id);
+      (presentationIndex.value - 1 + presentationNodes.value.length) %
+      presentationNodes.value.length;
+    focusNode(presentationNodes.value[presentationIndex.value]);
   };
 
   const togglePresentation = () => {
     isPresenting.value = !isPresenting.value;
     if (isPresenting.value) {
+      // 进入演示模式：计算排序
+      presentationNodes.value = getPresentationOrder();
       presentationIndex.value = 0;
-      if (flowNodes.value.length > 0) {
-        focusNode(flowNodes.value[0].id);
+
+      if (presentationNodes.value.length > 0) {
+        focusNode(presentationNodes.value[0]);
       }
     } else {
       presentationIndex.value = -1;
+      presentationNodes.value = [];
     }
   };
 
