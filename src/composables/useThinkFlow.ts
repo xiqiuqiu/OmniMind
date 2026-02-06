@@ -39,6 +39,15 @@ const sanitizeNodesForLocalStorage = (nodes: any[]) => {
 };
 
 /**
+ * 工具函数：清理文件名，移除不合法字符
+ */
+const sanitizeFilename = (name: string) => {
+  return (name || "untitled")
+    .replace(/[\\/:*?"<>|]/g, "_")
+    .replace(/\s+/g, "_");
+};
+
+/**
  * 创建 ThinkFlow 的业务上下文。
  * @param t 国际化翻译函数
  * @param locale 当前语言（用于持久化语言选择）
@@ -1378,7 +1387,10 @@ export function useThinkFlow({
     const blob = new Blob([markdown], { type: "text/markdown" });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
-    link.download = `omnimind-${rootNode.data.label}-${Date.now()}.md`;
+    const safeName = sanitizeFilename(rootNode.data.label);
+    const filename = `omnimind-${safeName}-${Date.now()}.md`;
+    console.log("[Export Debug] Generated Markdown filename:", filename);
+    link.download = filename;
     link.href = url;
     link.click();
     URL.revokeObjectURL(url);
@@ -1530,7 +1542,10 @@ export function useThinkFlow({
     const blob = new Blob([fullHTML], { type: "text/html" });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
-    link.download = `omnimind-${rootNode.data.label}-${Date.now()}.html`;
+    const safeName = sanitizeFilename(rootNode.data.label);
+    const filename = `omnimind-${safeName}-${Date.now()}.html`;
+    console.log("[Export Debug] Generated HTML filename:", filename);
+    link.download = filename;
     link.href = url;
     link.click();
     URL.revokeObjectURL(url);

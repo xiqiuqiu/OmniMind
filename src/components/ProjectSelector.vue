@@ -41,6 +41,10 @@ const editingProjectId = ref<string | null>(null);
 const editingProjectName = ref("");
 const editInputRef = ref<HTMLInputElement | null>(null);
 
+// 删除确认模态框状态
+const showDeleteConfirm = ref(false);
+const pendingDeleteId = ref<string | null>(null);
+
 // 开始编辑项目名称
 const startEdit = (project: (typeof projects.value)[0], e: Event) => {
   e.stopPropagation();
@@ -99,11 +103,22 @@ const handleCreate = async () => {
   isCreating.value = false;
 };
 
-const handleDelete = async (id: string, e: Event) => {
+const handleDelete = (id: string, e: Event) => {
   e.stopPropagation();
-  if (confirm(props.t("project.deleteConfirm"))) {
-    await deleteProject(id);
+  pendingDeleteId.value = id;
+  showDeleteConfirm.value = true;
+};
+
+const confirmDelete = async () => {
+  if (pendingDeleteId.value) {
+    await deleteProject(pendingDeleteId.value);
   }
+  cancelDelete();
+};
+
+const cancelDelete = () => {
+  showDeleteConfirm.value = false;
+  pendingDeleteId.value = null;
 };
 
 const handleSelect = (project: (typeof projects.value)[0]) => {
@@ -129,6 +144,9 @@ const handleSelect = (project: (typeof projects.value)[0]) => {
       />
     </button>
 
+    <!-- Backdrop (rendered before Dropdown so Dropdown stays on top) -->
+    <div v-if="isOpen" class="fixed inset-0 z-[45]" @click="isOpen = false" />
+
     <!-- Dropdown -->
     <Transition
       enter-active-class="transition-all duration-200"
@@ -138,7 +156,7 @@ const handleSelect = (project: (typeof projects.value)[0]) => {
     >
       <div
         v-if="isOpen"
-        class="absolute top-full left-0 mt-2 w-64 bg-white border border-slate-200 rounded-xl shadow-xl z-50 overflow-hidden"
+        class="absolute top-full left-0 mt-2 w-64 bg-white border border-slate-200 rounded-xl shadow-xl z-[60] overflow-hidden"
       >
         <!-- Header -->
         <div class="px-4 py-3 border-b border-slate-100 bg-slate-50">
@@ -239,7 +257,51 @@ const handleSelect = (project: (typeof projects.value)[0]) => {
       </div>
     </Transition>
 
-    <!-- Backdrop -->
-    <div v-if="isOpen" class="fixed inset-0 z-40" @click="isOpen = false" />
+    <!-- 删除确认模态框 -->
+    <Teleport to="body">
+      <Transition
+        enter-active-class="transition-all duration-200"
+        leave-active-class="transition-all duration-150"
+        enter-from-class="opacity-0"
+        leave-to-class="opacity-0"
+      >
+        <div
+          v-if="showDeleteConfirm"
+          class="fixed inset-0 z-[100] flex items-center justify-center bg-black/50"
+          @click.self="cancelDelete"
+        >
+          <div
+            class="bg-white rounded-xl shadow-2xl p-6 w-80 transform transition-all"
+            :class="showDeleteConfirm ? 'scale-100' : 'scale-95'"
+          >
+            <div class="flex items-center gap-3 mb-4">
+              <div class="p-2 bg-rose-100 rounded-full">
+                <Trash2 class="w-5 h-5 text-rose-500" />
+              </div>
+              <h3 class="text-lg font-bold text-slate-800">
+                {{ t("project.deleteTitle") || "删除项目" }}
+              </h3>
+            </div>
+            <p class="text-sm text-slate-600 mb-6">
+              {{ t("project.deleteConfirm") }}
+            </p>
+            <div class="flex gap-3 justify-end">
+              <button
+                @click="cancelDelete"
+                class="px-4 py-2 text-sm font-medium text-slate-600 bg-slate-100 rounded-lg hover:bg-slate-200 transition-colors"
+              >
+                {{ t("common.cancel") || "取消" }}
+              </button>
+              <button
+                @click="confirmDelete"
+                class="px-4 py-2 text-sm font-medium text-white bg-rose-500 rounded-lg hover:bg-rose-600 transition-colors"
+              >
+                {{ t("common.confirm") || "确认" }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </Transition>
+    </Teleport>
   </div>
 </template>

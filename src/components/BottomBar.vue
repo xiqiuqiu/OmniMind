@@ -81,28 +81,76 @@ const handleBallClick = () => {
     inputRef.value.focus();
   }
 };
+
+// 点击遮罩时关闭输入框
+const handleBackdropClick = () => {
+  isInputFocused.value = false;
+  if (inputRef.value) {
+    inputRef.value.blur();
+  }
+};
 </script>
 
 <template>
+  <!-- 虚化背景遮罩 - 仅在有节点且展开时显示 -->
+  <Transition name="backdrop">
+    <div
+      v-if="props.hasNodes && isExpanded"
+      class="fixed inset-0 z-[60] bg-slate-900/40 backdrop-blur-sm"
+      @click="handleBackdropClick"
+    ></div>
+  </Transition>
+
+  <!-- 收缩状态的圆形球 - 固定左下角 -->
   <div
-    class="absolute z-30 flex flex-col items-center gap-3 w-full px-4 md:px-6 transition-all duration-700 ease-in-out"
     :class="[
-      props.hasNodes
-        ? 'bottom-20 md:bottom-4 max-w-[92vw] md:max-w-2xl left-1/2 -translate-x-1/2'
-        : 'top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 max-w-lg md:max-w-2xl',
+      'fixed left-4 bottom-20 md:bottom-4 z-[70]',
+      'w-12 h-12 md:w-14 md:h-14 bg-gradient-to-br from-slate-100/90 to-slate-200/90 backdrop-blur-lg border border-slate-300/60',
+      'rounded-full cursor-pointer shadow-lg hover:shadow-2xl',
+      'flex items-center justify-center group',
+      !isExpanded
+        ? 'opacity-100 translate-y-0 hover:scale-105'
+        : 'opacity-0 translate-y-4 pointer-events-none',
     ]"
+    :style="{
+      transition: 'opacity 400ms ease-out, transform 400ms ease-out',
+    }"
+    @click="handleBallClick"
+  >
+    <!-- 球内的图标 -->
+    <div class="relative">
+      <Terminal
+        :class="[
+          'w-5 h-5 md:w-6 md:h-6 text-slate-600 transition-all duration-300',
+          'group-hover:text-orange-500 group-hover:scale-110',
+        ]"
+      />
+      <!-- 悬停时的光晕效果 -->
+      <div
+        class="absolute inset-0 w-5 h-5 md:w-6 md:h-6 bg-orange-400/20 rounded-full blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+      ></div>
+    </div>
+    <!-- 球的呼吸光环 -->
+    <div
+      class="absolute inset-0 rounded-full bg-gradient-to-br from-orange-200/30 to-slate-200/30 animate-pulse opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+    ></div>
+  </div>
+
+  <!-- 输入框容器 - 始终居中 -->
+  <div
+    class="fixed z-[70] flex flex-col items-center gap-3 w-full px-4 md:px-6 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 max-w-lg md:max-w-2xl"
   >
     <div class="flex items-center justify-center w-full relative">
       <div
         :class="[
-          'flex items-center bg-white/90 backdrop-blur-xl border-slate-200/60',
+          'flex items-center bg-white/95 backdrop-blur-xl border-slate-200/60',
           'transform-gpu will-change-transform overflow-hidden',
           isExpanded
-            ? 'opacity-100 w-full py-2 md:py-3 px-3 md:px-5 gap-2 md:gap-3 rounded-xl border translate-y-0 shadow-terminal'
+            ? 'opacity-100 w-full py-2 md:py-3 px-3 md:px-5 gap-2 md:gap-3 rounded-xl border translate-y-0 shadow-2xl'
             : 'opacity-0 w-12 h-12 md:w-14 md:h-14 p-0 gap-0 rounded-full border-0 translate-y-2 pointer-events-none',
         ]"
         :style="{
-          transition: 'all 600ms cubic-bezier(0.34, 1.56, 0.64, 1)',
+          transition: 'all 500ms cubic-bezier(0.34, 1.56, 0.64, 1)',
         }"
       >
         <span
@@ -170,68 +218,18 @@ const handleBallClick = () => {
           <RefreshCw v-else class="w-3.5 h-3.5 md:w-4 h-4 animate-spin" />
         </button>
       </div>
-
-      <!-- 收缩状态的圆形球 -->
-      <div
-        :class="[
-          'absolute left-1/2 -translate-x-1/2 -bottom-2',
-          'w-12 h-12 md:w-14 md:h-14 bg-gradient-to-br from-slate-100/90 to-slate-200/90 backdrop-blur-lg border border-slate-300/60',
-          'rounded-full cursor-pointer shadow-lg hover:shadow-2xl',
-          'transform-gpu will-change-transform',
-          'flex items-center justify-center group',
-          !isExpanded
-            ? 'opacity-100 scale-100 hover:scale-105'
-            : 'opacity-0 scale-0 pointer-events-none',
-        ]"
-        :style="{
-          transition: 'all 600ms cubic-bezier(0.23, 1, 0.32, 1)',
-        }"
-        @click="handleBallClick"
-      >
-        <!-- 球内的图标 -->
-        <div class="relative">
-          <Terminal
-            :class="[
-              'w-5 h-5 md:w-6 md:h-6 text-slate-600 transition-all duration-300',
-              'group-hover:text-orange-500 group-hover:scale-110',
-            ]"
-          />
-          <!-- 悬停时的光晕效果 (仅修饰) -->
-          <div
-            class="absolute inset-0 w-5 h-5 md:w-6 md:h-6 bg-orange-400/20 rounded-full blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-          ></div>
-        </div>
-
-        <!-- 球的呼吸光环 -->
-        <div
-          class="absolute inset-0 rounded-full bg-gradient-to-br from-orange-200/30 to-slate-200/30 animate-pulse opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-        ></div>
-
-        <!-- 新项目提示 (当在中心点时) -->
-        <div
-          v-if="!props.hasNodes"
-          class="absolute -bottom-8 whitespace-nowrap text-xs text-slate-400/80 font-mono tracking-widest uppercase animate-pulse"
-        >
-          {{ props.t("nav.clickToStart") || "Click to Start" }}
-        </div>
-      </div>
-    </div>
-
-    <!-- 底部信息 -->
-    <div
-      class="flex items-center gap-2 px-3 py-1 rounded-full text-[10px] font-black tracking-widest uppercase select-none shadow-sm"
-    >
-      <!-- <a
-        href="https://github.com/liu-ziting/OmniMind"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="flex items-center gap-1.5 text-slate-500 hover:text-orange-500 transition-colors"
-      >
-        <Github class="w-3 h-3" />
-        <span>OmniMind</span>
-      </a>
-      <span class="w-[1px] h-2 bg-slate-300 mx-1"></span>
-      <span class="text-slate-400">By:Liuziting</span> -->
     </div>
   </div>
 </template>
+
+<style scoped>
+/* 遮罩过渡动画 */
+.backdrop-enter-active,
+.backdrop-leave-active {
+  transition: opacity 300ms ease-out;
+}
+.backdrop-enter-from,
+.backdrop-leave-to {
+  opacity: 0;
+}
+</style>
